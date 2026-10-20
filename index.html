@@ -380,6 +380,8 @@
             <button class="nav-btn" data-tab="quiz"><span class="icon">🧩</span>Quiz</button>
             <button class="nav-btn" data-tab="temoignages"><span class="icon">📝</span>Témoignages</button>
             <button class="nav-btn" data-tab="reseaux"><span class="icon">🌐</span>Équipe & Réseaux</button>
+            <!-- Bouton Admin masqué par défaut, affiché s'il est admin -->
+            <button class="nav-btn" data-tab="admin-panel" id="nav-btn-admin" style="display: none;"><span class="icon">⚙️</span>Admin</button>
             <button class="nav-btn" data-tab="compte"><span class="icon">👤</span>Compte</button>
         </div>
     </nav>
@@ -673,6 +675,29 @@
             </div>
         </div>
 
+        <!-- 8.5. PANNEAU ADMIN DÉDIÉ (Visible uniquement pour les administrateurs) -->
+        <div id="tab-admin-panel" class="tab-view">
+            <div class="intro-banner" style="background: linear-gradient(135deg, var(--primary-blue), var(--secondary-bg)); color: white;">
+                <h2>⚙️ Espace Administrateur</h2>
+                <p>Panneau de contrôle exclusif pour gérer les membres de la communauté et les privilèges.</p>
+            </div>
+
+            <div class="card">
+                <h3>👥 Gestion des membres et des rôles</h3>
+                <p style="margin-bottom: 15px; font-size: 0.9rem;">Voici la liste de tous les membres enregistrés sur le site :</p>
+                <div id="admin-members-list" style="overflow-x: auto;">
+                    <!-- Rempli dynamiquement -->
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>➕ Promouvoir un administrateur</h3>
+                <p style="font-size: 0.85rem; margin-bottom: 10px;">Entrez le nom ou pseudo exact d'un membre pour lui donner les droits d'administration :</p>
+                <input type="text" id="admin-target-input" placeholder="Nom ou pseudo exact..." style="margin-bottom: 8px;">
+                <button class="btn" onclick="promoteMemberFromPanel()">Promouvoir Administrateur</button>
+            </div>
+        </div>
+
         <!-- 9. COMPTE -->
         <div id="tab-compte" class="tab-view">
             <div class="intro-banner">
@@ -698,14 +723,6 @@
                         <h3 id="user-display-name" style="margin-bottom: 2px;"></h3>
                         <p style="font-size: 0.85rem; opacity: 0.8;" id="user-role-status">Connecté</p>
                     </div>
-                </div>
-
-                <!-- Panneau de promotion admin visible uniquement pour le créateur suprême -->
-                <div id="admin-panel-section" style="display: none; margin-bottom: 20px; padding: 15px; background: var(--secondary-bg); border-radius: 8px; border: 1px solid var(--border-color);">
-                    <h3 style="font-size: 1.05rem; margin-bottom: 8px;">⚙️ Gestion des Administrateurs</h3>
-                    <p style="font-size: 0.85rem; margin-bottom: 10px;">Promouvoir un membre en tant qu'administrateur en entrant son nom/pseudo exact :</p>
-                    <input type="text" id="target-admin-name" placeholder="Nom ou pseudo exact du membre..." style="margin-bottom: 8px;">
-                    <button class="btn" onclick="promoteAdmin()" style="font-size: 0.85rem; padding: 8px 14px;">Promouvoir Administrateur</button>
                 </div>
 
                 <div class="card" style="background: var(--bg-color);">
@@ -775,7 +792,6 @@
             "Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel..."
         ];
 
-        // Banque de questions étendue (~100 questions)
         const allQuizQuestions = [
             { question: "À quel âge Jésus est-il mort sur la croix ?", options: ["Environ 33 ans", "Environ 30 ans", "Environ 40 ans", "Environ 25 ans"], answer: 0 },
             { question: "Où Jésus est-il né ?", options: ["Nazareth", "Jérusalem", "Bethléem", "Capharnaüm"], answer: 2 },
@@ -900,7 +916,6 @@
             document.getElementById('home-saint').innerText = saintsList[getDayIndex(saintsList.length)];
 
             updateCountdowns();
-
             document.getElementById('bible-versets-list').innerHTML = versetsList.join('<br>');
 
             renderBooks('at-books', atBooks);
@@ -918,7 +933,6 @@
             const now = new Date();
             const year = now.getFullYear();
 
-            // Noël : 25 décembre
             let noelDate = new Date(year, 11, 25);
             if (now > noelDate) noelDate = new Date(year + 1, 11, 25);
             const diffNoel = Math.ceil((noelDate - now) / (1000 * 60 * 60 * 24));
@@ -930,12 +944,9 @@
             document.getElementById('countdown-paques').innerText = `${diffPaques > 0 ? diffPaques : 170} jour(s)`;
         }
 
-        // Logique du Quiz Aléatoire (10 questions parmi la banque)
         function initQuiz() {
             currentQuizIndex = 0;
             quizScore = 0;
-            
-            // Mélanger et prendre 10 questions au hasard
             let shuffled = [...allQuizQuestions].sort(() => 0.5 - Math.random());
             activeQuizQuestions = shuffled.slice(0, 10);
 
@@ -1032,6 +1043,14 @@
             }
         }
 
+        function registerMemberInDirectory(name, isAdmin) {
+            let members = loadData('members_directory', []);
+            if (!members.some(m => m.name.toLowerCase() === name.toLowerCase())) {
+                members.push({ name, isAdmin, joined: new Date().toLocaleDateString() });
+                saveData('members_directory', members);
+            }
+        }
+
         function createAccount() {
             const prenom = document.getElementById('reg-prenom').value.trim();
             const nom = document.getElementById('reg-nom').value.trim();
@@ -1071,6 +1090,7 @@
         }
 
         function saveAccountAndReload(name, photo, isAdmin) {
+            registerMemberInDirectory(name, isAdmin);
             localStorage.setItem('pd_account', JSON.stringify({ name, photo, isAdmin }));
             updateAccountUI();
             renderQuestions();
@@ -1082,6 +1102,10 @@
         function logout() {
             localStorage.removeItem('pd_account');
             updateAccountUI();
+            // Si on était dans l'onglet admin, on retourne à l'accueil
+            if (document.getElementById('tab-admin-panel').classList.contains('active')) {
+                switchTab('accueil');
+            }
             renderQuestions();
             renderIntentions();
             renderTemoignages();
@@ -1090,6 +1114,14 @@
 
         function updateAccountUI() {
             const acc = getAccount();
+            const adminBtn = document.getElementById('nav-btn-admin');
+
+            if (acc && acc.isAdmin) {
+                adminBtn.style.display = 'flex';
+            } else {
+                adminBtn.style.display = 'none';
+            }
+
             if (acc) {
                 document.getElementById('auth-logged-out').style.display = 'none';
                 document.getElementById('auth-logged-in').style.display = 'block';
@@ -1098,12 +1130,6 @@
                 
                 const avatarDiv = document.getElementById('user-display-avatar');
                 avatarDiv.innerHTML = acc.photo ? `<img src="${acc.photo}" style="width:100%;height:100%;object-fit:cover;">` : acc.name.charAt(0).toUpperCase();
-                
-                if (acc.name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() && acc.isAdmin) {
-                    document.getElementById('admin-panel-section').style.display = 'block';
-                } else {
-                    document.getElementById('admin-panel-section').style.display = 'none';
-                }
 
                 document.getElementById('new-question-text').disabled = false;
                 document.getElementById('publish-question-btn').disabled = false;
@@ -1112,6 +1138,8 @@
                 document.getElementById('new-temoignage-text').disabled = false;
                 document.getElementById('publish-temoignage-btn').disabled = false;
                 document.getElementById('auth-warning-temoignage').style.display = 'none';
+
+                renderAdminMembersList();
             } else {
                 document.getElementById('auth-logged-out').style.display = 'block';
                 document.getElementById('auth-logged-in').style.display = 'none';
@@ -1125,18 +1153,82 @@
             }
         }
 
-        function promoteAdmin() {
-            const target = document.getElementById('target-admin-name').value.trim();
+        function renderAdminMembersList() {
+            const members = loadData('members_directory', []);
+            const container = document.getElementById('admin-members-list');
+            if (!container) return;
+
+            if (members.length === 0) {
+                container.innerHTML = `<p style="font-style: italic;">Aucun membre enregistré pour le moment.</p>`;
+                return;
+            }
+
+            let html = `
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+                            <th style="padding: 8px;">Membre</th>
+                            <th style="padding: 8px;">Statut</th>
+                            <th style="padding: 8px; text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            members.forEach((m, index) => {
+                const isSupreme = (m.name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase());
+                const customAdmins = loadData('custom_admins', []);
+                const isCustomAdmin = customAdmins.map(a => a.toLowerCase()).includes(m.name.trim().toLowerCase());
+                const roleBadge = (isSupreme || isCustomAdmin) ? '👑 Administrateur' : 'Membre';
+
+                html += `
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 10px; font-weight: bold;">${escapeHTML(m.name)}</td>
+                        <td style="padding: 10px;">${roleBadge}</td>
+                        <td style="padding: 10px; text-align: right;">
+                            ${!isSupreme ? `<button class="btn-delete" onclick="deleteMember('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Supprimer</button>` : '<span style="font-size: 0.75rem; font-style: italic; opacity: 0.7;">Protégé</span>'}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        function promoteMemberFromPanel() {
+            const target = document.getElementById('admin-target-input').value.trim();
             if (!target) return;
             let customAdmins = loadData('custom_admins', []);
             if (!customAdmins.map(a => a.toLowerCase()).includes(target.toLowerCase())) {
                 customAdmins.push(target);
                 saveData('custom_admins', customAdmins);
+
+                // Mettre à jour l'annuaire si présent
+                let members = loadData('members_directory', []);
+                let member = members.find(m => m.name.toLowerCase() === target.toLowerCase());
+                if (member) {
+                    member.isAdmin = true;
+                    saveData('members_directory', members);
+                }
+
                 alert(`Le membre "${target}" a été promu administrateur avec succès !`);
-                document.getElementById('target-admin-name').value = '';
+                document.getElementById('admin-target-input').value = '';
+                renderAdminMembersList();
+                updateAccountUI();
+                renderQuestions();
+                renderTemoignages();
             } else {
                 alert("Ce membre est déjà administrateur.");
             }
+        }
+
+        function deleteMember(name) {
+            if (!confirm(`Voulez-vous vraiment supprimer le membre "${name}" de l'annuaire ?`)) return;
+            let members = loadData('members_directory', []);
+            members = members.filter(m => m.name.toLowerCase() !== name.toLowerCase());
+            saveData('members_directory', members);
+            renderAdminMembersList();
         }
 
         function renderQuestions() {
@@ -1297,7 +1389,6 @@
             }
         }
 
-        // Logique Témoignages
         function renderTemoignages() {
             const temoignages = loadData('temoignages', []);
             const feed = document.getElementById('temoignages-feed');
