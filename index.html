@@ -511,7 +511,7 @@
             </div>
 
             <div class="card">
-                <h3>✨ 30 versets à méditer</h3>
+                <h3>✨ 10 versets à méditer</h3>
                 <p id="bible-versets-list">Chargement des versets...</p>
             </div>
 
@@ -601,6 +601,14 @@
                     </div>
                 </div>
 
+                <!-- Panneau de promotion admin visible uniquement pour le créateur suprême -->
+                <div id="admin-panel-section" style="display: none; margin-bottom: 20px; padding: 15px; background: var(--secondary-bg); border-radius: 8px; border: 1px solid var(--border-color);">
+                    <h3 style="font-size: 1.05rem; margin-bottom: 8px;">⚙️ Gestion des Administrateurs</h3>
+                    <p style="font-size: 0.85rem; margin-bottom: 10px;">Promouvoir un membre en tant qu'administrateur en entrant son nom/pseudo exact :</p>
+                    <input type="text" id="target-admin-name" placeholder="Nom ou pseudo exact du membre..." style="margin-bottom: 8px;">
+                    <button class="btn" onclick="promoteAdmin()" style="font-size: 0.85rem; padding: 8px 14px;">Promouvoir Administrateur</button>
+                </div>
+
                 <div class="card" style="background: var(--bg-color);">
                     <h3>Mon activité</h3>
                     <p>Questions posées : <strong id="my-stat-questions">0</strong></p>
@@ -641,11 +649,16 @@
         ];
 
         const versetsList = [
-            "Dieu a tant aimé le monde qu’il a donné son Fils unique, afin que quiconque croit en lui ne se perde pas, mais obtienne la vie éternelle. — *Jean 3, 16*",
-            "Tu es Pierre, et sur cette pierre je bâtirai mon Église. — *Matthieu 16, 18*",
-            "Réjouis-toi, comblée de grâce, le Seigneur est avec toi. — *Luc 1, 28*",
-            "Venez à moi, vous tous qui peinez sous le poids du fardeau, et moi, je vous procurerai le repos. — *Matthieu 11, 28*",
-            "Le Seigneur est mon berger : je ne manque de rien. — *Psaume 22 (23), 1*"
+            "1. « Dieu a tant aimé le monde qu’il a donné son Fils unique, afin que quiconque croit en lui ne se perde pas, mais obtienne la vie éternelle. » — *Jean 3, 16*",
+            "2. « Le Seigneur est mon berger : je ne manque de rien. » — *Psaume 22 (23), 1*",
+            "3. « Je suis le chemin, la vérité et la vie. » — *Jean 14, 6*",
+            "4. « Tout est possible à celui qui croit. » — *Marc 9, 23*",
+            "5. « Venez à moi, vous tous qui peinez sous le poids du fardeau, et moi, je vous procurerai le repos. » — *Matthieu 11, 28*",
+            "6. « Ne craignez pas, car je suis avec vous. » — *Isaïe 43, 5*",
+            "7. « L’amour prend patience, l’amour rend service. » — *1 Corinthiens 13, 4*",
+            "8. « Demandez, et l'on vous donnera ; cherchez, et vous trouverez. » — *Matthieu 7, 7*",
+            "9. « Réjouissez-vous toujours dans le Seigneur. » — *Philippiens 4, 4*",
+            "10. « Ta parole est la lumière de mes pas, une lampe sur ma route. » — *Psaume 118 (119), 105*"
         ];
 
         const prieresJourList = [
@@ -681,13 +694,14 @@
             return acc ? JSON.parse(acc) : null;
         }
 
-        // 🔐 VÉRIFICATION STRICTE ADMIN : Nom exact "Aaron Mendy" + Code secret "159357"
+        // 🔐 VÉRIFICATION STRICTE ADMIN : Nom exact "Aaron Mendy" + Code secret "159357", ou admins promus
         function isUserAdmin(name, secretProvided = "") {
             if (!name) return false;
             if (name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() && secretProvided === ADMIN_SECRET) {
                 return true;
             }
-            return false;
+            const customAdmins = loadData('custom_admins', []);
+            return customAdmins.map(a => a.toLowerCase()).includes(name.trim().toLowerCase());
         }
 
         function switchTab(tabId) {
@@ -711,12 +725,15 @@
                 });
             });
 
-            document.getElementById('home-verset').innerText = versetsList[getDayIndex(versetsList.length)];
+            // Affichage d'un verset brut sans les numéros pour l'accueil
+            const rawVerset = versetsList[getDayIndex(versetsList.length)].replace(/^[0-9]+\.\s*/, '');
+            document.getElementById('home-verset').innerText = rawVerset;
+
             const fullPriere = prieresJourList[getDayIndex(prieresJourList.length)];
             document.getElementById('home-priere').innerText = fullPriere;
             document.getElementById('home-saviez').innerText = saviezVousList[getDayIndex(saviezVousList.length)];
 
-            document.getElementById('bible-versets-list').innerHTML = versetsList.map(v => `• ${escapeHTML(v)}`).join('<br>');
+            document.getElementById('bible-versets-list').innerHTML = versetsList.join('<br>');
 
             renderBooks('at-books', atBooks);
             renderBooks('nt-books', ntBooks);
@@ -824,6 +841,13 @@
                 const avatarDiv = document.getElementById('user-display-avatar');
                 avatarDiv.innerHTML = acc.photo ? `<img src="${acc.photo}" style="width:100%;height:100%;object-fit:cover;">` : acc.name.charAt(0).toUpperCase();
                 
+                // Afficher le panneau de promotion admin seulement si c'est le créateur suprême (Aaron Mendy)
+                if (acc.name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() && acc.isAdmin) {
+                    document.getElementById('admin-panel-section').style.display = 'block';
+                } else {
+                    document.getElementById('admin-panel-section').style.display = 'none';
+                }
+
                 document.getElementById('new-question-text').disabled = false;
                 document.getElementById('publish-question-btn').disabled = false;
                 document.getElementById('auth-warning-question').style.display = 'none';
@@ -836,18 +860,37 @@
             }
         }
 
+        function promoteAdmin() {
+            const target = document.getElementById('target-admin-name').value.trim();
+            if (!target) return;
+            let customAdmins = loadData('custom_admins', []);
+            if (!customAdmins.map(a => a.toLowerCase()).includes(target.toLowerCase())) {
+                customAdmins.push(target);
+                saveData('custom_admins', customAdmins);
+                alert(`Le membre "${target}" a été promu administrateur avec succès !`);
+                document.getElementById('target-admin-name').value = '';
+            } else {
+                alert("Ce membre est déjà administrateur.");
+            }
+        }
+
         function renderQuestions() {
             const questions = loadData('questions', []);
             const feed = document.getElementById('questions-feed');
             const acc = getAccount();
 
             feed.innerHTML = questions.slice().reverse().map(q => {
-                let commentsHtml = q.comments ? q.comments.map((c, cIdx) => `
-                    <div class="comment-box">
-                        <strong>${escapeHTML(c.author)}</strong> ${c.isTeam ? '<span class="badge-admin">admin</span>' : ''} : ${escapeHTML(c.text)}
-                        ${(acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteComment(${q.id}, ${cIdx})">Supprimer</button>` : ''}
-                    </div>
-                `).join('') : '';
+                const authorIsAdmin = (q.author.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() || loadData('custom_admins', []).map(a => a.toLowerCase()).includes(q.author.trim().toLowerCase()));
+
+                let commentsHtml = q.comments ? q.comments.map((c, cIdx) => {
+                    const commentAuthorIsAdmin = (c.author.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() || loadData('custom_admins', []).map(a => a.toLowerCase()).includes(c.author.trim().toLowerCase()));
+                    return `
+                        <div class="comment-box">
+                            <strong>${escapeHTML(c.author)}</strong> ${commentAuthorIsAdmin ? '<span class="badge-admin">admin</span>' : ''} : ${escapeHTML(c.text)}
+                            ${(acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteComment(${q.id}, ${cIdx})">Supprimer</button>` : ''}
+                        </div>
+                    `;
+                }).join('') : '';
 
                 let replySection = acc ? `
                     <div style="margin-top: 12px; display: flex; gap: 8px;">
@@ -863,7 +906,7 @@
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <div class="user-avatar-small">${q.author.charAt(0).toUpperCase()}</div>
-                                <strong>${escapeHTML(q.author)}</strong> ${q.isTeam ? '<span class="badge-admin">admin</span>' : ''}
+                                <strong>${escapeHTML(q.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''}
                             </div>
                             ${deleteQuestionBtn}
                         </div>
@@ -888,7 +931,6 @@
                 id: Date.now(), 
                 author: acc.name, 
                 text, 
-                isTeam: acc.isAdmin, 
                 comments: [] 
             });
             saveData('questions', questions);
@@ -910,8 +952,7 @@
                 if (!q.comments) q.comments = [];
                 q.comments.push({ 
                     author: acc.name, 
-                    text, 
-                    isTeam: acc.isAdmin 
+                    text 
                 });
                 saveData('questions', questions);
                 renderQuestions();
