@@ -277,6 +277,24 @@
             font-size: 0.8rem;
         }
 
+        .clickable-user {
+            cursor: pointer;
+            color: var(--primary-blue);
+            font-weight: bold;
+            text-decoration: underline dotted;
+        }
+        .clickable-user:hover {
+            opacity: 0.8;
+        }
+
+        .mention-tag {
+            background-color: var(--secondary-bg);
+            color: var(--primary-blue);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
         .btn-delete {
             background-color: #d9534f;
             color: white;
@@ -286,6 +304,64 @@
             font-size: 0.75rem;
             cursor: pointer;
             float: right;
+            margin-left: 4px;
+        }
+
+        .btn-action {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .btn-warning {
+            background-color: #f0ad4e;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .btn-report {
+            background-color: transparent;
+            color: #d9534f;
+            border: 1px solid #d9534f;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            float: right;
+            margin-left: 4px;
+        }
+        .btn-report:hover {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        /* Modal Profil */
+        #profile-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 420px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            position: relative;
         }
 
         /* Widgets Grille Accueil */
@@ -380,11 +456,23 @@
             <button class="nav-btn" data-tab="quiz"><span class="icon">🧩</span>Quiz</button>
             <button class="nav-btn" data-tab="temoignages"><span class="icon">📝</span>Témoignages</button>
             <button class="nav-btn" data-tab="reseaux"><span class="icon">🌐</span>Équipe & Réseaux</button>
-            <!-- Bouton Admin masqué par défaut, affiché s'il est admin -->
             <button class="nav-btn" data-tab="admin-panel" id="nav-btn-admin" style="display: none;"><span class="icon">⚙️</span>Admin</button>
             <button class="nav-btn" data-tab="compte"><span class="icon">👤</span>Compte</button>
         </div>
     </nav>
+
+    <!-- Modal Profil Interactif -->
+    <div id="profile-modal">
+        <div class="modal-content">
+            <h3 id="modal-profile-title" style="margin-bottom: 12px;">Profil du membre</h3>
+            <div id="modal-profile-body" style="font-size: 0.95rem; margin-bottom: 20px;">
+                <!-- Rempli dynamiquement -->
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                <button class="btn" onclick="closeProfileModal()" style="background-color: #6c757d; padding: 6px 12px; font-size: 0.85rem;">Fermer</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Contenu Principal -->
     <main class="content">
@@ -515,7 +603,7 @@
         <div id="tab-questions" class="tab-view">
             <div class="intro-banner">
                 <h2>💬 Questions & Échanges</h2>
-                <p>Pose ta question sur la foi, la Bible, la prière… Les admins et la communauté répondent. Rappel : respect et bienveillance, même en cas de désaccord.</p>
+                <p>Pose ta question sur la foi, la Bible, la prière… Les admins et la communauté répondent. Tu peux mentionner un admin en tapant <strong>@Nom</strong> ou <strong>@Admin</strong>. Rappel : respect et bienveillance.</p>
             </div>
 
             <div class="card" id="question-form-container">
@@ -523,7 +611,7 @@
                 <div id="auth-warning-question" style="color: var(--primary-blue); font-style: italic; margin-bottom: 10px;">
                     Veuillez créer un compte dans l’onglet « Compte » pour pouvoir publier une question.
                 </div>
-                <textarea id="new-question-text" placeholder="Votre question..." rows="3" disabled></textarea>
+                <textarea id="new-question-text" placeholder="Votre question... (ex: @Aaron Mendy j'ai une question)" rows="3" disabled></textarea>
                 <button class="btn" id="publish-question-btn" onclick="publishQuestion()" disabled>Publier</button>
             </div>
 
@@ -678,13 +766,31 @@
         <!-- 8.5. PANNEAU ADMIN DÉDIÉ (Visible uniquement pour les administrateurs) -->
         <div id="tab-admin-panel" class="tab-view">
             <div class="intro-banner" style="background: linear-gradient(135deg, var(--primary-blue), var(--secondary-bg)); color: white;">
-                <h2>⚙️ Espace Administrateur</h2>
-                <p>Panneau de contrôle exclusif pour gérer les membres de la communauté et les privilèges.</p>
+                <h2>⚙️ Espace Administrateur & Modération</h2>
+                <p>Panneau de contrôle exclusif pour gérer les signalements, les mentions, les membres et le journal d'activités.</p>
+            </div>
+
+            <!-- Paramètre Notifications Push -->
+            <div class="card">
+                <h3>🔔 Notifications Push Admin</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 10px;">Activez ou désactivez les alertes et notifications push sur votre appareil lorsque vous êtes mentionné ou qu'un signalement est effectué.</p>
+                <button class="btn" id="push-toggle-btn" onclick="togglePushNotifications()" style="background-color: var(--primary-blue);">Activer les notifications push</button>
+            </div>
+
+            <!-- Signalements -->
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3>🚨 Contenus signalés (<span id="report-count">0</span>)</h3>
+                    <button class="btn-delete" onclick="clearAllReports()" style="float:none;">Tout effacer / Masquer</button>
+                </div>
+                <div id="admin-reports-list">
+                    <!-- Rempli dynamiquement -->
+                </div>
             </div>
 
             <div class="card">
                 <h3>👥 Gestion des membres et des rôles</h3>
-                <p style="margin-bottom: 15px; font-size: 0.9rem;">Voici la liste de tous les membres enregistrés sur le site :</p>
+                <p style="margin-bottom: 15px; font-size: 0.9rem;">Voici la liste de tous les membres enregistrés et actifs sur le site (cliquez sur un nom pour voir son profil) :</p>
                 <div id="admin-members-list" style="overflow-x: auto;">
                     <!-- Rempli dynamiquement -->
                 </div>
@@ -695,6 +801,15 @@
                 <p style="font-size: 0.85rem; margin-bottom: 10px;">Entrez le nom ou pseudo exact d'un membre pour lui donner les droits d'administration :</p>
                 <input type="text" id="admin-target-input" placeholder="Nom ou pseudo exact..." style="margin-bottom: 8px;">
                 <button class="btn" onclick="promoteMemberFromPanel()">Promouvoir Administrateur</button>
+            </div>
+
+            <!-- Journal d'activités (Audit Log) -->
+            <div class="card">
+                <h3>📜 Journal d'activités (Audit Log)</h3>
+                <p style="font-size: 0.85rem; margin-bottom: 10px; opacity: 0.8;">Historique des actions de modération et des événements administratifs :</p>
+                <div id="audit-log-container" style="background: var(--bg-color); padding: 10px; border-radius: 8px; font-size: 0.85rem; max-height: 200px; overflow-y: auto;">
+                    <!-- Rempli dynamiquement -->
+                </div>
             </div>
         </div>
 
@@ -877,13 +992,130 @@
             return acc ? JSON.parse(acc) : null;
         }
 
-        function isUserAdmin(name, secretProvided = "") {
+        function isUserAdmin(name) {
             if (!name) return false;
-            if (name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() && secretProvided === ADMIN_SECRET) {
+            if (name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) {
                 return true;
             }
             const customAdmins = loadData('custom_admins', []);
             return customAdmins.map(a => a.toLowerCase()).includes(name.trim().toLowerCase());
+        }
+
+        function logAudit(action) {
+            let logs = loadData('audit_logs', []);
+            const timeStr = new Date().toLocaleString();
+            logs.unshift(`[${timeStr}] ${action}`);
+            if (logs.length > 50) logs.pop();
+            saveData('audit_logs', logs);
+            renderAuditLogs();
+        }
+
+        function renderAuditLogs() {
+            const container = document.getElementById('audit-log-container');
+            if (!container) return;
+            const logs = loadData('audit_logs', []);
+            if (logs.length === 0) {
+                container.innerHTML = `<span style="font-style: italic;">Aucune action enregistrée.</span>`;
+                return;
+            }
+            container.innerHTML = logs.map(l => `<div>• ${escapeHTML(l)}</div>`).join('');
+        }
+
+        // Gestion des notifications push / Web
+        function isPushEnabled() {
+            return localStorage.getItem('pd_push_enabled') === 'true';
+        }
+
+        function togglePushNotifications() {
+            const current = isPushEnabled();
+            if (!current) {
+                if ("Notification" in window) {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === "granted") {
+                            localStorage.setItem('pd_push_enabled', 'true');
+                            alert("Notifications push activées avec succès !");
+                            updatePushBtnUI();
+                        } else {
+                            alert("Permission de notification refusée par le navigateur.");
+                        }
+                    });
+                } else {
+                    alert("Votre navigateur ne supporte pas les notifications.");
+                }
+            } else {
+                localStorage.setItem('pd_push_enabled', 'false');
+                alert("Notifications push désactivées.");
+                updatePushBtnUI();
+            }
+        }
+
+        function updatePushBtnUI() {
+            const btn = document.getElementById('push-toggle-btn');
+            if (!btn) return;
+            const enabled = isPushEnabled();
+            btn.innerText = enabled ? "Désactiver les notifications push" : "Activer les notifications push";
+            btn.style.backgroundColor = enabled ? "#d9534f" : "var(--primary-blue)";
+        }
+
+        function triggerPushNotification(title, body) {
+            if (!isPushEnabled()) return;
+            if ("Notification" in window && Notification.permission === "granted") {
+                try {
+                    new Notification(title, { body, icon: "téléchargement.jpg" });
+                } catch (e) {
+                    console.log("Notification non envoyée", e);
+                }
+            }
+        }
+
+        // Analyse du texte pour formater les mentions (@Nom ou @Admin)
+        function formatMentions(text) {
+            if (!text) return "";
+            // Échapper d'abord le HTML
+            let safe = escapeHTML(text);
+            // Remplacer les mentions par un span stylisé
+            return safe.replace(/@([a-zA-ZÀ-ÿ0-9_\s]+)(?=\b|$)/g, '<span class="mention-tag">@$1</span>');
+        }
+
+        // Vérifie si le texte mentionne un admin connecté
+        function checkForMentions(text, author) {
+            const acc = getAccount();
+            if (!acc || !acc.isAdmin) return;
+            
+            const lowerText = text.toLowerCase();
+            const myName = acc.name.toLowerCase();
+            if (lowerText.includes(`@${myName}`) || lowerText.includes('@admin')) {
+                triggerPushNotification("Nouvelle mention ✝", `${author} vous a mentionné dans une publication.`);
+            }
+        }
+
+        // Rétrocompatibilité : analyse et enregistre tous les auteurs existants
+        function syncAllMembersFromActivity() {
+            let members = loadData('members_directory', []);
+            const existingNames = new Set(members.map(m => m.name.toLowerCase()));
+
+            const addNameIfNeeded = (name) => {
+                if (!name || name === "Anonyme") return;
+                const trimmed = name.trim();
+                if (!existingNames.has(trimmed.toLowerCase())) {
+                    existingNames.add(trimmed.toLowerCase());
+                    members.push({ name: trimmed, isAdmin: isUserAdmin(trimmed), joined: "Antérieur" });
+                }
+            };
+
+            const questions = loadData('questions', []);
+            questions.forEach(q => {
+                addNameIfNeeded(q.author);
+                if (q.comments) q.comments.forEach(c => addNameIfNeeded(c.author));
+            });
+
+            const temoignages = loadData('temoignages', []);
+            temoignages.forEach(t => addNameIfNeeded(t.author));
+
+            const intentions = loadData('intentions', []);
+            intentions.forEach(i => addNameIfNeeded(i.author));
+
+            saveData('members_directory', members);
         }
 
         function switchTab(tabId) {
@@ -900,6 +1132,8 @@
         }
 
         function initApp() {
+            syncAllMembersFromActivity();
+
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const tab = btn.getAttribute('data-tab');
@@ -927,6 +1161,9 @@
             renderIntentions();
             renderTemoignages();
             updateStats();
+            updatePushBtnUI();
+            renderAdminReports();
+            renderAuditLogs();
         }
 
         function updateCountdowns() {
@@ -1024,14 +1261,14 @@
 
             if (questions.length > 0) {
                 const lastQ = questions[questions.length - 1];
-                document.getElementById('home-last-question').innerHTML = `<strong>${escapeHTML(lastQ.author)}</strong> : ${escapeHTML(lastQ.text)}`;
+                document.getElementById('home-last-question').innerHTML = `<strong class="clickable-user" onclick="openProfileModal('${escapeHTML(lastQ.author)}')">${escapeHTML(lastQ.author)}</strong> : ${escapeHTML(lastQ.text)}`;
             } else {
                 document.getElementById('home-last-question').innerHTML = `Aucune question pour le moment.`;
             }
 
             if (intentions.length > 0) {
                 const lastI = intentions[intentions.length - 1];
-                document.getElementById('home-last-intention').innerHTML = `<strong>${escapeHTML(lastI.author)}</strong> : ${escapeHTML(lastI.text)}`;
+                document.getElementById('home-last-intention').innerHTML = `<strong class="clickable-user" onclick="openProfileModal('${escapeHTML(lastI.author)}')">${escapeHTML(lastI.author)}</strong> : ${escapeHTML(lastI.text)}`;
             } else {
                 document.getElementById('home-last-intention').innerHTML = `Aucune intention pour le moment.`;
             }
@@ -1043,10 +1280,10 @@
             }
         }
 
-        function registerMemberInDirectory(name, isAdmin) {
+        function registerMemberInDirectory(name) {
             let members = loadData('members_directory', []);
             if (!members.some(m => m.name.toLowerCase() === name.toLowerCase())) {
-                members.push({ name, isAdmin, joined: new Date().toLocaleDateString() });
+                members.push({ name, joined: new Date().toLocaleDateString() });
                 saveData('members_directory', members);
             }
         }
@@ -1063,7 +1300,17 @@
             }
 
             const displayName = pseudo || `${prenom} ${nom}`.trim();
-            const isAdmin = isUserAdmin(displayName, adminCode);
+            
+            if (adminCode === ADMIN_SECRET) {
+                let customAdmins = loadData('custom_admins', []);
+                if (!customAdmins.map(a => a.toLowerCase()).includes(displayName.toLowerCase())) {
+                    customAdmins.push(displayName);
+                    saveData('custom_admins', customAdmins);
+                    logAudit(`Promotion admin initiale via code secret pour ${displayName}`);
+                }
+            }
+
+            const isAdmin = isUserAdmin(displayName);
 
             const fileInput = document.getElementById('reg-photo');
             if (fileInput.files && fileInput.files[0]) {
@@ -1090,7 +1337,7 @@
         }
 
         function saveAccountAndReload(name, photo, isAdmin) {
-            registerMemberInDirectory(name, isAdmin);
+            registerMemberInDirectory(name);
             localStorage.setItem('pd_account', JSON.stringify({ name, photo, isAdmin }));
             updateAccountUI();
             renderQuestions();
@@ -1102,7 +1349,6 @@
         function logout() {
             localStorage.removeItem('pd_account');
             updateAccountUI();
-            // Si on était dans l'onglet admin, on retourne à l'accueil
             if (document.getElementById('tab-admin-panel').classList.contains('active')) {
                 switchTab('accueil');
             }
@@ -1115,6 +1361,11 @@
         function updateAccountUI() {
             const acc = getAccount();
             const adminBtn = document.getElementById('nav-btn-admin');
+
+            if (acc) {
+                acc.isAdmin = isUserAdmin(acc.name);
+                localStorage.setItem('pd_account', JSON.stringify(acc));
+            }
 
             if (acc && acc.isAdmin) {
                 adminBtn.style.display = 'flex';
@@ -1140,6 +1391,7 @@
                 document.getElementById('auth-warning-temoignage').style.display = 'none';
 
                 renderAdminMembersList();
+                renderAdminReports();
             } else {
                 document.getElementById('auth-logged-out').style.display = 'block';
                 document.getElementById('auth-logged-in').style.display = 'none';
@@ -1153,7 +1405,160 @@
             }
         }
 
+        // --- GESTION DES SIGNALEMENTS ---
+        function reportContent(type, id, previewText) {
+            let reports = loadData('reports', []);
+            const reportId = Date.now();
+            reports.push({
+                id: reportId,
+                type,
+                targetId: id,
+                preview: previewText,
+                date: new Date().toLocaleString()
+            });
+            saveData('reports', reports);
+            triggerPushNotification("Nouveau signalement 🚩", `Un contenu a été signalé : "${previewText.substring(0, 30)}..."`);
+            alert("Contenu signalé aux administrateurs. Merci pour votre vigilance.");
+            renderAdminReports();
+        }
+
+        function renderAdminReports() {
+            const reports = loadData('reports', []);
+            const container = document.getElementById('admin-reports-list');
+            const countBadge = document.getElementById('report-count');
+            if (!container || !countBadge) return;
+
+            countBadge.innerText = reports.length;
+
+            if (reports.length === 0) {
+                container.innerHTML = `<p style="font-style: italic; font-size: 0.9rem;">Aucun signalement en attente.</p>`;
+                return;
+            }
+
+            container.innerHTML = reports.map(r => `
+                <div style="background: var(--bg-color); border-left: 4px solid #d9534f; padding: 10px; margin-bottom: 8px; border-radius: 4px; font-size: 0.9rem;">
+                    <p><strong>Type :</strong> ${r.type} | <strong>Date :</strong> ${r.date}</p>
+                    <p style="margin: 4px 0;">« ${escapeHTML(r.preview)} »</p>
+                    <button class="btn-delete" onclick="dismissReport(${r.id})" style="float:none;">Ignorer / Supprimer le signalement</button>
+                </div>
+            `).join('');
+        }
+
+        function dismissReport(reportId) {
+            let reports = loadData('reports', []);
+            reports = reports.filter(r => r.id !== reportId);
+            saveData('reports', reports);
+            renderAdminReports();
+        }
+
+        function clearAllReports() {
+            if (!confirm("Voulez-vous effacer tous les signalements ?")) return;
+            saveData('reports', []);
+            renderAdminReports();
+        }
+
+        // --- GESTION MODALE PROFIL & MODÉRATION ---
+        function openProfileModal(memberName) {
+            syncAllMembersFromActivity();
+            const modal = document.getElementById('profile-modal');
+            const title = document.getElementById('modal-profile-title');
+            const body = document.getElementById('modal-profile-body');
+
+            const isSupreme = (memberName.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase());
+            const isAdmin = isUserAdmin(memberName);
+            const questions = loadData('questions', []);
+            const temoignages = loadData('temoignages', []);
+
+            const userQuestions = questions.filter(q => q.author.toLowerCase() === memberName.toLowerCase()).length;
+            const userTemoignages = temoignages.filter(t => t.author.toLowerCase() === memberName.toLowerCase()).length;
+
+            title.innerText = `Profil de ${memberName}`;
+            
+            let acc = getAccount();
+            let canManage = acc && acc.isAdmin;
+
+            let managementHtml = '';
+            if (canManage && memberName !== "Anonyme") {
+                managementHtml = `<div style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                    <p style="font-size: 0.85rem; font-weight: bold; margin-bottom: 8px; color: var(--primary-blue);">Actions de modération :</p>`;
+                
+                if (!isSupreme) {
+                    if (isAdmin) {
+                        managementHtml += `<button class="btn-warning" onclick="demoteUser('${memberName.replace(/'/g, "\\'")}')">Rétrograder</button> `;
+                    } else {
+                        managementHtml += `<button class="btn-action" onclick="promoteUser('${memberName.replace(/'/g, "\\'")}')">Promouvoir Admin</button> `;
+                    }
+                    managementHtml += `<button class="btn-delete" style="float:none;" onclick="deleteMemberFully('${memberName.replace(/'/g, "\\'")}')">Bannir</button>`;
+                } else {
+                    managementHtml += `<p style="font-style: italic; font-size: 0.8rem;">Propriétaire suprême (protégé).</p>`;
+                }
+                managementHtml += `</div>`;
+            }
+
+            body.innerHTML = `
+                <p><strong>Statut :</strong> ${isAdmin ? '👑 Administrateur' : 'Membre'}</p>
+                <p><strong>Questions publiées :</strong> ${userQuestions}</p>
+                <p><strong>Témoignages partagés :</strong> ${userTemoignages}</p>
+                ${managementHtml}
+            `;
+
+            modal.style.display = 'flex';
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profile-modal').style.display = 'none';
+        }
+
+        function promoteUser(name) {
+            let customAdmins = loadData('custom_admins', []);
+            if (!customAdmins.map(a => a.toLowerCase()).includes(name.toLowerCase())) {
+                customAdmins.push(name);
+                saveData('custom_admins', customAdmins);
+                logAudit(`Promotion admin de ${name}`);
+                alert(`Le membre "${name}" a été promu administrateur avec succès !`);
+                closeProfileModal();
+                renderAdminMembersList();
+                updateAccountUI();
+                renderQuestions();
+                renderTemoignages();
+            }
+        }
+
+        function demoteUser(name) {
+            if (name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) {
+                alert("Impossible de rétrograder le propriétaire suprême.");
+                return;
+            }
+            let customAdmins = loadData('custom_admins', []);
+            customAdmins = customAdmins.filter(a => a.toLowerCase() !== name.toLowerCase());
+            saveData('custom_admins', customAdmins);
+            logAudit(`Rétrogradation de ${name}`);
+            alert(`Le membre "${name}" a été rétrogradé au rang de membre simple.`);
+            closeProfileModal();
+            renderAdminMembersList();
+            updateAccountUI();
+            renderQuestions();
+            renderTemoignages();
+        }
+
+        function deleteMemberFully(name) {
+            if (!confirm(`Voulez-vous vraiment supprimer et bannir "${name}" de l'annuaire ?`)) return;
+            let members = loadData('members_directory', []);
+            members = members.filter(m => m.name.toLowerCase() !== name.toLowerCase());
+            saveData('members_directory', members);
+
+            let customAdmins = loadData('custom_admins', []);
+            customAdmins = customAdmins.filter(a => a.toLowerCase() !== name.toLowerCase());
+            saveData('custom_admins', customAdmins);
+
+            logAudit(`Bannissement de ${name}`);
+            alert(`Le membre "${name}" a été supprimé.`);
+            closeProfileModal();
+            renderAdminMembersList();
+        }
+
         function renderAdminMembersList() {
+            syncAllMembersFromActivity();
             const members = loadData('members_directory', []);
             const container = document.getElementById('admin-members-list');
             if (!container) return;
@@ -1169,24 +1574,28 @@
                         <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
                             <th style="padding: 8px;">Membre</th>
                             <th style="padding: 8px;">Statut</th>
-                            <th style="padding: 8px; text-align: right;">Action</th>
+                            <th style="padding: 8px; text-align: right;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
 
-            members.forEach((m, index) => {
+            members.forEach((m) => {
                 const isSupreme = (m.name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase());
-                const customAdmins = loadData('custom_admins', []);
-                const isCustomAdmin = customAdmins.map(a => a.toLowerCase()).includes(m.name.trim().toLowerCase());
-                const roleBadge = (isSupreme || isCustomAdmin) ? '👑 Administrateur' : 'Membre';
+                const isAdmin = isUserAdmin(m.name);
+                const roleBadge = isAdmin ? '👑 Administrateur' : 'Membre';
 
                 html += `
                     <tr style="border-bottom: 1px solid var(--border-color);">
-                        <td style="padding: 10px; font-weight: bold;">${escapeHTML(m.name)}</td>
+                        <td style="padding: 10px;">
+                            <span class="clickable-user" onclick="openProfileModal('${escapeHTML(m.name).replace(/'/g, "\\'")}')">${escapeHTML(m.name)}</span>
+                        </td>
                         <td style="padding: 10px;">${roleBadge}</td>
                         <td style="padding: 10px; text-align: right;">
-                            ${!isSupreme ? `<button class="btn-delete" onclick="deleteMember('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Supprimer</button>` : '<span style="font-size: 0.75rem; font-style: italic; opacity: 0.7;">Protégé</span>'}
+                            ${!isSupreme ? `
+                                ${isAdmin ? `<button class="btn-warning" onclick="demoteUser('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Rétrograder</button>` : `<button class="btn-action" onclick="promoteUser('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Promouvoir</button>`}
+                                <button class="btn-delete" onclick="deleteMemberFully('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Supprimer</button>
+                            ` : '<span style="font-size: 0.75rem; font-style: italic; opacity: 0.7;">Protégé</span>'}
                         </td>
                     </tr>
                 `;
@@ -1199,36 +1608,8 @@
         function promoteMemberFromPanel() {
             const target = document.getElementById('admin-target-input').value.trim();
             if (!target) return;
-            let customAdmins = loadData('custom_admins', []);
-            if (!customAdmins.map(a => a.toLowerCase()).includes(target.toLowerCase())) {
-                customAdmins.push(target);
-                saveData('custom_admins', customAdmins);
-
-                // Mettre à jour l'annuaire si présent
-                let members = loadData('members_directory', []);
-                let member = members.find(m => m.name.toLowerCase() === target.toLowerCase());
-                if (member) {
-                    member.isAdmin = true;
-                    saveData('members_directory', members);
-                }
-
-                alert(`Le membre "${target}" a été promu administrateur avec succès !`);
-                document.getElementById('admin-target-input').value = '';
-                renderAdminMembersList();
-                updateAccountUI();
-                renderQuestions();
-                renderTemoignages();
-            } else {
-                alert("Ce membre est déjà administrateur.");
-            }
-        }
-
-        function deleteMember(name) {
-            if (!confirm(`Voulez-vous vraiment supprimer le membre "${name}" de l'annuaire ?`)) return;
-            let members = loadData('members_directory', []);
-            members = members.filter(m => m.name.toLowerCase() !== name.toLowerCase());
-            saveData('members_directory', members);
-            renderAdminMembersList();
+            promoteUser(target);
+            document.getElementById('admin-target-input').value = '';
         }
 
         function renderQuestions() {
@@ -1237,13 +1618,14 @@
             const acc = getAccount();
 
             feed.innerHTML = questions.slice().reverse().map(q => {
-                const authorIsAdmin = (q.author.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() || loadData('custom_admins', []).map(a => a.toLowerCase()).includes(q.author.trim().toLowerCase()));
+                const authorIsAdmin = isUserAdmin(q.author);
 
                 let commentsHtml = q.comments ? q.comments.map((c, cIdx) => {
-                    const commentAuthorIsAdmin = (c.author.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() || loadData('custom_admins', []).map(a => a.toLowerCase()).includes(c.author.trim().toLowerCase()));
+                    const commentAuthorIsAdmin = isUserAdmin(c.author);
                     return `
                         <div class="comment-box">
-                            <strong>${escapeHTML(c.author)}</strong> ${commentAuthorIsAdmin ? '<span class="badge-admin">admin</span>' : ''} : ${escapeHTML(c.text)}
+                            <strong class="clickable-user" onclick="openProfileModal('${escapeHTML(c.author).replace(/'/g, "\\'")}')">${escapeHTML(c.author)}</strong> ${commentAuthorIsAdmin ? '<span class="badge-admin">admin</span>' : ''} : ${formatMentions(c.text)}
+                            <button class="btn-report" onclick="reportContent('Commentaire', ${q.id}, '${escapeHTML(c.text).replace(/'/g, "\\'")}')">🚩 Signaler</button>
                             ${(acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteComment(${q.id}, ${cIdx})">Supprimer</button>` : ''}
                         </div>
                     `;
@@ -1251,7 +1633,7 @@
 
                 let replySection = acc ? `
                     <div style="margin-top: 12px; display: flex; gap: 8px;">
-                        <input type="text" id="reply-input-${q.id}" placeholder="Répondre..." style="margin-bottom:0; flex:1;">
+                        <input type="text" id="reply-input-${q.id}" placeholder="Répondre (@nom)..." style="margin-bottom:0; flex:1;">
                         <button class="btn" onclick="addComment(${q.id})">Envoyer</button>
                     </div>
                 ` : '';
@@ -1263,11 +1645,14 @@
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <div class="user-avatar-small">${q.author.charAt(0).toUpperCase()}</div>
-                                <strong>${escapeHTML(q.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''}
+                                <strong class="clickable-user" onclick="openProfileModal('${escapeHTML(q.author).replace(/'/g, "\\'")}')">${escapeHTML(q.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''}
                             </div>
-                            ${deleteQuestionBtn}
+                            <div>
+                                <button class="btn-report" onclick="reportContent('Question', ${q.id}, '${escapeHTML(q.text).replace(/'/g, "\\'")}')">🚩 Signaler</button>
+                                ${deleteQuestionBtn}
+                            </div>
                         </div>
-                        <p style="margin-bottom: 10px;">${escapeHTML(q.text)}</p>
+                        <p style="margin-bottom: 10px;">${formatMentions(q.text)}</p>
                         <div style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 10px;">${q.comments ? q.comments.length : 0} réponse(s)</div>
                         <div style="background: var(--bg-color); padding: 10px; border-radius: 8px;">
                             ${commentsHtml}
@@ -1292,6 +1677,8 @@
             });
             saveData('questions', questions);
             document.getElementById('new-question-text').value = '';
+            syncAllMembersFromActivity();
+            checkForMentions(text, acc.name);
             renderQuestions();
             updateStats();
         }
@@ -1312,6 +1699,8 @@
                     text 
                 });
                 saveData('questions', questions);
+                syncAllMembersFromActivity();
+                checkForMentions(text, acc.name);
                 renderQuestions();
             }
         }
@@ -1321,6 +1710,7 @@
             let questions = loadData('questions', []);
             questions = questions.filter(q => q.id !== qId);
             saveData('questions', questions);
+            logAudit(`Suppression de la question ID ${qId}`);
             renderQuestions();
             updateStats();
         }
@@ -1332,6 +1722,7 @@
             if (q && q.comments) {
                 q.comments.splice(cIdx, 1);
                 saveData('questions', questions);
+                logAudit(`Suppression d'un commentaire sur la question ID ${qId}`);
                 renderQuestions();
             }
         }
@@ -1342,11 +1733,15 @@
 
             document.getElementById('intentions-feed').innerHTML = intentions.slice().reverse().map(i => {
                 let deleteIntentionBtn = (acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteIntention(${i.id})">Supprimer</button>` : '';
+                const authorDisplay = i.author === "Anonyme" ? "Anonyme" : `<span class="clickable-user" onclick="openProfileModal('${escapeHTML(i.author).replace(/'/g, "\\'")}')">${escapeHTML(i.author)}</span>`;
                 return `
                     <div class="card">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                            <p style="margin-bottom: 0; flex: 1;"><strong>${escapeHTML(i.author)}</strong> : ${escapeHTML(i.text)}</p>
-                            ${deleteIntentionBtn}
+                            <p style="margin-bottom: 0; flex: 1;"><strong>${authorDisplay}</strong> : ${escapeHTML(i.text)}</p>
+                            <div>
+                                <button class="btn-report" onclick="reportContent('Intention', ${i.id}, '${escapeHTML(i.text).replace(/'/g, "\\'")}')">🚩 Signaler</button>
+                                ${deleteIntentionBtn}
+                            </div>
                         </div>
                         <button class="btn" onclick="incrementPrayer(${i.id})" style="padding: 6px 12px; font-size: 0.85rem; margin-top: 8px;">🙏 Je prie (${i.count})</button>
                     </div>
@@ -1365,6 +1760,7 @@
             saveData('intentions', intentions);
             document.getElementById('new-intention-text').value = '';
             document.getElementById('anon-intention').checked = false;
+            syncAllMembersFromActivity();
             renderIntentions();
             updateStats();
         }
@@ -1395,7 +1791,7 @@
             const acc = getAccount();
 
             feed.innerHTML = temoignages.slice().reverse().map(t => {
-                const authorIsAdmin = (t.author.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() || loadData('custom_admins', []).map(a => a.toLowerCase()).includes(t.author.trim().toLowerCase()));
+                const authorIsAdmin = isUserAdmin(t.author);
                 let deleteBtn = (acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteTemoignage(${t.id})">Supprimer</button>` : '';
 
                 return `
@@ -1403,11 +1799,14 @@
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <div class="user-avatar-small">${t.author.charAt(0).toUpperCase()}</div>
-                                <strong>${escapeHTML(t.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''}
+                                <strong class="clickable-user" onclick="openProfileModal('${escapeHTML(t.author).replace(/'/g, "\\'")}')">${escapeHTML(t.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''}
                             </div>
-                            ${deleteBtn}
+                            <div>
+                                <button class="btn-report" onclick="reportContent('Témoignage', ${t.id}, '${escapeHTML(t.text).replace(/'/g, "\\'")}')">🚩 Signaler</button>
+                                ${deleteBtn}
+                            </div>
                         </div>
-                        <p>${escapeHTML(t.text)}</p>
+                        <p>${formatMentions(t.text)}</p>
                     </div>
                 `;
             }).join('');
@@ -1422,6 +1821,8 @@
             temoignages.push({ id: Date.now(), author: acc.name, text });
             saveData('temoignages', temoignages);
             document.getElementById('new-temoignage-text').value = '';
+            syncAllMembersFromActivity();
+            checkForMentions(text, acc.name);
             renderTemoignages();
         }
 
@@ -1430,6 +1831,7 @@
             let temoignages = loadData('temoignages', []);
             temoignages = temoignages.filter(t => t.id !== tId);
             saveData('temoignages', temoignages);
+            logAudit(`Suppression du témoignage ID ${tId}`);
             renderTemoignages();
         }
 
