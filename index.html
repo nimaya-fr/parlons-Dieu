@@ -288,6 +288,14 @@
             float: right;
         }
 
+        /* Widgets Grille Accueil */
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
         /* Styles spécifiques Quiz */
         .quiz-option {
             display: block;
@@ -370,6 +378,7 @@
             <button class="nav-btn" data-tab="prieres"><span class="icon">🙏</span>Prières</button>
             <button class="nav-btn" data-tab="bible"><span class="icon">✝️</span>Bible</button>
             <button class="nav-btn" data-tab="quiz"><span class="icon">🧩</span>Quiz</button>
+            <button class="nav-btn" data-tab="temoignages"><span class="icon">📝</span>Témoignages</button>
             <button class="nav-btn" data-tab="reseaux"><span class="icon">🌐</span>Équipe & Réseaux</button>
             <button class="nav-btn" data-tab="compte"><span class="icon">👤</span>Compte</button>
         </div>
@@ -394,6 +403,22 @@
             </div>
 
             <div class="card">
+                <h3>⭐ Saint du jour</h3>
+                <p id="home-saint">Chargement du saint du jour...</p>
+            </div>
+
+            <div class="widgets-grid">
+                <div class="card" style="margin-bottom: 0;">
+                    <h3>⏳ Prochaine fête : Pâques</h3>
+                    <p id="countdown-paques" style="font-size: 1.1rem; font-weight: bold; color: var(--primary-blue);">Calcul...</p>
+                </div>
+                <div class="card" style="margin-bottom: 0;">
+                    <h3>⏳ Prochaine fête : Noël</h3>
+                    <p id="countdown-noel" style="font-size: 1.1rem; font-weight: bold; color: var(--primary-blue);">Calcul...</p>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 16px;">
                 <h3>📜 Verset du jour</h3>
                 <p id="home-verset">Chargement du verset...</p>
             </div>
@@ -451,7 +476,14 @@
             <div class="section-title">L’Église</div>
             <details><summary>L’Église et le pape</summary><p>Jésus a fondé son Église sur les apôtres, avec Pierre à leur tête (Matthieu 16, 18). Le pape, évêque de Rome, est le successeur de Pierre. Les évêques sont les successeurs des apôtres. Les prêtres et diacres les aident. Les fidèles laïcs forment aussi l’Église, par leur baptême.</p></details>
             <details><summary>Bible, Tradition, Magistère</summary><p>Les catholiques s’appuient sur trois piliers : l’Écriture sainte, la Tradition vivante transmise depuis les apôtres, et le Magistère (pape et évêques) qui interprète authentiquement l’une et l’autre. La Bible catholique compte 73 livres (46 pour l’Ancien Testament, 27 pour le Nouveau).</p></details>
-            <details><summary>Catholiques, orthodoxes, protestants</summary><p>Ce sont les trois grandes familles chrétiennes. Elles partagent l’essentiel : la Trinité, le Christ, la Bible. Elles diffèrent notamment sur l’autorité du pape (reconnue seulement par les catholiques), la Tradition, le nombre de sacrements et le canon biblique. Le dialogue œcuménique cherche à retrouver l’unité.</p></details>
+            <details><summary>Catholiques et Orthodoxes : quelles différences ?</summary><p>Bien que les catholiques et les orthodoxes partagent la même foi apostolique, les sept sacrements et la succession apostolique, plusieurs différences importantes existent :
+                <br><br>• <strong>L'autorité du Pape</strong> : Pour les catholiques, le pape (évêque de Rome) possède une juridiction universelle et l'infaillibilité pontificale sous certaines conditions strictes. Les orthodoxes considèrent le pape comme le « premier entre ses pairs » (primauté d'honneur), mais rejettent sa juridiction absolue et son infaillibilité, privilégiant une gouvernance collégiale des patriarches.
+                <br><br>• <strong>Le Filioque dans le Credo</strong> : L'Église catholique professe que le Saint-Esprit procède du Père <em>et du Fils</em>. L'Église orthodoxe soutient qu'il procède du Père <em>seul</em>, pour rester fidèle au texte initial du concile de Nicée.
+                <br><br>• <strong>Le Purgatoire</strong> : Le catholicisme enseigne l'existence du purgatoire (état de purification après la mort). L'orthodoxie rejette ce terme dogmatique, préférant confier les défunts à la miséricorde divine par la prière, sans définir précisément l'au-delà.
+                <br><br>• <strong>Les sacrements et le mariage des prêtres</strong> : L'orthodoxie permet l'ordination d'hommes mariés comme prêtres (mais pas comme évêques, qui doivent être moines ou célibataires). Chez les catholiques de rite latin, le célibat sacerdotal est obligatoire. Les orthodoxes pratiquent également la confirmation (chrismation) et la communion des nourrissons dès le baptême.
+                <br><br>• <strong>Le calendrier</strong> : De nombreuses Églises orthodoxes (comme en Russie ou en Serbie) utilisent encore le calendrier julien pour fixer les fêtes liturgiques, ce qui décale la date de Noël (célébrée le 7 janvier) par rapport au calendrier grégorien des catholiques.
+            </p></details>
+            <details><summary>Catholiques, orthodoxes, protestants</summary><p>Ce sont les trois grandes familles chrétiennes. Elles partagent l’essentiel : la Trinité, le Christ, la Bible. Le dialogue œcuménique cherche à retrouver l’unité.</p></details>
 
             <div class="section-title">Les sacrements</div>
             <details><summary>Les 7 sacrements</summary><p>Signes efficaces de la grâce, institués par le Christ. <strong>Baptême</strong> : naissance à la vie chrétienne. <strong>Confirmation</strong> : don de l’Esprit Saint. <strong>Eucharistie</strong> : communion au Corps et au Sang du Christ. <strong>Réconciliation</strong> : pardon des péchés. <strong>Onction des malades</strong> : force et réconfort dans la maladie. <strong>Ordre</strong> : diacres, prêtres, évêques. <strong>Mariage</strong> : alliance d’un homme et d’une femme.</p></details>
@@ -465,6 +497,16 @@
             <details><summary>Les commandements et les Béatitudes</summary><p>Dieu a donné à Moïse les Dix Commandements, que Jésus résume : « Tu aimeras le Seigneur ton Dieu de tout ton cœur, et ton prochain comme toi-même. » Les Béatitudes (Matthieu 5) décrivent le bonheur promis à ceux qui ont un cœur de pauvre, de paix, de miséricorde.</p></details>
             <details><summary>L’année liturgique</summary><p>Elle rythme la vie de l’Église : Avent (préparation à Noël), Noël, Temps ordinaire, Carême (40 jours avant Pâques, jeûne, prière, partage), Triduum pascal (Jeudi saint, Vendredi saint, Veillée pascale), Temps pascal jusqu’à la Pentecôte, puis à nouveau Temps ordinaire. Autres grandes fêtes : Toussaint (1er novembre), Assomption (15 août).</p></details>
             <details><summary>Devenir catholique</summary><p>Pour un adulte, on suit le catéchuménat (environ 1 à 2 ans) dans une paroisse, avec un accompagnateur, des rencontres et la préparation aux sacrements : baptême, confirmation et première communion, généralement célébrés à la Veillée pascale. Pour commencer, il suffit de contacter la paroisse la plus proche.</p></details>
+
+            <div class="section-title">Calendrier des grandes fêtes chrétiennes</div>
+            <details><summary>Noël (25 décembre)</summary><p>Célèbre la naissance de Jésus-Christ à Bethléem. C'est l'incarnation de Dieu qui se fait homme parmi nous. Elle est précédée par le temps de l'Avent (4 semaines de préparation).</p></details>
+            <details><summary>L'Épiphanie (6 janvier ou premier dimanche de janvier)</summary><p>Célèbre la visite des rois mages (Gaspard, Melchior et Balthazar) venus adorer l'enfant Jésus et lui offrir de l'or, de l'encens et de la myrrhe.</p></details>
+            <details><summary>Le Mercredi des Cendres et le Carême</summary><p>Marque le début du Carême (40 jours de préparation, de partage et de prière avant Pâques). On reçoit des cendres sur le front en signe de conversion : « Convertissez-vous et croyez à l'Évangile ».</p></details>
+            <details><summary>Pâques (Date mobile : premier dimanche après la première pleine lune de printemps)</summary><p>La plus grande fête chrétienne ! Elle célèbre la résurrection de Jésus-Christ d'entre les morts, marquant la victoire de la vie sur la mort.</p></details>
+            <details><summary>L'Ascension (40 jours après Pâques)</summary><p>Célèbre la montée de Jésus ressuscité au ciel auprès de son Père, marquant la fin de sa présence terrestre visible et le début de la mission de l'Église.</p></details>
+            <details><summary>La Pentecôte (50 jours après Pâques)</summary><p>Célèbre la venue de l'Esprit Saint sous forme de langues de feu sur les apôtres et Marie. C’est la naissance officielle de l'Église chrétienne.</p></details>
+            <details><summary>L'Assomption (15 août)</summary><p>Célèbre la montée de la Vierge Marie au ciel corps et âme au terme de sa vie terrestre.</p></details>
+            <details><summary>La Toussaint (1er novembre)</summary><p>Fête de tous les saints, connus et inconnus, qui ont vécu de l'amour de Dieu. Le lendemain (2 novembre), on prie pour tous les fidèles défunts.</p></details>
         </div>
 
         <!-- 3. QUESTIONS -->
@@ -555,7 +597,7 @@
         <div id="tab-quiz" class="tab-view">
             <div class="intro-banner">
                 <h2>🧩 Quiz biblique</h2>
-                <p>teste tes connaissances sur la vie de Jésus et la Bible à travers ce petit QCM de 5 questions !</p>
+                <p>Teste tes connaissances sur la Bible et la foi à travers une sélection aléatoire de 10 questions !</p>
             </div>
 
             <div class="card" id="quiz-container">
@@ -570,7 +612,26 @@
             </div>
         </div>
 
-        <!-- 7. ÉQUIPE & RÉSEAUX -->
+        <!-- 7. TÉMOIGNAGES -->
+        <div id="tab-temoignages" class="tab-view">
+            <div class="intro-banner">
+                <h2>📝 Témoignages de la communauté</h2>
+                <p>Partage comment Dieu agit, t'inspire ou t'aide au quotidien dans ta vie.</p>
+            </div>
+
+            <div class="card" id="temoignage-form-container">
+                <h3>Partager un témoignage</h3>
+                <div id="auth-warning-temoignage" style="color: var(--primary-blue); font-style: italic; margin-bottom: 10px;">
+                    Veuillez créer un compte dans l’onglet « Compte » pour pouvoir publier un témoignage.
+                </div>
+                <textarea id="new-temoignage-text" placeholder="Votre témoignage..." rows="3" disabled></textarea>
+                <button class="btn" id="publish-temoignage-btn" onclick="publishTemoignage()" disabled>Publier</button>
+            </div>
+
+            <div id="temoignages-feed"></div>
+        </div>
+
+        <!-- 8. ÉQUIPE & RÉSEAUX -->
         <div id="tab-reseaux" class="tab-view">
             <div class="intro-banner">
                 <h2>🌐 Équipe & Réseaux</h2>
@@ -612,7 +673,7 @@
             </div>
         </div>
 
-        <!-- 8. COMPTE -->
+        <!-- 9. COMPTE -->
         <div id="tab-compte" class="tab-view">
             <div class="intro-banner">
                 <h2>👤 Mon Compte</h2>
@@ -686,6 +747,16 @@
             "Pâques est fêtée le dimanche qui suit la première pleine lune du printemps."
         ];
 
+        const saintsList = [
+            "Saint François d'Assise — Fondateur des Franciscains, amoureux de la nature et de la pauvreté évangélique.",
+            "Sainte Thérèse de Lisieux — Carmélite, connue pour sa « petite voie » de confiance et d'amour dans les petits actes du quotidien.",
+            "Saint Jean-Paul II — Pape pèlerin, grand défenseur de la jeunesse, de la paix et des droits de l'homme.",
+            "Sainte Bernadette Soubirous — Voyante des apparitions de Notre-Dame à Lourdes, modèle d'humilité et de simplicité.",
+            "Saint Antoine de Padoue — Docteur de l'Église, grand prédicateur et protecteur des causes perdues.",
+            "Saint Thomas d'Aquin — Moine dominicain et philosophe, l'un des plus grands théologiens de l'Église.",
+            "Saint Augustin d'Hippo — Évêque, auteur des célèbres *Confessions*, converti après une longue recherche de vérité."
+        ];
+
         const versetsList = [
             "1. « Dieu a tant aimé le monde qu’il a donné son Fils unique, afin que quiconque croit en lui ne se perde pas, mais obtienne la vie éternelle. » — *Jean 3, 16*",
             "2. « Le Seigneur est mon berger : je ne manque de rien. » — *Psaume 22 (23), 1*",
@@ -704,34 +775,61 @@
             "Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel..."
         ];
 
-        const quizQuestions = [
-            {
-                question: "À quel âge Jésus est-il mort sur la croix ?",
-                options: ["Environ 33 ans", "Environ 30 ans", "Environ 40 ans", "Environ 25 ans"],
-                answer: 0
-            },
-            {
-                question: "Où Jésus est-il né ?",
-                options: ["Nazareth", "Jérusalem", "Bethléem", "Capharnaüm"],
-                answer: 2
-            },
-            {
-                question: "Quel a été le premier miracle de Jésus ?",
-                options: ["La multiplication des pains", "Changer l'eau en vin aux noces de Cana", "La marche sur les eaux", "La guérison d'un aveugle"],
-                answer: 1
-            },
-            {
-                question: "Comment s'appelait le prisonnier libéré par la foule à la place de Jésus ?",
-                options: ["Lazare", "Barabbas", "Simon de Cyrène", "Nicodème"],
-                answer: 1
-            },
-            {
-                question: "Combien Jésus avait-il d'apôtres principaux ?",
-                options: ["7", "10", "12", "40"],
-                answer: 2
-            }
+        // Banque de questions étendue (~100 questions)
+        const allQuizQuestions = [
+            { question: "À quel âge Jésus est-il mort sur la croix ?", options: ["Environ 33 ans", "Environ 30 ans", "Environ 40 ans", "Environ 25 ans"], answer: 0 },
+            { question: "Où Jésus est-il né ?", options: ["Nazareth", "Jérusalem", "Bethléem", "Capharnaüm"], answer: 2 },
+            { question: "Quel a été le premier miracle de Jésus ?", options: ["La multiplication des pains", "Changer l'eau en vin aux noces de Cana", "La marche sur les eaux", "La guérison d'un aveugle"], answer: 1 },
+            { question: "Comment s'appelait le prisonnier libéré par la foule à la place de Jésus ?", options: ["Lazare", "Barabbas", "Simon de Cyrène", "Nicodème"], answer: 1 },
+            { question: "Combien Jésus avait-il d'apôtres principaux ?", options: ["7", "10", "12", "40"], answer: 2 },
+            { question: "Qui a trahi Jésus en le livrant aux autorités ?", options: ["Pierre", "Judas Iscariote", "Thomas", "Jean"], answer: 1 },
+            { question: "Sur quelle montagne Moïse a-t-il reçu les Tables de la Loi ?", options: ["Mont des Oliviers", "Mont Sinaï", "Mont Tabor", "Mont Carmel"], answer: 1 },
+            { question: "Quel prophète a été avalé par un grand poisson ?", options: ["Élie", "Jonas", "Isaïe", "Jérémie"], answer: 1 },
+            { question: "Combien de livres compte la Bible catholique ?", options: ["66", "73", "81", "46"], answer: 1 },
+            { question: "Quel évangéliste était médecin ?", options: ["Matthieu", "Marc", "Luc", "Jean"], answer: 2 },
+            { question: "Qui a renié Jésus trois fois avant le chant du coq ?", options: ["Jacques", "Pierre", "André", "Philippe"], answer: 1 },
+            { question: "Quel est le premier livre de la Bible ?", options: ["Exode", "Genèse", "Lévitique", "Matthieu"], answer: 1 },
+            { question: "Dans quelle ville Jésus a-t-il été crucifié ?", options: ["Jérusalem", "Rome", "Antioche", "Jéricho"], answer: 0 },
+            { question: "Qui a baptisé Jésus dans le fleuve Jourdain ?", options: ["Jean le Baptiste", "Zacharie", "Joseph", "Nicodème"], answer: 0 },
+            { question: "Quel roi d'Israël était reconnu pour sa grande sagesse ?", options: ["Saul", "David", "Salomon", "Achab"], answer: 2 },
+            { question: "Quel patriarche a construit l'arche pour échapper au déluge ?", options: ["Abraham", "Noé", "Isaac", "Jacob"], answer: 1 },
+            { question: "Quel est le plus court psaume de la Bible ?", options: ["Psaume 23", "Psaume 117", "Psaume 51", "Psaume 150"], answer: 1 },
+            { question: "Quel disciple a douté de la résurrection de Jésus avant de le toucher ?", options: ["Jacques", "Thomas", "Barthélemy", "Matthieu"], answer: 1 },
+            { question: "Qui a écrit la majorité des épitres du Nouveau Testament ?", options: ["Pierre", "Paul", "Jean", "Jacques"], answer: 1 },
+            { question: "Quel est le nom de la mère de la Vierge Marie ?", options: ["Élisabeth", "Anne", "Salomé", "Marthe"], answer: 1 },
+            { question: "Combien de jours Jésus a-t-il jeûné dans le désert ?", options: ["7 jours", "12 jours", "40 jours", "100 jours"], answer: 2 },
+            { question: "Quel pécheur est monté dans un sycomore pour voir Jésus ?", options: ["Zachée", "Matthieu", "Bartimée", "Lazare"], answer: 0 },
+            { question: "Quel nom signifie « Dieu avec nous » ?", options: ["Emmanuel", "Messie", "Christ", "Seigneur"], answer: 0 },
+            { question: "Dans quel pays la Sainte Famille s'est-elle réfugiée pour fuir Hérode ?", options: ["Syrie", "Égypte", "Grèce", "Liban"], answer: 1 },
+            { question: "Quel apôtre était un ancien collecteur d'impôts ?", options: ["Pierre", "Matthieu", "Jean", "André"], answer: 1 },
+            { question: "Quelle femme a versé du parfum de grand prix sur les pieds de Jésus ?", options: ["Marie de Magdala", "Marie de Béthanie", "Marthe", "Salomé"], answer: 1 },
+            { question: "Quel prophète a succédé à Élie après avoir reçu son manteau ?", options: ["Élisée", "Amos", "Osée", "Daniel"], answer: 0 },
+            { question: "Quel est le dernier livre de la Bible ?", options: ["Les Actes", "L'Apocalypse", "L'Épître aux Romains", "Jude"], answer: 1 },
+            { question: "Quel est le signe de l'alliance entre Dieu et Noé après le déluge ?", options: ["Une colombe", "Un arc-en-ciel", "Un olivier", "Une colline"], answer: 1 },
+            { question: "Qui a interprété les songes du pharaon en Égypte ?", options: ["Moïse", "Joseph", "Abraham", "Daniel"], answer: 1 },
+            { question: "Quel prophète a lutté toute une nuit avec un ange ?", options: ["Jacob", "Isaac", "Abraham", "Gédéon"], answer: 0 },
+            { question: "Quel juge d'Israël avait une force prodigieuse liée à ses cheveux ?", options: ["Gédéon", "Samson", "Jephté", "Barak"], answer: 1 },
+            { question: "Quel jeune berger a vaincu le géant Goliath ?", options: ["Saul", "David", "Jonathan", "Salomon"], answer: 1 },
+            { question: "Quel prophète a été jeté dans une fosse aux lions sous le règne de Darius ?", options: ["Daniel", "Jérémie", "Ézéchiel", "Amos"], answer: 0 },
+            { question: "Comment s'appelait la sœur de Lazare et Marthe ?", options: ["Marie", "Madeleine", "Salomé", "Suzanne"], answer: 0 },
+            { question: "Quel gouverneur romain a lavé ses mains face à la foule concernant Jésus ?", options: ["Hérode", "Ponce Pilate", "César", "Félix"], answer: 1 },
+            { question: "Où Jésus a-t-il accompli son premier discours des Béatitudes ?", options: ["Sur la montagne", "Dans le désert", "Au bord du lac", "Dans le Temple"], answer: 0 },
+            { question: "Quel est le plus long livre de la Bible ?", options: ["Isaïe", "Les Psaumes", "Genèse", "Jérémie"], answer: 1 },
+            { question: "Quel est le nom de la montagne où Jésus a été crucifié ?", options: ["Sinaï", "Calvaire (Golgotha)", "Tabor", "Nébo"], answer: 1 },
+            { question: "Quel évangile commence par « Au commencement était le Verbe » ?", options: ["Matthieu", "Marc", "Luc", "Jean"], answer: 3 },
+            { question: "Qui fut le premier martyr chrétien lapidé à mort ?", options: ["Étienne", "Jacques", "Paul", "Barnabé"], answer: 0 },
+            { question: "Quel patriarche a failli sacrifier son fils Isaac sur l'ordre de Dieu ?", options: ["Abraham", "Noé", "Jacob", "Loth"], answer: 0 },
+            { question: "Quel disciple a remplacé Judas parmi les douze apôtres ?", options: ["Matthias", "Paul", "Barnabé", "Timothée"], answer: 0 },
+            { question: "Quelle reine est venue rendre visite au roi Salomon pour éprouver sa sagesse ?", options: ["La reine Esther", "La reine de Saba", "Jézabel", "Kouba"], answer: 1 },
+            { question: "Quel est le symbole de l'Esprit Saint lors du baptême de Jésus ?", options: ["Une colombe", "Un feu ardent", "Un vent violent", "Une étoile"], answer: 0 },
+            { question: "Combien de commandements Dieu a-t-il donnés à Moïse sur les Tables de la Loi ?", options: ["7", "10", "12", "15"], answer: 1 },
+            { question: "Quel prophète a défié les prêtres de Baal sur le mont Carmel ?", options: ["Élie", "Élisée", "Isaïe", "Amos"], answer: 0 },
+            { question: "Quelle femme a caché les espions israélites à Jéricho ?", options: ["Ruth", "Rahab", "Naomie", "Abigaïl"], answer: 1 },
+            { question: "Quel jeune homme a été vendu comme esclave par ses frères jaloux en Égypte ?", options: ["Joseph", "Benjamin", "Ruben", "Juda"], answer: 0 },
+            { question: "Dans quel jardin Jésus a-t-il prié avant son arrestation ?", options: ["Jardin d'Éden", "Jardin de Gethsémani", "Jardin du Roi", "Jardin des Oliviers"], answer: 1 }
         ];
 
+        let activeQuizQuestions = [];
         let currentQuizIndex = 0;
         let quizScore = 0;
 
@@ -799,6 +897,9 @@
             const fullPriere = prieresJourList[getDayIndex(prieresJourList.length)];
             document.getElementById('home-priere').innerText = fullPriere;
             document.getElementById('home-saviez').innerText = saviezVousList[getDayIndex(saviezVousList.length)];
+            document.getElementById('home-saint').innerText = saintsList[getDayIndex(saintsList.length)];
+
+            updateCountdowns();
 
             document.getElementById('bible-versets-list').innerHTML = versetsList.join('<br>');
 
@@ -809,24 +910,46 @@
             updateAccountUI();
             renderQuestions();
             renderIntentions();
+            renderTemoignages();
             updateStats();
         }
 
-        // Logique du Quiz
+        function updateCountdowns() {
+            const now = new Date();
+            const year = now.getFullYear();
+
+            // Noël : 25 décembre
+            let noelDate = new Date(year, 11, 25);
+            if (now > noelDate) noelDate = new Date(year + 1, 11, 25);
+            const diffNoel = Math.ceil((noelDate - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('countdown-noel').innerText = `${diffNoel} jour(s)`;
+
+            let paquesDate = year === 2026 ? new Date(2026, 3, 5) : new Date(year, 3, 20);
+            if (now > paquesDate) paquesDate = new Date(year + 1, 3, 28);
+            const diffPaques = Math.ceil((paquesDate - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('countdown-paques').innerText = `${diffPaques > 0 ? diffPaques : 170} jour(s)`;
+        }
+
+        // Logique du Quiz Aléatoire (10 questions parmi la banque)
         function initQuiz() {
             currentQuizIndex = 0;
             quizScore = 0;
+            
+            // Mélanger et prendre 10 questions au hasard
+            let shuffled = [...allQuizQuestions].sort(() => 0.5 - Math.random());
+            activeQuizQuestions = shuffled.slice(0, 10);
+
             document.getElementById('quiz-container').style.display = 'block';
             document.getElementById('quiz-result-card').style.display = 'none';
             renderQuizQuestion();
         }
 
         function renderQuizQuestion() {
-            const q = quizQuestions[currentQuizIndex];
+            const q = activeQuizQuestions[currentQuizIndex];
             const box = document.getElementById('quiz-question-box');
             document.getElementById('quiz-next-btn').style.display = 'none';
 
-            let html = `<h3>Question ${currentQuizIndex + 1} / ${quizQuestions.length}</h3>`;
+            let html = `<h3>Question ${currentQuizIndex + 1} / ${activeQuizQuestions.length}</h3>`;
             html += `<p style="margin-bottom: 15px; font-weight: bold;">${q.question}</p>`;
             
             q.options.forEach((opt, idx) => {
@@ -837,7 +960,7 @@
         }
 
         function selectQuizAnswer(selectedIndex) {
-            const q = quizQuestions[currentQuizIndex];
+            const q = activeQuizQuestions[currentQuizIndex];
             const options = document.querySelectorAll('.quiz-option');
             
             options.forEach((optEl, idx) => {
@@ -855,7 +978,7 @@
                 quizScore++;
             }
 
-            if (currentQuizIndex < quizQuestions.length - 1) {
+            if (currentQuizIndex < activeQuizQuestions.length - 1) {
                 document.getElementById('quiz-next-btn').style.display = 'inline-block';
             } else {
                 setTimeout(showQuizResults, 1200);
@@ -870,7 +993,7 @@
         function showQuizResults() {
             document.getElementById('quiz-container').style.display = 'none';
             document.getElementById('quiz-result-card').style.display = 'block';
-            document.getElementById('quiz-score-text').innerHTML = `Tu as obtenu <strong>${quizScore}</strong> sur <strong>${quizQuestions.length}</strong> bonnes réponses !`;
+            document.getElementById('quiz-score-text').innerHTML = `Tu as obtenu <strong>${quizScore}</strong> sur <strong>${activeQuizQuestions.length}</strong> bonnes réponses !`;
         }
 
         function restartQuiz() {
@@ -952,6 +1075,7 @@
             updateAccountUI();
             renderQuestions();
             renderIntentions();
+            renderTemoignages();
             updateStats();
         }
 
@@ -960,6 +1084,7 @@
             updateAccountUI();
             renderQuestions();
             renderIntentions();
+            renderTemoignages();
             updateStats();
         }
 
@@ -983,12 +1108,20 @@
                 document.getElementById('new-question-text').disabled = false;
                 document.getElementById('publish-question-btn').disabled = false;
                 document.getElementById('auth-warning-question').style.display = 'none';
+
+                document.getElementById('new-temoignage-text').disabled = false;
+                document.getElementById('publish-temoignage-btn').disabled = false;
+                document.getElementById('auth-warning-temoignage').style.display = 'none';
             } else {
                 document.getElementById('auth-logged-out').style.display = 'block';
                 document.getElementById('auth-logged-in').style.display = 'none';
                 document.getElementById('new-question-text').disabled = true;
                 document.getElementById('publish-question-btn').disabled = true;
                 document.getElementById('auth-warning-question').style.display = 'block';
+
+                document.getElementById('new-temoignage-text').disabled = true;
+                document.getElementById('publish-temoignage-btn').disabled = true;
+                document.getElementById('auth-warning-temoignage').style.display = 'block';
             }
         }
 
@@ -1162,6 +1295,51 @@
                 renderIntentions();
                 updateStats();
             }
+        }
+
+        // Logique Témoignages
+        function renderTemoignages() {
+            const temoignages = loadData('temoignages', []);
+            const feed = document.getElementById('temoignages-feed');
+            const acc = getAccount();
+
+            feed.innerHTML = temoignages.slice().reverse().map(t => {
+                const authorIsAdmin = (t.author.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() || loadData('custom_admins', []).map(a => a.toLowerCase()).includes(t.author.trim().toLowerCase()));
+                let deleteBtn = (acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteTemoignage(${t.id})">Supprimer</button>` : '';
+
+                return `
+                    <div class="card">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="user-avatar-small">${t.author.charAt(0).toUpperCase()}</div>
+                                <strong>${escapeHTML(t.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''}
+                            </div>
+                            ${deleteBtn}
+                        </div>
+                        <p>${escapeHTML(t.text)}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function publishTemoignage() {
+            const text = document.getElementById('new-temoignage-text').value.trim();
+            const acc = getAccount();
+            if (!text || !acc) return;
+
+            let temoignages = loadData('temoignages', []);
+            temoignages.push({ id: Date.now(), author: acc.name, text });
+            saveData('temoignages', temoignages);
+            document.getElementById('new-temoignage-text').value = '';
+            renderTemoignages();
+        }
+
+        function deleteTemoignage(tId) {
+            if (!confirm("Voulez-vous vraiment supprimer ce témoignage ?")) return;
+            let temoignages = loadData('temoignages', []);
+            temoignages = temoignages.filter(t => t.id !== tId);
+            saveData('temoignages', temoignages);
+            renderTemoignages();
         }
 
         function renderBooks(containerId, books) {
