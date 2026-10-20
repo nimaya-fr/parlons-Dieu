@@ -288,6 +288,24 @@
             float: right;
         }
 
+        /* Styles spécifiques Quiz */
+        .quiz-option {
+            display: block;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .quiz-option:hover {
+            background: var(--secondary-bg);
+        }
+        .quiz-option input {
+            margin-right: 10px;
+        }
+
         /* Adaptation Mobile */
         @media (max-width: 768px) {
             body {
@@ -351,6 +369,7 @@
             <button class="nav-btn" data-tab="questions"><span class="icon">💬</span>Questions</button>
             <button class="nav-btn" data-tab="prieres"><span class="icon">🙏</span>Prières</button>
             <button class="nav-btn" data-tab="bible"><span class="icon">✝️</span>Bible</button>
+            <button class="nav-btn" data-tab="quiz"><span class="icon">🧩</span>Quiz</button>
             <button class="nav-btn" data-tab="reseaux"><span class="icon">🌐</span>Équipe & Réseaux</button>
             <button class="nav-btn" data-tab="compte"><span class="icon">👤</span>Compte</button>
         </div>
@@ -532,7 +551,26 @@
             </div>
         </div>
 
-        <!-- 6. ÉQUIPE & RÉSEAUX -->
+        <!-- 6. QUIZ -->
+        <div id="tab-quiz" class="tab-view">
+            <div class="intro-banner">
+                <h2>🧩 Quiz biblique</h2>
+                <p>teste tes connaissances sur la vie de Jésus et la Bible à travers ce petit QCM de 5 questions !</p>
+            </div>
+
+            <div class="card" id="quiz-container">
+                <div id="quiz-question-box"></div>
+                <button class="btn" id="quiz-next-btn" onclick="nextQuizQuestion()" style="margin-top: 15px; display: none;">Question suivante</button>
+            </div>
+
+            <div class="card" id="quiz-result-card" style="display: none; text-align: center;">
+                <h3>🎉 Quiz terminé !</h3>
+                <p id="quiz-score-text" style="font-size: 1.2rem; margin: 15px 0;"></p>
+                <button class="btn" onclick="restartQuiz()">Recommencer le quiz</button>
+            </div>
+        </div>
+
+        <!-- 7. ÉQUIPE & RÉSEAUX -->
         <div id="tab-reseaux" class="tab-view">
             <div class="intro-banner">
                 <h2>🌐 Équipe & Réseaux</h2>
@@ -574,7 +612,7 @@
             </div>
         </div>
 
-        <!-- 7. COMPTE -->
+        <!-- 8. COMPTE -->
         <div id="tab-compte" class="tab-view">
             <div class="intro-banner">
                 <h2>👤 Mon Compte</h2>
@@ -586,7 +624,7 @@
                 <input type="text" id="reg-prenom" placeholder="Prénom">
                 <input type="text" id="reg-nom" placeholder="Nom">
                 <input type="text" id="reg-pseudo" placeholder="Pseudo (optionnel)">
-                <input type="password" id="reg-admin-code" placeholder="Code secret administrateur (requis si tu es Aaron Mendy)">
+                <input type="password" id="reg-admin-code" placeholder="Code secret administrateur">
                 <label style="font-size: 0.85rem; display: block; margin-bottom: 4px;">Photo de profil :</label>
                 <input type="file" id="reg-photo" accept="image/*">
                 <button class="btn" onclick="createAccount()">Créer mon compte</button>
@@ -666,6 +704,37 @@
             "Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel..."
         ];
 
+        const quizQuestions = [
+            {
+                question: "À quel âge Jésus est-il mort sur la croix ?",
+                options: ["Environ 33 ans", "Environ 30 ans", "Environ 40 ans", "Environ 25 ans"],
+                answer: 0
+            },
+            {
+                question: "Où Jésus est-il né ?",
+                options: ["Nazareth", "Jérusalem", "Bethléem", "Capharnaüm"],
+                answer: 2
+            },
+            {
+                question: "Quel a été le premier miracle de Jésus ?",
+                options: ["La multiplication des pains", "Changer l'eau en vin aux noces de Cana", "La marche sur les eaux", "La guérison d'un aveugle"],
+                answer: 1
+            },
+            {
+                question: "Comment s'appelait le prisonnier libéré par la foule à la place de Jésus ?",
+                options: ["Lazare", "Barabbas", "Simon de Cyrène", "Nicodème"],
+                answer: 1
+            },
+            {
+                question: "Combien Jésus avait-il d'apôtres principaux ?",
+                options: ["7", "10", "12", "40"],
+                answer: 2
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+
         const atBooks = ["Genèse", "Exode", "Lévitique", "Nombres", "Deutéronome", "Josué", "Juges", "Ruth", "1 Samuel", "2 Samuel", "1 Rois", "2 Rois", "1 Chroniques", "2 Chroniques", "Esdras", "Néhémie", "Tobie*", "Judith*", "Esther", "1 Maccabées*", "2 Maccabées*", "Job", "Psaumes", "Proverbes", "Qohélet", "Cantique des Cantiques", "Sagesse*", "Siracide*", "Isaïe", "Jérémie", "Lamentations", "Baruch*", "Ézéchiel", "Daniel", "Osée", "Joël", "Amos", "Abdias", "Jonas", "Michée", "Nahum", "Habacuc", "Sophonie", "Aggée", "Zacharie", "Malachie"];
         const ntBooks = ["Matthieu", "Marc", "Luc", "Jean", "Actes des Apôtres", "Romains", "1 Corinthiens", "2 Corinthiens", "Galates", "Éphésiens", "Philippiens", "Colossiens", "1 Thessaloniciens", "2 Thessaloniciens", "1 Timothée", "2 Timothée", "Tite", "Philémon", "Hébreux", "Jacques", "1 Pierre", "2 Pierre", "1 Jean", "2 Jean", "3 Jean", "Jude", "Apocalypse"];
 
@@ -694,7 +763,6 @@
             return acc ? JSON.parse(acc) : null;
         }
 
-        // 🔐 VÉRIFICATION STRICTE ADMIN : Nom exact "Aaron Mendy" + Code secret "159357", ou admins promus
         function isUserAdmin(name, secretProvided = "") {
             if (!name) return false;
             if (name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() && secretProvided === ADMIN_SECRET) {
@@ -725,7 +793,6 @@
                 });
             });
 
-            // Affichage d'un verset brut sans les numéros pour l'accueil
             const rawVerset = versetsList[getDayIndex(versetsList.length)].replace(/^[0-9]+\.\s*/, '');
             document.getElementById('home-verset').innerText = rawVerset;
 
@@ -738,10 +805,76 @@
             renderBooks('at-books', atBooks);
             renderBooks('nt-books', ntBooks);
 
+            initQuiz();
             updateAccountUI();
             renderQuestions();
             renderIntentions();
             updateStats();
+        }
+
+        // Logique du Quiz
+        function initQuiz() {
+            currentQuizIndex = 0;
+            quizScore = 0;
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('quiz-result-card').style.display = 'none';
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const q = quizQuestions[currentQuizIndex];
+            const box = document.getElementById('quiz-question-box');
+            document.getElementById('quiz-next-btn').style.display = 'none';
+
+            let html = `<h3>Question ${currentQuizIndex + 1} / ${quizQuestions.length}</h3>`;
+            html += `<p style="margin-bottom: 15px; font-weight: bold;">${q.question}</p>`;
+            
+            q.options.forEach((opt, idx) => {
+                html += `<label class="quiz-option"><input type="radio" name="quiz-opt" value="${idx}" onclick="selectQuizAnswer(${idx})"> ${opt}</label>`;
+            });
+
+            box.innerHTML = html;
+        }
+
+        function selectQuizAnswer(selectedIndex) {
+            const q = quizQuestions[currentQuizIndex];
+            const options = document.querySelectorAll('.quiz-option');
+            
+            options.forEach((optEl, idx) => {
+                optEl.style.pointerEvents = 'none';
+                if (idx === q.answer) {
+                    optEl.style.backgroundColor = '#d4edda';
+                    optEl.style.borderColor = '#c3e6cb';
+                } else if (idx === selectedIndex) {
+                    optEl.style.backgroundColor = '#f8d7da';
+                    optEl.style.borderColor = '#f5c6cb';
+                }
+            });
+
+            if (selectedIndex === q.answer) {
+                quizScore++;
+            }
+
+            if (currentQuizIndex < quizQuestions.length - 1) {
+                document.getElementById('quiz-next-btn').style.display = 'inline-block';
+            } else {
+                setTimeout(showQuizResults, 1200);
+            }
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            renderQuizQuestion();
+        }
+
+        function showQuizResults() {
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('quiz-result-card').style.display = 'block';
+            document.getElementById('quiz-score-text').innerHTML = `Tu as obtenu <strong>${quizScore}</strong> sur <strong>${quizQuestions.length}</strong> bonnes réponses !`;
+        }
+
+        function restartQuiz() {
+            initQuiz();
         }
 
         function updateStats() {
@@ -841,7 +974,6 @@
                 const avatarDiv = document.getElementById('user-display-avatar');
                 avatarDiv.innerHTML = acc.photo ? `<img src="${acc.photo}" style="width:100%;height:100%;object-fit:cover;">` : acc.name.charAt(0).toUpperCase();
                 
-                // Afficher le panneau de promotion admin seulement si c'est le créateur suprême (Aaron Mendy)
                 if (acc.name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() && acc.isAdmin) {
                     document.getElementById('admin-panel-section').style.display = 'block';
                 } else {
