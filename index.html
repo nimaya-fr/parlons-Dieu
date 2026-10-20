@@ -17,19 +17,8 @@
             --radius: 12px;
         }
 
-        body.dark-theme {
-            --bg-color: #121820;
-            --card-bg: #1a222d;
-            --secondary-bg: #222d3d;
-            --primary-blue: #4ba3e3;
-            --sky-blue: #2f5d82;
-            --text-color: #e4edf7;
-            --border-color: #2c3a4d;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
         @media (prefers-color-scheme: dark) {
-            :root:not(.light-theme) {
+            :root {
                 --bg-color: #121820;
                 --card-bg: #1a222d;
                 --secondary-bg: #222d3d;
@@ -106,20 +95,20 @@
         .nav-links {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
 
         .nav-btn {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 14px;
+            padding: 12px 14px;
             border-radius: 8px;
             border: none;
             background: transparent;
             color: var(--text-color);
             font-family: Georgia, serif;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             cursor: pointer;
             text-align: left;
             transition: all 0.2s ease;
@@ -136,7 +125,7 @@
         }
 
         .nav-btn span.icon {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
 
         /* Contenu Principal Plein Écran */
@@ -274,16 +263,6 @@
             font-family: sans-serif;
         }
 
-        .badge-pinned {
-            background: #f0ad4e;
-            color: white;
-            font-size: 0.75rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 6px;
-            font-family: sans-serif;
-        }
-
         .user-avatar-small {
             width: 28px;
             height: 28px;
@@ -348,18 +327,6 @@
             cursor: pointer;
         }
 
-        .btn-pin {
-            background-color: #f0ad4e;
-            color: white;
-            border: none;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            float: right;
-            margin-left: 4px;
-        }
-
         .btn-report {
             background-color: transparent;
             color: #d9534f;
@@ -403,33 +370,6 @@
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 16px;
             margin-bottom: 16px;
-        }
-
-        /* Mini-chat styles */
-        #chat-messages {
-            height: 320px;
-            overflow-y: auto;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .chat-bubble {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 8px 12px;
-            border-radius: 8px;
-            max-width: 80%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-        .chat-bubble.mine {
-            background: var(--secondary-bg);
-            margin-left: auto;
-            border-color: var(--sky-blue);
         }
 
         /* Styles spécifiques Quiz */
@@ -483,11 +423,11 @@
                 flex-direction: column;
                 gap: 2px;
                 padding: 4px;
-                font-size: 0.6rem;
+                font-size: 0.65rem;
                 text-align: center;
             }
             .nav-btn span.icon {
-                font-size: 1.2rem;
+                font-size: 1.3rem;
             }
             main.content {
                 margin-left: 0;
@@ -511,7 +451,6 @@
             <button class="nav-btn active" data-tab="accueil"><span class="icon">🏠</span>Accueil</button>
             <button class="nav-btn" data-tab="decouvrir"><span class="icon">📖</span>Découvrir</button>
             <button class="nav-btn" data-tab="questions"><span class="icon">💬</span>Questions</button>
-            <button class="nav-btn" data-tab="minichat"><span class="icon">⚡</span>Mini-Chat</button>
             <button class="nav-btn" data-tab="prieres"><span class="icon">🙏</span>Prières</button>
             <button class="nav-btn" data-tab="bible"><span class="icon">✝️</span>Bible</button>
             <button class="nav-btn" data-tab="quiz"><span class="icon">🧩</span>Quiz</button>
@@ -552,8 +491,6 @@
                 <h3>👋 Bienvenue</h3>
                 <p>Un espace pour découvrir la foi chrétienne, poser tes questions, prier ensemble et échanger avec des admins et toute la communauté. Pas besoin d’être un expert : toutes les questions sont les bienvenues.</p>
             </div>
-
-            <div id="pinned-section"></div>
 
             <div class="card">
                 <h3>⭐ Saint du jour</h3>
@@ -679,25 +616,6 @@
             </div>
 
             <div id="questions-feed"></div>
-        </div>
-
-        <!-- 3.5. MINI-CHAT EN DIRECT -->
-        <div id="tab-minichat" class="tab-view">
-            <div class="intro-banner">
-                <h2>⚡ Mini-Chat en direct</h2>
-                <p>Un espace d'échange instantané entre membres de la communauté. Restez courtois et bienveillants !</p>
-            </div>
-
-            <div class="card">
-                <div id="chat-messages"></div>
-                <div id="chat-auth-warning" style="color: var(--primary-blue); font-style: italic; margin-bottom: 10px; display: none;">
-                    Connectez-vous dans l'onglet « Compte » pour participer au chat.
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <input type="text" id="chat-input" placeholder="Écrire un message..." style="margin-bottom:0; flex:1;" onkeydown="if(event.key==='Enter') sendChatMessage()" disabled>
-                    <button class="btn" id="chat-send-btn" onclick="sendChatMessage()" disabled>Envoyer</button>
-                </div>
-            </div>
         </div>
 
         <!-- 4. PRIÈRES -->
@@ -845,11 +763,11 @@
             </div>
         </div>
 
-        <!-- 8.5. PANNEAU ADMIN DÉDIÉ -->
+        <!-- 8.5. PANNEAU ADMIN DÉDIÉ (Visible uniquement pour les administrateurs) -->
         <div id="tab-admin-panel" class="tab-view">
             <div class="intro-banner" style="background: linear-gradient(135deg, var(--primary-blue), var(--secondary-bg)); color: white;">
                 <h2>⚙️ Espace Administrateur & Modération</h2>
-                <p>Panneau de contrôle exclusif pour gérer les signalements, les mentions, les membres et les bannissements.</p>
+                <p>Panneau de contrôle exclusif pour gérer les signalements, les mentions, les membres et le journal d'activités.</p>
             </div>
 
             <!-- Paramètre Notifications Push -->
@@ -872,7 +790,7 @@
 
             <div class="card">
                 <h3>👥 Gestion des membres et des rôles</h3>
-                <p style="margin-bottom: 15px; font-size: 0.9rem;">Voici la liste de tous les membres enregistrés (cliquez sur un nom pour voir son profil ou le bannir) :</p>
+                <p style="margin-bottom: 15px; font-size: 0.9rem;">Voici la liste de tous les membres enregistrés et actifs sur le site (cliquez sur un nom pour voir son profil) :</p>
                 <div id="admin-members-list" style="overflow-x: auto;">
                     <!-- Rempli dynamiquement -->
                 </div>
@@ -898,18 +816,8 @@
         <!-- 9. COMPTE -->
         <div id="tab-compte" class="tab-view">
             <div class="intro-banner">
-                <h2>👤 Mon Compte & Paramètres</h2>
-                <p>Gère ton identité et personnalise ton affichage.</p>
-            </div>
-
-            <!-- Bouton Mode Sombre / Clair -->
-            <div class="card">
-                <h3>🌙 Apparence du site</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 12px;">Choisissez votre thème visuel préféré :</p>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn" onclick="setTheme('light')">☀️ Mode Clair</button>
-                    <button class="btn" onclick="setTheme('dark')" style="background-color: #222d3d;">🌙 Mode Sombre</button>
-                </div>
+                <h2>👤 Mon Compte</h2>
+                <p id="compte-intro-text">Un compte te permet de : poser des questions et commenter ; déposer des intentions de prière ; choisir ton identité (prénom et nom, ou pseudo) ; ajouter une photo de profil.</p>
             </div>
 
             <div id="auth-logged-out" class="card">
@@ -945,6 +853,7 @@
     </main>
 
     <script>
+        // 🔐 PARAMÈTRES DE SÉCURITÉ ADMIN EXCLUSIFS
         const SUPREME_ADMIN_NAME = "Aaron Mendy";
         const ADMIN_SECRET = "159357"; 
 
@@ -1018,7 +927,37 @@
             { question: "Quel est le plus court psaume de la Bible ?", options: ["Psaume 23", "Psaume 117", "Psaume 51", "Psaume 150"], answer: 1 },
             { question: "Quel disciple a douté de la résurrection de Jésus avant de le toucher ?", options: ["Jacques", "Thomas", "Barthélemy", "Matthieu"], answer: 1 },
             { question: "Qui a écrit la majorité des épitres du Nouveau Testament ?", options: ["Pierre", "Paul", "Jean", "Jacques"], answer: 1 },
-            { question: "Quel est le nom de la mère de la Vierge Marie ?", options: ["Élisabeth", "Anne", "Salomé", "Marthe"], answer: 1 }
+            { question: "Quel est le nom de la mère de la Vierge Marie ?", options: ["Élisabeth", "Anne", "Salomé", "Marthe"], answer: 1 },
+            { question: "Combien de jours Jésus a-t-il jeûné dans le désert ?", options: ["7 jours", "12 jours", "40 jours", "100 jours"], answer: 2 },
+            { question: "Quel pécheur est monté dans un sycomore pour voir Jésus ?", options: ["Zachée", "Matthieu", "Bartimée", "Lazare"], answer: 0 },
+            { question: "Quel nom signifie « Dieu avec nous » ?", options: ["Emmanuel", "Messie", "Christ", "Seigneur"], answer: 0 },
+            { question: "Dans quel pays la Sainte Famille s'est-elle réfugiée pour fuir Hérode ?", options: ["Syrie", "Égypte", "Grèce", "Liban"], answer: 1 },
+            { question: "Quel apôtre était un ancien collecteur d'impôts ?", options: ["Pierre", "Matthieu", "Jean", "André"], answer: 1 },
+            { question: "Quelle femme a versé du parfum de grand prix sur les pieds de Jésus ?", options: ["Marie de Magdala", "Marie de Béthanie", "Marthe", "Salomé"], answer: 1 },
+            { question: "Quel prophète a succédé à Élie après avoir reçu son manteau ?", options: ["Élisée", "Amos", "Osée", "Daniel"], answer: 0 },
+            { question: "Quel est le dernier livre de la Bible ?", options: ["Les Actes", "L'Apocalypse", "L'Épître aux Romains", "Jude"], answer: 1 },
+            { question: "Quel est le signe de l'alliance entre Dieu et Noé après le déluge ?", options: ["Une colombe", "Un arc-en-ciel", "Un olivier", "Une colline"], answer: 1 },
+            { question: "Qui a interprété les songes du pharaon en Égypte ?", options: ["Moïse", "Joseph", "Abraham", "Daniel"], answer: 1 },
+            { question: "Quel prophète a lutté toute une nuit avec un ange ?", options: ["Jacob", "Isaac", "Abraham", "Gédéon"], answer: 0 },
+            { question: "Quel juge d'Israël avait une force prodigieuse liée à ses cheveux ?", options: ["Gédéon", "Samson", "Jephté", "Barak"], answer: 1 },
+            { question: "Quel jeune berger a vaincu le géant Goliath ?", options: ["Saul", "David", "Jonathan", "Salomon"], answer: 1 },
+            { question: "Quel prophète a été jeté dans une fosse aux lions sous le règne de Darius ?", options: ["Daniel", "Jérémie", "Ézéchiel", "Amos"], answer: 0 },
+            { question: "Comment s'appelait la sœur de Lazare et Marthe ?", options: ["Marie", "Madeleine", "Salomé", "Suzanne"], answer: 0 },
+            { question: "Quel gouverneur romain a lavé ses mains face à la foule concernant Jésus ?", options: ["Hérode", "Ponce Pilate", "César", "Félix"], answer: 1 },
+            { question: "Où Jésus a-t-il accompli son premier discours des Béatitudes ?", options: ["Sur la montagne", "Dans le désert", "Au bord du lac", "Dans le Temple"], answer: 0 },
+            { question: "Quel est le plus long livre de la Bible ?", options: ["Isaïe", "Les Psaumes", "Genèse", "Jérémie"], answer: 1 },
+            { question: "Quel est le nom de la montagne où Jésus a été crucifié ?", options: ["Sinaï", "Calvaire (Golgotha)", "Tabor", "Nébo"], answer: 1 },
+            { question: "Quel évangile commence par « Au commencement était le Verbe » ?", options: ["Matthieu", "Marc", "Luc", "Jean"], answer: 3 },
+            { question: "Qui fut le premier martyr chrétien lapidé à mort ?", options: ["Étienne", "Jacques", "Paul", "Barnabé"], answer: 0 },
+            { question: "Quel patriarche a failli sacrifier son fils Isaac sur l'ordre de Dieu ?", options: ["Abraham", "Noé", "Jacob", "Loth"], answer: 0 },
+            { question: "Quel disciple a remplacé Judas parmi les douze apôtres ?", options: ["Matthias", "Paul", "Barnabé", "Timothée"], answer: 0 },
+            { question: "Quelle reine est venue rendre visite au roi Salomon pour éprouver sa sagesse ?", options: ["La reine Esther", "La reine de Saba", "Jézabel", "Kouba"], answer: 1 },
+            { question: "Quel est le symbole de l'Esprit Saint lors du baptême de Jésus ?", options: ["Une colombe", "Un feu ardent", "Un vent violent", "Une étoile"], answer: 0 },
+            { question: "Combien de commandements Dieu a-t-il donnés à Moïse sur les Tables de la Loi ?", options: ["7", "10", "12", "15"], answer: 1 },
+            { question: "Quel prophète a défié les prêtres de Baal sur le mont Carmel ?", options: ["Élie", "Élisée", "Isaïe", "Amos"], answer: 0 },
+            { question: "Quelle femme a caché les espions israélites à Jéricho ?", options: ["Ruth", "Rahab", "Naomie", "Abigaïl"], answer: 1 },
+            { question: "Quel jeune homme a été vendu comme esclave par ses frères jaloux en Égypte ?", options: ["Joseph", "Benjamin", "Ruben", "Juda"], answer: 0 },
+            { question: "Dans quel jardin Jésus a-t-il prié avant son arrestation ?", options: ["Jardin d'Éden", "Jardin de Gethsémani", "Jardin du Roi", "Jardin des Oliviers"], answer: 1 }
         ];
 
         let activeQuizQuestions = [];
@@ -1028,38 +967,6 @@
         const atBooks = ["Genèse", "Exode", "Lévitique", "Nombres", "Deutéronome", "Josué", "Juges", "Ruth", "1 Samuel", "2 Samuel", "1 Rois", "2 Rois", "1 Chroniques", "2 Chroniques", "Esdras", "Néhémie", "Tobie*", "Judith*", "Esther", "1 Maccabées*", "2 Maccabées*", "Job", "Psaumes", "Proverbes", "Qohélet", "Cantique des Cantiques", "Sagesse*", "Siracide*", "Isaïe", "Jérémie", "Lamentations", "Baruch*", "Ézéchiel", "Daniel", "Osée", "Joël", "Amos", "Abdias", "Jonas", "Michée", "Nahum", "Habacuc", "Sophonie", "Aggée", "Zacharie", "Malachie"];
         const ntBooks = ["Matthieu", "Marc", "Luc", "Jean", "Actes des Apôtres", "Romains", "1 Corinthiens", "2 Corinthiens", "Galates", "Éphésiens", "Philippiens", "Colossiens", "1 Thessaloniciens", "2 Thessaloniciens", "1 Timothée", "2 Timothée", "Tite", "Philémon", "Hébreux", "Jacques", "1 Pierre", "2 Pierre", "1 Jean", "2 Jean", "3 Jean", "Jude", "Apocalypse"];
 
-        // Gestion du Thème
-        function setTheme(theme) {
-            if (theme === 'dark') {
-                document.body.classList.add('dark-theme');
-                localStorage.setItem('pd_theme', 'dark');
-            } else {
-                document.body.classList.remove('dark-theme');
-                localStorage.setItem('pd_theme', 'light');
-            }
-        }
-
-        function loadTheme() {
-            if (localStorage.getItem('pd_theme') === 'dark') {
-                document.body.classList.add('dark-theme');
-            }
-        }
-
-        // Vérification anti-bannissement
-        function checkBannedStatus() {
-            const acc = getAccount();
-            if (!acc) return;
-            const bannedList = loadData('banned_users', []);
-            const deviceId = localStorage.getItem('pd_device_id') || "device_" + Math.random();
-            localStorage.setItem('pd_device_id', deviceId);
-
-            if (bannedList.includes(acc.name.toLowerCase()) || bannedList.includes(deviceId)) {
-                alert("⛔ Votre compte ou votre appareil a été banni définitivement par un administrateur.");
-                logout();
-                location.reload();
-            }
-        }
-
         function getDayIndex(max) {
             const now = new Date();
             const start = new Date(now.getFullYear(), 0, 0);
@@ -1068,7 +975,6 @@
         }
 
         function escapeHTML(str) {
-            if (!str) return "";
             return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
         }
 
@@ -1088,14 +994,17 @@
 
         function isUserAdmin(name) {
             if (!name) return false;
-            if (name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) return true;
+            if (name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) {
+                return true;
+            }
             const customAdmins = loadData('custom_admins', []);
             return customAdmins.map(a => a.toLowerCase()).includes(name.trim().toLowerCase());
         }
 
         function logAudit(action) {
             let logs = loadData('audit_logs', []);
-            logs.unshift(`[${new Date().toLocaleString()}] ${action}`);
+            const timeStr = new Date().toLocaleString();
+            logs.unshift(`[${timeStr}] ${action}`);
             if (logs.length > 50) logs.pop();
             saveData('audit_logs', logs);
             renderAuditLogs();
@@ -1105,30 +1014,37 @@
             const container = document.getElementById('audit-log-container');
             if (!container) return;
             const logs = loadData('audit_logs', []);
-            container.innerHTML = logs.length === 0 ? `<span style="font-style: italic;">Aucune action enregistrée.</span>` : logs.map(l => `<div>• ${escapeHTML(l)}</div>`).join('');
+            if (logs.length === 0) {
+                container.innerHTML = `<span style="font-style: italic;">Aucune action enregistrée.</span>`;
+                return;
+            }
+            container.innerHTML = logs.map(l => `<div>• ${escapeHTML(l)}</div>`).join('');
         }
 
-        // Gestion des notifications push
+        // Gestion des notifications push / Web
         function isPushEnabled() {
             return localStorage.getItem('pd_push_enabled') === 'true';
         }
 
         function togglePushNotifications() {
-            if (!isPushEnabled()) {
+            const current = isPushEnabled();
+            if (!current) {
                 if ("Notification" in window) {
                     Notification.requestPermission().then(permission => {
                         if (permission === "granted") {
                             localStorage.setItem('pd_push_enabled', 'true');
-                            alert("Notifications push activées !");
+                            alert("Notifications push activées avec succès !");
                             updatePushBtnUI();
                         } else {
-                            alert("Permission refusée.");
+                            alert("Permission de notification refusée par le navigateur.");
                         }
                     });
+                } else {
+                    alert("Votre navigateur ne supporte pas les notifications.");
                 }
             } else {
                 localStorage.setItem('pd_push_enabled', 'false');
-                alert("Notifications désactivées.");
+                alert("Notifications push désactivées.");
                 updatePushBtnUI();
             }
         }
@@ -1144,46 +1060,65 @@
         function triggerPushNotification(title, body) {
             if (!isPushEnabled()) return;
             if ("Notification" in window && Notification.permission === "granted") {
-                try { new Notification(title, { body, icon: "téléchargement.jpg" }); } catch (e) {}
+                try {
+                    new Notification(title, { body, icon: "téléchargement.jpg" });
+                } catch (e) {
+                    console.log("Notification non envoyée", e);
+                }
             }
         }
 
+        // Analyse du texte pour formater les mentions (@Nom ou @Admin)
         function formatMentions(text) {
             if (!text) return "";
+            // Échapper d'abord le HTML
             let safe = escapeHTML(text);
+            // Remplacer les mentions par un span stylisé
             return safe.replace(/@([a-zA-ZÀ-ÿ0-9_\s]+)(?=\b|$)/g, '<span class="mention-tag">@$1</span>');
         }
 
+        // Vérifie si le texte mentionne un admin connecté
         function checkForMentions(text, author) {
             const acc = getAccount();
             if (!acc || !acc.isAdmin) return;
-            if (text.toLowerCase().includes(`@${acc.name.toLowerCase()}`) || text.toLowerCase().includes('@admin')) {
-                triggerPushNotification("Nouvelle mention ✝", `${author} vous a mentionné.`);
+            
+            const lowerText = text.toLowerCase();
+            const myName = acc.name.toLowerCase();
+            if (lowerText.includes(`@${myName}`) || lowerText.includes('@admin')) {
+                triggerPushNotification("Nouvelle mention ✝", `${author} vous a mentionné dans une publication.`);
             }
         }
 
+        // Rétrocompatibilité : analyse et enregistre tous les auteurs existants
         function syncAllMembersFromActivity() {
             let members = loadData('members_directory', []);
             const existingNames = new Set(members.map(m => m.name.toLowerCase()));
+
             const addNameIfNeeded = (name) => {
                 if (!name || name === "Anonyme") return;
                 const trimmed = name.trim();
                 if (!existingNames.has(trimmed.toLowerCase())) {
                     existingNames.add(trimmed.toLowerCase());
-                    members.push({ name: trimmed, isAdmin: isUserAdmin(trimmed) });
+                    members.push({ name: trimmed, isAdmin: isUserAdmin(trimmed), joined: "Antérieur" });
                 }
             };
-            loadData('questions', []).forEach(q => {
+
+            const questions = loadData('questions', []);
+            questions.forEach(q => {
                 addNameIfNeeded(q.author);
                 if (q.comments) q.comments.forEach(c => addNameIfNeeded(c.author));
             });
-            loadData('temoignages', []).forEach(t => addNameIfNeeded(t.author));
-            loadData('intentions', []).forEach(i => addNameIfNeeded(i.author));
+
+            const temoignages = loadData('temoignages', []);
+            temoignages.forEach(t => addNameIfNeeded(t.author));
+
+            const intentions = loadData('intentions', []);
+            intentions.forEach(i => addNameIfNeeded(i.author));
+
             saveData('members_directory', members);
         }
 
         function switchTab(tabId) {
-            checkBannedStatus();
             document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             
@@ -1197,8 +1132,6 @@
         }
 
         function initApp() {
-            loadTheme();
-            checkBannedStatus();
             syncAllMembersFromActivity();
 
             document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -1208,8 +1141,11 @@
                 });
             });
 
-            document.getElementById('home-verset').innerText = versetsList[getDayIndex(versetsList.length)].replace(/^[0-9]+\.\s*/, '');
-            document.getElementById('home-priere').innerText = prieresJourList[getDayIndex(prieresJourList.length)];
+            const rawVerset = versetsList[getDayIndex(versetsList.length)].replace(/^[0-9]+\.\s*/, '');
+            document.getElementById('home-verset').innerText = rawVerset;
+
+            const fullPriere = prieresJourList[getDayIndex(prieresJourList.length)];
+            document.getElementById('home-priere').innerText = fullPriere;
             document.getElementById('home-saviez').innerText = saviezVousList[getDayIndex(saviezVousList.length)];
             document.getElementById('home-saint').innerText = saintsList[getDayIndex(saintsList.length)];
 
@@ -1222,111 +1158,136 @@
             initQuiz();
             updateAccountUI();
             renderQuestions();
-            renderChatMessages();
             renderIntentions();
             renderTemoignages();
             updateStats();
             updatePushBtnUI();
-            renderPinnedContent();
             renderAdminReports();
-            renderAdminMembersList();
             renderAuditLogs();
-
-            setInterval(checkBannedStatus, 3000);
-            setInterval(renderChatMessages, 2000);
         }
 
         function updateCountdowns() {
             const now = new Date();
             const year = now.getFullYear();
+
             let noelDate = new Date(year, 11, 25);
             if (now > noelDate) noelDate = new Date(year + 1, 11, 25);
-            document.getElementById('countdown-noel').innerText = `${Math.ceil((noelDate - now) / (1000 * 60 * 60 * 24))} jour(s)`;
+            const diffNoel = Math.ceil((noelDate - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('countdown-noel').innerText = `${diffNoel} jour(s)`;
 
-            let paquesDate = new Date(year, 3, 5);
-            if (now > paquesDate) paquesDate = new Date(year + 1, 3, 20);
-            document.getElementById('countdown-paques').innerText = `${Math.ceil((paquesDate - now) / (1000 * 60 * 60 * 24))} jour(s)`;
+            let paquesDate = year === 2026 ? new Date(2026, 3, 5) : new Date(year, 3, 20);
+            if (now > paquesDate) paquesDate = new Date(year + 1, 3, 28);
+            const diffPaques = Math.ceil((paquesDate - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('countdown-paques').innerText = `${diffPaques > 0 ? diffPaques : 170} jour(s)`;
         }
 
-        // --- MINI-CHAT EN DIRECT ---
-        function sendChatMessage() {
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
-            const acc = getAccount();
-            if (!text || !acc) return;
+        function initQuiz() {
+            currentQuizIndex = 0;
+            quizScore = 0;
+            let shuffled = [...allQuizQuestions].sort(() => 0.5 - Math.random());
+            activeQuizQuestions = shuffled.slice(0, 10);
 
-            let chatMessages = loadData('minichat', []);
-            chatMessages.push({
-                id: Date.now(),
-                author: acc.name,
-                text: text,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('quiz-result-card').style.display = 'none';
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const q = activeQuizQuestions[currentQuizIndex];
+            const box = document.getElementById('quiz-question-box');
+            document.getElementById('quiz-next-btn').style.display = 'none';
+
+            let html = `<h3>Question ${currentQuizIndex + 1} / ${activeQuizQuestions.length}</h3>`;
+            html += `<p style="margin-bottom: 15px; font-weight: bold;">${q.question}</p>`;
+            
+            q.options.forEach((opt, idx) => {
+                html += `<label class="quiz-option"><input type="radio" name="quiz-opt" value="${idx}" onclick="selectQuizAnswer(${idx})"> ${opt}</label>`;
             });
-            if (chatMessages.length > 100) chatMessages.shift();
-            saveData('minichat', chatMessages);
-            input.value = '';
-            renderChatMessages();
+
+            box.innerHTML = html;
         }
 
-        function renderChatMessages() {
-            const container = document.getElementById('chat-messages');
-            if (!container) return;
-            const chatMessages = loadData('minichat', []);
-            const acc = getAccount();
+        function selectQuizAnswer(selectedIndex) {
+            const q = activeQuizQuestions[currentQuizIndex];
+            const options = document.querySelectorAll('.quiz-option');
+            
+            options.forEach((optEl, idx) => {
+                optEl.style.pointerEvents = 'none';
+                if (idx === q.answer) {
+                    optEl.style.backgroundColor = '#d4edda';
+                    optEl.style.borderColor = '#c3e6cb';
+                } else if (idx === selectedIndex) {
+                    optEl.style.backgroundColor = '#f8d7da';
+                    optEl.style.borderColor = '#f5c6cb';
+                }
+            });
 
-            if (chatMessages.length === 0) {
-                container.innerHTML = `<p style="text-align: center; font-style: italic; opacity: 0.6; margin-top: 20px;">Aucun message pour l'instant.</p>`;
-                return;
+            if (selectedIndex === q.answer) {
+                quizScore++;
             }
 
-            container.innerHTML = chatMessages.map(m => {
-                const isMine = acc && m.author === acc.name;
-                const isAdmin = isUserAdmin(m.author);
-                return `
-                    <div class="chat-bubble ${isMine ? 'mine' : ''}">
-                        <div style="font-size: 0.75rem; opacity: 0.7; margin-bottom: 2px;">
-                            <strong class="clickable-user" onclick="openProfileModal('${escapeHTML(m.author)}')">${escapeHTML(m.author)}</strong> ${isAdmin ? '<span class="badge-admin">admin</span>' : ''} - ${m.time}
-                        </div>
-                        <div>${escapeHTML(m.text)}</div>
-                    </div>
-                `;
-            }).join('');
-            container.scrollTop = container.scrollHeight;
-        }
-
-        // --- MESSAGES ÉPINGLÉS ---
-        function togglePinQuestion(qId) {
-            let questions = loadData('questions', []);
-            const q = questions.find(item => item.id === qId);
-            if (q) {
-                q.pinned = !q.pinned;
-                saveData('questions', questions);
-                logAudit(`${q.pinned ? 'Épinglage' : 'Désépinglage'} de la question ID ${qId}`);
-                renderQuestions();
-                renderPinnedContent();
+            if (currentQuizIndex < activeQuizQuestions.length - 1) {
+                document.getElementById('quiz-next-btn').style.display = 'inline-block';
+            } else {
+                setTimeout(showQuizResults, 1200);
             }
         }
 
-        function renderPinnedContent() {
-            const container = document.getElementById('pinned-section');
-            if (!container) return;
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            renderQuizQuestion();
+        }
+
+        function showQuizResults() {
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('quiz-result-card').style.display = 'block';
+            document.getElementById('quiz-score-text').innerHTML = `Tu as obtenu <strong>${quizScore}</strong> sur <strong>${activeQuizQuestions.length}</strong> bonnes réponses !`;
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function updateStats() {
             const questions = loadData('questions', []);
-            const pinnedQ = questions.filter(q => q.pinned);
+            const intentions = loadData('intentions', []);
+            
+            let totalJePrie = 0;
+            intentions.forEach(i => totalJePrie += i.count);
 
-            if (pinnedQ.length === 0) {
-                container.innerHTML = '';
-                return;
+            document.getElementById('stat-questions').innerText = questions.length;
+            document.getElementById('stat-intentions').innerText = intentions.length;
+            document.getElementById('stat-priere-clicks').innerText = totalJePrie;
+
+            if (questions.length > 0) {
+                const lastQ = questions[questions.length - 1];
+                document.getElementById('home-last-question').innerHTML = `<strong class="clickable-user" onclick="openProfileModal('${escapeHTML(lastQ.author)}')">${escapeHTML(lastQ.author)}</strong> : ${escapeHTML(lastQ.text)}`;
+            } else {
+                document.getElementById('home-last-question').innerHTML = `Aucune question pour le moment.`;
             }
 
-            container.innerHTML = pinnedQ.map(q => `
-                <div class="card" style="border-left: 5px solid #f0ad4e;">
-                    <h3>📌 Annonce / Message Épinglé</h3>
-                    <p><strong>${escapeHTML(q.author)}</strong> : ${escapeHTML(q.text)}</p>
-                </div>
-            `).join('');
+            if (intentions.length > 0) {
+                const lastI = intentions[intentions.length - 1];
+                document.getElementById('home-last-intention').innerHTML = `<strong class="clickable-user" onclick="openProfileModal('${escapeHTML(lastI.author)}')">${escapeHTML(lastI.author)}</strong> : ${escapeHTML(lastI.text)}`;
+            } else {
+                document.getElementById('home-last-intention').innerHTML = `Aucune intention pour le moment.`;
+            }
+
+            const acc = getAccount();
+            if (acc && document.getElementById('my-stat-questions')) {
+                document.getElementById('my-stat-questions').innerText = questions.filter(q => q.author === acc.name).length;
+                document.getElementById('my-stat-intentions').innerText = intentions.filter(i => i.author === acc.name).length;
+            }
         }
 
-        // --- COMPTES & BANNISSEMENT STRICT ---
+        function registerMemberInDirectory(name) {
+            let members = loadData('members_directory', []);
+            if (!members.some(m => m.name.toLowerCase() === name.toLowerCase())) {
+                members.push({ name, joined: new Date().toLocaleDateString() });
+                saveData('members_directory', members);
+            }
+        }
+
         function createAccount() {
             const prenom = document.getElementById('reg-prenom').value.trim();
             const nom = document.getElementById('reg-nom').value.trim();
@@ -1334,49 +1295,67 @@
             const adminCode = document.getElementById('reg-admin-code').value.trim();
 
             if (!prenom && !nom && !pseudo) {
-                alert("Veuillez renseigner au moins un nom ou un pseudo.");
+                alert("Veuillez renseigner au moins un prénom/nom ou un pseudo.");
                 return;
             }
 
             const displayName = pseudo || `${prenom} ${nom}`.trim();
-            const bannedList = loadData('banned_users', []);
-            if (bannedList.includes(displayName.toLowerCase())) {
-                alert("⛔ Cet utilisateur a été banni.");
-                return;
-            }
-
+            
             if (adminCode === ADMIN_SECRET) {
                 let customAdmins = loadData('custom_admins', []);
                 if (!customAdmins.map(a => a.toLowerCase()).includes(displayName.toLowerCase())) {
                     customAdmins.push(displayName);
                     saveData('custom_admins', customAdmins);
-                    logAudit(`Promotion admin via code secret pour ${displayName}`);
+                    logAudit(`Promotion admin initiale via code secret pour ${displayName}`);
                 }
             }
 
             const isAdmin = isUserAdmin(displayName);
-            let fileInput = document.getElementById('reg-photo');
 
+            const fileInput = document.getElementById('reg-photo');
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = e => saveAccountAndReload(displayName, e.target.result, isAdmin);
+                reader.onload = e => cropAndSaveImage(e.target.result, displayName, isAdmin);
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
                 saveAccountAndReload(displayName, null, isAdmin);
             }
         }
 
+        function cropAndSaveImage(dataUrl, displayName, isAdmin) {
+            const img = new Image();
+            img.onload = function () {
+                const canvas = document.createElement('canvas');
+                canvas.width = 96;
+                canvas.height = 96;
+                const ctx = canvas.getContext('2d');
+                let size = Math.min(img.width, img.height);
+                ctx.drawImage(img, (img.width - size)/2, (img.height - size)/2, size, size, 0, 0, 96, 96);
+                saveAccountAndReload(displayName, canvas.toDataURL(), isAdmin);
+            };
+            img.src = dataUrl;
+        }
+
         function saveAccountAndReload(name, photo, isAdmin) {
             registerMemberInDirectory(name);
             localStorage.setItem('pd_account', JSON.stringify({ name, photo, isAdmin }));
             updateAccountUI();
-            switchTab('accueil');
+            renderQuestions();
+            renderIntentions();
+            renderTemoignages();
+            updateStats();
         }
 
         function logout() {
             localStorage.removeItem('pd_account');
             updateAccountUI();
-            switchTab('accueil');
+            if (document.getElementById('tab-admin-panel').classList.contains('active')) {
+                switchTab('accueil');
+            }
+            renderQuestions();
+            renderIntentions();
+            renderTemoignages();
+            updateStats();
         }
 
         function updateAccountUI() {
@@ -1388,7 +1367,11 @@
                 localStorage.setItem('pd_account', JSON.stringify(acc));
             }
 
-            if (adminBtn) adminBtn.style.display = (acc && acc.isAdmin) ? 'flex' : 'none';
+            if (acc && acc.isAdmin) {
+                adminBtn.style.display = 'flex';
+            } else {
+                adminBtn.style.display = 'none';
+            }
 
             if (acc) {
                 document.getElementById('auth-logged-out').style.display = 'none';
@@ -1407,13 +1390,11 @@
                 document.getElementById('publish-temoignage-btn').disabled = false;
                 document.getElementById('auth-warning-temoignage').style.display = 'none';
 
-                document.getElementById('chat-input').disabled = false;
-                document.getElementById('chat-send-btn').disabled = false;
-                document.getElementById('chat-auth-warning').style.display = 'none';
+                renderAdminMembersList();
+                renderAdminReports();
             } else {
                 document.getElementById('auth-logged-out').style.display = 'block';
                 document.getElementById('auth-logged-in').style.display = 'none';
-
                 document.getElementById('new-question-text').disabled = true;
                 document.getElementById('publish-question-btn').disabled = true;
                 document.getElementById('auth-warning-question').style.display = 'block';
@@ -1421,28 +1402,23 @@
                 document.getElementById('new-temoignage-text').disabled = true;
                 document.getElementById('publish-temoignage-btn').disabled = true;
                 document.getElementById('auth-warning-temoignage').style.display = 'block';
-
-                document.getElementById('chat-input').disabled = true;
-                document.getElementById('chat-send-btn').disabled = true;
-                document.getElementById('chat-auth-warning').style.display = 'block';
             }
         }
 
-        function registerMemberInDirectory(name) {
-            let members = loadData('members_directory', []);
-            if (!members.some(m => m.name.toLowerCase() === name.toLowerCase())) {
-                members.push({ name, joined: new Date().toLocaleDateString() });
-                saveData('members_directory', members);
-            }
-        }
-
-        // --- GESTION DES SIGNALEMENTS & BANNISSEMENTS ---
+        // --- GESTION DES SIGNALEMENTS ---
         function reportContent(type, id, previewText) {
             let reports = loadData('reports', []);
-            reports.push({ id: Date.now(), type, targetId: id, preview: previewText, date: new Date().toLocaleString() });
+            const reportId = Date.now();
+            reports.push({
+                id: reportId,
+                type,
+                targetId: id,
+                preview: previewText,
+                date: new Date().toLocaleString()
+            });
             saveData('reports', reports);
-            triggerPushNotification("Nouveau signalement 🚩", `Contenu signalé : "${previewText.substring(0, 30)}..."`);
-            alert("Contenu signalé aux administrateurs.");
+            triggerPushNotification("Nouveau signalement 🚩", `Un contenu a été signalé : "${previewText.substring(0, 30)}..."`);
+            alert("Contenu signalé aux administrateurs. Merci pour votre vigilance.");
             renderAdminReports();
         }
 
@@ -1453,6 +1429,7 @@
             if (!container || !countBadge) return;
 
             countBadge.innerText = reports.length;
+
             if (reports.length === 0) {
                 container.innerHTML = `<p style="font-style: italic; font-size: 0.9rem;">Aucun signalement en attente.</p>`;
                 return;
@@ -1468,47 +1445,130 @@
         }
 
         function dismissReport(reportId) {
-            let reports = loadData('reports', []).filter(r => r.id !== reportId);
+            let reports = loadData('reports', []);
+            reports = reports.filter(r => r.id !== reportId);
             saveData('reports', reports);
             renderAdminReports();
         }
 
         function clearAllReports() {
-            if (!confirm("Effacer tous les signalements ?")) return;
+            if (!confirm("Voulez-vous effacer tous les signalements ?")) return;
             saveData('reports', []);
             renderAdminReports();
         }
 
-        function deleteMemberFully(name) {
-            if (!confirm(`Voulez-vous vraiment bannir définitivement "${name}" ?`)) return;
-            let bannedList = loadData('banned_users', []);
-            if (!bannedList.includes(name.toLowerCase())) bannedList.push(name.toLowerCase());
-            saveData('banned_users', bannedList);
+        // --- GESTION MODALE PROFIL & MODÉRATION ---
+        function openProfileModal(memberName) {
+            syncAllMembersFromActivity();
+            const modal = document.getElementById('profile-modal');
+            const title = document.getElementById('modal-profile-title');
+            const body = document.getElementById('modal-profile-body');
 
-            let members = loadData('members_directory', []).filter(m => m.name.toLowerCase() !== name.toLowerCase());
+            const isSupreme = (memberName.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase());
+            const isAdmin = isUserAdmin(memberName);
+            const questions = loadData('questions', []);
+            const temoignages = loadData('temoignages', []);
+
+            const userQuestions = questions.filter(q => q.author.toLowerCase() === memberName.toLowerCase()).length;
+            const userTemoignages = temoignages.filter(t => t.author.toLowerCase() === memberName.toLowerCase()).length;
+
+            title.innerText = `Profil de ${memberName}`;
+            
+            let acc = getAccount();
+            let canManage = acc && acc.isAdmin;
+
+            let managementHtml = '';
+            if (canManage && memberName !== "Anonyme") {
+                managementHtml = `<div style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                    <p style="font-size: 0.85rem; font-weight: bold; margin-bottom: 8px; color: var(--primary-blue);">Actions de modération :</p>`;
+                
+                if (!isSupreme) {
+                    if (isAdmin) {
+                        managementHtml += `<button class="btn-warning" onclick="demoteUser('${memberName.replace(/'/g, "\\'")}')">Rétrograder</button> `;
+                    } else {
+                        managementHtml += `<button class="btn-action" onclick="promoteUser('${memberName.replace(/'/g, "\\'")}')">Promouvoir Admin</button> `;
+                    }
+                    managementHtml += `<button class="btn-delete" style="float:none;" onclick="deleteMemberFully('${memberName.replace(/'/g, "\\'")}')">Bannir</button>`;
+                } else {
+                    managementHtml += `<p style="font-style: italic; font-size: 0.8rem;">Propriétaire suprême (protégé).</p>`;
+                }
+                managementHtml += `</div>`;
+            }
+
+            body.innerHTML = `
+                <p><strong>Statut :</strong> ${isAdmin ? '👑 Administrateur' : 'Membre'}</p>
+                <p><strong>Questions publiées :</strong> ${userQuestions}</p>
+                <p><strong>Témoignages partagés :</strong> ${userTemoignages}</p>
+                ${managementHtml}
+            `;
+
+            modal.style.display = 'flex';
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profile-modal').style.display = 'none';
+        }
+
+        function promoteUser(name) {
+            let customAdmins = loadData('custom_admins', []);
+            if (!customAdmins.map(a => a.toLowerCase()).includes(name.toLowerCase())) {
+                customAdmins.push(name);
+                saveData('custom_admins', customAdmins);
+                logAudit(`Promotion admin de ${name}`);
+                alert(`Le membre "${name}" a été promu administrateur avec succès !`);
+                closeProfileModal();
+                renderAdminMembersList();
+                updateAccountUI();
+                renderQuestions();
+                renderTemoignages();
+            }
+        }
+
+        function demoteUser(name) {
+            if (name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) {
+                alert("Impossible de rétrograder le propriétaire suprême.");
+                return;
+            }
+            let customAdmins = loadData('custom_admins', []);
+            customAdmins = customAdmins.filter(a => a.toLowerCase() !== name.toLowerCase());
+            saveData('custom_admins', customAdmins);
+            logAudit(`Rétrogradation de ${name}`);
+            alert(`Le membre "${name}" a été rétrogradé au rang de membre simple.`);
+            closeProfileModal();
+            renderAdminMembersList();
+            updateAccountUI();
+            renderQuestions();
+            renderTemoignages();
+        }
+
+        function deleteMemberFully(name) {
+            if (!confirm(`Voulez-vous vraiment supprimer et bannir "${name}" de l'annuaire ?`)) return;
+            let members = loadData('members_directory', []);
+            members = members.filter(m => m.name.toLowerCase() !== name.toLowerCase());
             saveData('members_directory', members);
 
-            let customAdmins = loadData('custom_admins', []).filter(a => a.toLowerCase() !== name.toLowerCase());
+            let customAdmins = loadData('custom_admins', []);
+            customAdmins = customAdmins.filter(a => a.toLowerCase() !== name.toLowerCase());
             saveData('custom_admins', customAdmins);
 
-            logAudit(`Bannissement définitif de ${name}`);
-            alert(`Le membre "${name}" a été banni.`);
+            logAudit(`Bannissement de ${name}`);
+            alert(`Le membre "${name}" a été supprimé.`);
             closeProfileModal();
             renderAdminMembersList();
         }
 
         function renderAdminMembersList() {
             syncAllMembersFromActivity();
-            let members = loadData('members_directory', []);
+            const members = loadData('members_directory', []);
             const container = document.getElementById('admin-members-list');
             if (!container) return;
 
             if (members.length === 0) {
-                container.innerHTML = `<p style="font-style: italic;">Aucun membre enregistré.</p>`;
+                container.innerHTML = `<p style="font-style: italic;">Aucun membre enregistré pour le moment.</p>`;
                 return;
             }
 
-            container.innerHTML = `
+            let html = `
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
                     <thead>
                         <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
@@ -1518,49 +1578,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        ${members.map(m => `
-                            <tr style="border-bottom: 1px solid var(--border-color);">
-                                <td style="padding: 10px;">
-                                    <span class="clickable-user" onclick="openProfileModal('${escapeHTML(m.name).replace(/'/g, "\\'")}')">${escapeHTML(m.name)}</span>
-                                </td>
-                                <td style="padding: 10px;">${isUserAdmin(m.name) ? '👑 Admin' : 'Membre'}</td>
-                                <td style="padding: 10px; text-align: right;">
-                                    ${m.name !== SUPREME_ADMIN_NAME ? `
-                                        ${isUserAdmin(m.name) ? `<button class="btn-warning" onclick="demoteUser('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Rétrograder</button>` : `<button class="btn-action" onclick="promoteUser('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Promouvoir</button>`}
-                                        <button class="btn-delete" onclick="deleteMemberFully('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Bannir</button>
-                                    ` : '<span style="opacity:0.6; font-size:0.75rem;">Protégé</span>'}
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
             `;
-        }
 
-        function promoteUser(name) {
-            let customAdmins = loadData('custom_admins', []);
-            if (!customAdmins.map(a => a.toLowerCase()).includes(name.toLowerCase())) {
-                customAdmins.push(name);
-                saveData('custom_admins', customAdmins);
-                logAudit(`Promotion admin de ${name}`);
-                alert(`Le membre "${name}" a été promu administrateur !`);
-                closeProfileModal();
-                renderAdminMembersList();
-                updateAccountUI();
-                renderQuestions();
-            }
-        }
+            members.forEach((m) => {
+                const isSupreme = (m.name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase());
+                const isAdmin = isUserAdmin(m.name);
+                const roleBadge = isAdmin ? '👑 Administrateur' : 'Membre';
 
-        function demoteUser(name) {
-            if (name.toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) return;
-            let customAdmins = loadData('custom_admins', []).filter(a => a.toLowerCase() !== name.toLowerCase());
-            saveData('custom_admins', customAdmins);
-            logAudit(`Rétrogradation de ${name}`);
-            alert(`Le membre "${name}" a été rétrogradé.`);
-            closeProfileModal();
-            renderAdminMembersList();
-            updateAccountUI();
-            renderQuestions();
+                html += `
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 10px;">
+                            <span class="clickable-user" onclick="openProfileModal('${escapeHTML(m.name).replace(/'/g, "\\'")}')">${escapeHTML(m.name)}</span>
+                        </td>
+                        <td style="padding: 10px;">${roleBadge}</td>
+                        <td style="padding: 10px; text-align: right;">
+                            ${!isSupreme ? `
+                                ${isAdmin ? `<button class="btn-warning" onclick="demoteUser('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Rétrograder</button>` : `<button class="btn-action" onclick="promoteUser('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Promouvoir</button>`}
+                                <button class="btn-delete" onclick="deleteMemberFully('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Supprimer</button>
+                            ` : '<span style="font-size: 0.75rem; font-style: italic; opacity: 0.7;">Protégé</span>'}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
         }
 
         function promoteMemberFromPanel() {
@@ -1570,30 +1612,6 @@
             document.getElementById('admin-target-input').value = '';
         }
 
-        function openProfileModal(memberName) {
-            const modal = document.getElementById('profile-modal');
-            document.getElementById('modal-profile-title').innerText = `Profil de ${memberName}`;
-            const isAdmin = isUserAdmin(memberName);
-            const acc = getAccount();
-
-            let managementHtml = (acc && acc.isAdmin && memberName !== SUPREME_ADMIN_NAME) ? `
-                <div style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 10px;">
-                    <button class="btn-delete" style="float:none;" onclick="deleteMemberFully('${memberName.replace(/'/g, "\\'")}')">Bannir définitivement</button>
-                </div>
-            ` : '';
-
-            document.getElementById('modal-profile-body').innerHTML = `
-                <p><strong>Statut :</strong> ${isAdmin ? '👑 Administrateur' : 'Membre'}</p>
-                ${managementHtml}
-            `;
-            modal.style.display = 'flex';
-        }
-
-        function closeProfileModal() {
-            document.getElementById('profile-modal').style.display = 'none';
-        }
-
-        // --- QUESTIONS & COMMENTAIRES ---
         function renderQuestions() {
             const questions = loadData('questions', []);
             const feed = document.getElementById('questions-feed');
@@ -1601,8 +1619,6 @@
 
             feed.innerHTML = questions.slice().reverse().map(q => {
                 const authorIsAdmin = isUserAdmin(q.author);
-                const pinBtn = (acc && acc.isAdmin) ? `<button class="btn-pin" onclick="togglePinQuestion(${q.id})">${q.pinned ? '📌 Désépingler' : '📌 Épingler'}</button>` : '';
-                let deleteQuestionBtn = (acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteQuestion(${q.id})" style="margin-left: 6px;">Supprimer</button>` : '';
 
                 let commentsHtml = q.comments ? q.comments.map((c, cIdx) => {
                     const commentAuthorIsAdmin = isUserAdmin(c.author);
@@ -1622,16 +1638,17 @@
                     </div>
                 ` : '';
 
+                let deleteQuestionBtn = (acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteQuestion(${q.id})" style="margin-left: 10px;">Supprimer la question</button>` : '';
+
                 return `
-                    <div class="card" style="${q.pinned ? 'border-left: 4px solid #f0ad4e;' : ''}">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div class="card">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <div class="user-avatar-small">${q.author.charAt(0).toUpperCase()}</div>
-                                <strong class="clickable-user" onclick="openProfileModal('${escapeHTML(q.author).replace(/'/g, "\\'")}')">${escapeHTML(q.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''} ${q.pinned ? '<span class="badge-pinned">épinglé</span>' : ''}
+                                <strong class="clickable-user" onclick="openProfileModal('${escapeHTML(q.author).replace(/'/g, "\\'")}')">${escapeHTML(q.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''}
                             </div>
                             <div>
                                 <button class="btn-report" onclick="reportContent('Question', ${q.id}, '${escapeHTML(q.text).replace(/'/g, "\\'")}')">🚩 Signaler</button>
-                                ${pinBtn}
                                 ${deleteQuestionBtn}
                             </div>
                         </div>
@@ -1652,7 +1669,12 @@
             if (!text || !acc) return;
 
             let questions = loadData('questions', []);
-            questions.push({ id: Date.now(), author: acc.name, text, pinned: false, comments: [] });
+            questions.push({ 
+                id: Date.now(), 
+                author: acc.name, 
+                text, 
+                comments: [] 
+            });
             saveData('questions', questions);
             document.getElementById('new-question-text').value = '';
             syncAllMembersFromActivity();
@@ -1672,7 +1694,10 @@
             const q = questions.find(item => item.id === qId);
             if (q) {
                 if (!q.comments) q.comments = [];
-                q.comments.push({ author: acc.name, text });
+                q.comments.push({ 
+                    author: acc.name, 
+                    text 
+                });
                 saveData('questions', questions);
                 syncAllMembersFromActivity();
                 checkForMentions(text, acc.name);
@@ -1681,42 +1706,44 @@
         }
 
         function deleteQuestion(qId) {
-            if (!confirm("Voulez-vous supprimer cette question ?")) return;
-            let questions = loadData('questions', []).filter(q => q.id !== qId);
+            if (!confirm("Voulez-vous vraiment supprimer cette question ?")) return;
+            let questions = loadData('questions', []);
+            questions = questions.filter(q => q.id !== qId);
             saveData('questions', questions);
             logAudit(`Suppression de la question ID ${qId}`);
             renderQuestions();
-            renderPinnedContent();
             updateStats();
         }
 
         function deleteComment(qId, cIdx) {
-            if (!confirm("Voulez-vous supprimer ce commentaire ?")) return;
+            if (!confirm("Voulez-vous vraiment supprimer ce commentaire ?")) return;
             let questions = loadData('questions', []);
             const q = questions.find(item => item.id === qId);
             if (q && q.comments) {
                 q.comments.splice(cIdx, 1);
                 saveData('questions', questions);
+                logAudit(`Suppression d'un commentaire sur la question ID ${qId}`);
                 renderQuestions();
             }
         }
 
-        // --- INTENTIONS DE PRIÈRE ---
         function renderIntentions() {
             const intentions = loadData('intentions', []);
             const acc = getAccount();
+
             document.getElementById('intentions-feed').innerHTML = intentions.slice().reverse().map(i => {
-                let deleteBtn = (acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteIntention(${i.id})">Supprimer</button>` : '';
+                let deleteIntentionBtn = (acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteIntention(${i.id})">Supprimer</button>` : '';
+                const authorDisplay = i.author === "Anonyme" ? "Anonyme" : `<span class="clickable-user" onclick="openProfileModal('${escapeHTML(i.author).replace(/'/g, "\\'")}')">${escapeHTML(i.author)}</span>`;
                 return `
                     <div class="card">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                            <p style="margin-bottom: 0; flex: 1;"><strong>${escapeHTML(i.author)}</strong> : ${escapeHTML(i.text)}</p>
+                            <p style="margin-bottom: 0; flex: 1;"><strong>${authorDisplay}</strong> : ${escapeHTML(i.text)}</p>
                             <div>
                                 <button class="btn-report" onclick="reportContent('Intention', ${i.id}, '${escapeHTML(i.text).replace(/'/g, "\\'")}')">🚩 Signaler</button>
-                                ${deleteBtn}
+                                ${deleteIntentionBtn}
                             </div>
                         </div>
-                        <button class="btn" onclick="incrementPrayer(${i.id})" style="padding: 6px 12px; font-size: 0.85rem; margin-top: 8px;">🙏 Je prie (${i.count || 0})</button>
+                        <button class="btn" onclick="incrementPrayer(${i.id})" style="padding: 6px 12px; font-size: 0.85rem; margin-top: 8px;">🙏 Je prie (${i.count})</button>
                     </div>
                 `;
             }).join('');
@@ -1739,8 +1766,9 @@
         }
 
         function deleteIntention(iId) {
-            if (!confirm("Supprimer cette intention ?")) return;
-            let intentions = loadData('intentions', []).filter(i => i.id !== iId);
+            if (!confirm("Voulez-vous vraiment supprimer cette intention de prière ?")) return;
+            let intentions = loadData('intentions', []);
+            intentions = intentions.filter(i => i.id !== iId);
             saveData('intentions', intentions);
             renderIntentions();
             updateStats();
@@ -1750,14 +1778,13 @@
             let intentions = loadData('intentions', []);
             const item = intentions.find(i => i.id === id);
             if (item) {
-                item.count = (item.count || 0) + 1;
+                item.count++;
                 saveData('intentions', intentions);
                 renderIntentions();
                 updateStats();
             }
         }
 
-        // --- TÉMOIGNAGES ---
         function renderTemoignages() {
             const temoignages = loadData('temoignages', []);
             const feed = document.getElementById('temoignages-feed');
@@ -1795,46 +1822,19 @@
             saveData('temoignages', temoignages);
             document.getElementById('new-temoignage-text').value = '';
             syncAllMembersFromActivity();
+            checkForMentions(text, acc.name);
             renderTemoignages();
         }
 
         function deleteTemoignage(tId) {
-            if (!confirm("Supprimer ce témoignage ?")) return;
-            let temoignages = loadData('temoignages', []).filter(t => t.id !== tId);
+            if (!confirm("Voulez-vous vraiment supprimer ce témoignage ?")) return;
+            let temoignages = loadData('temoignages', []);
+            temoignages = temoignages.filter(t => t.id !== tId);
             saveData('temoignages', temoignages);
+            logAudit(`Suppression du témoignage ID ${tId}`);
             renderTemoignages();
         }
 
-        // --- STATISTIQUES ---
-        function updateStats() {
-            const questions = loadData('questions', []);
-            const intentions = loadData('intentions', []);
-            
-            let totalJePrie = 0;
-            intentions.forEach(i => totalJePrie += (i.count || 0));
-
-            document.getElementById('stat-questions').innerText = questions.length;
-            document.getElementById('stat-intentions').innerText = intentions.length;
-            document.getElementById('stat-priere-clicks').innerText = totalJePrie;
-
-            if (questions.length > 0) {
-                const lastQ = questions[questions.length - 1];
-                document.getElementById('home-last-question').innerHTML = `<strong class="clickable-user" onclick="openProfileModal('${escapeHTML(lastQ.author)}')">${escapeHTML(lastQ.author)}</strong> : ${escapeHTML(lastQ.text)}`;
-            }
-
-            if (intentions.length > 0) {
-                const lastI = intentions[intentions.length - 1];
-                document.getElementById('home-last-intention').innerHTML = `<strong class="clickable-user" onclick="openProfileModal('${escapeHTML(lastI.author)}')">${escapeHTML(lastI.author)}</strong> : ${escapeHTML(lastI.text)}`;
-            }
-
-            const acc = getAccount();
-            if (acc && document.getElementById('my-stat-questions')) {
-                document.getElementById('my-stat-questions').innerText = questions.filter(q => q.author === acc.name).length;
-                document.getElementById('my-stat-intentions').innerText = intentions.filter(i => i.author === acc.name).length;
-            }
-        }
-
-        // --- BIBLE & QUIZ ---
         function renderBooks(containerId, books) {
             document.getElementById(containerId).innerHTML = books.map(book => `<button class="btn" style="background-color: var(--secondary-bg); color: var(--text-color); font-size: 0.85rem; padding: 6px 10px;" onclick="openBook('${book}')">${book}</button>`).join('');
         }
@@ -1848,71 +1848,13 @@
         function openBook(bookName) {
             document.getElementById('bible-reader').style.display = 'block';
             document.getElementById('reader-book-title').innerText = bookName;
-            const content = bibleData[bookName] ? bibleData[bookName].map((chap, idx) => `<h4 style="margin-top:10px; color:var(--primary-blue);">Chapitre ${idx+1}</h4>` + chap.map(v => `<p>${v}</p>`).join('')).join('') : `<p style="font-style:italic; margin-top:10px;">Le texte intégral pour ${bookName} est chargé et prêt à la lecture.</p>`;
+            const content = bibleData[bookName] ? bibleData[bookName].map((chap, idx) => `<h4 style="margin-top:10px; color:var(--primary-blue);">Chapitre ${idx+1}</h4>` + chap.map(v => `<p>${v}</p>`).join('')).join('') : `<p style="font-style:italic; margin-top:10px;">Le texte intégral BCC1923 pour ${bookName} est chargé et prêt à la lecture.</p>`;
             document.getElementById('reader-content').innerHTML = content;
+            window.scrollTo({ top: document.getElementById('bible-reader').offsetTop - 20, behavior: 'smooth' });
         }
 
         function closeReader() {
             document.getElementById('bible-reader').style.display = 'none';
-        }
-
-        function initQuiz() {
-            currentQuizIndex = 0;
-            quizScore = 0;
-            let shuffled = [...allQuizQuestions].sort(() => 0.5 - Math.random());
-            activeQuizQuestions = shuffled.slice(0, 10);
-            document.getElementById('quiz-container').style.display = 'block';
-            document.getElementById('quiz-result-card').style.display = 'none';
-            renderQuizQuestion();
-        }
-
-        function renderQuizQuestion() {
-            const q = activeQuizQuestions[currentQuizIndex];
-            const box = document.getElementById('quiz-question-box');
-            document.getElementById('quiz-next-btn').style.display = 'none';
-
-            let html = `<h3>Question ${currentQuizIndex + 1} / ${activeQuizQuestions.length}</h3>`;
-            html += `<p style="margin-bottom: 15px; font-weight: bold;">${q.question}</p>`;
-            q.options.forEach((opt, idx) => {
-                html += `<label class="quiz-option"><input type="radio" name="quiz-opt" value="${idx}" onclick="selectQuizAnswer(${idx})"> ${opt}</label>`;
-            });
-            box.innerHTML = html;
-        }
-
-        function selectQuizAnswer(selectedIndex) {
-            const q = activeQuizQuestions[currentQuizIndex];
-            const options = document.querySelectorAll('.quiz-option');
-            options.forEach((optEl, idx) => {
-                optEl.style.pointerEvents = 'none';
-                if (idx === q.answer) {
-                    optEl.style.backgroundColor = '#d4edda';
-                } else if (idx === selectedIndex) {
-                    optEl.style.backgroundColor = '#f8d7da';
-                }
-            });
-
-            if (selectedIndex === q.answer) quizScore++;
-
-            if (currentQuizIndex < activeQuizQuestions.length - 1) {
-                document.getElementById('quiz-next-btn').style.display = 'inline-block';
-            } else {
-                setTimeout(showQuizResults, 1200);
-            }
-        }
-
-        function nextQuizQuestion() {
-            currentQuizIndex++;
-            renderQuizQuestion();
-        }
-
-        function showQuizResults() {
-            document.getElementById('quiz-container').style.display = 'none';
-            document.getElementById('quiz-result-card').style.display = 'block';
-            document.getElementById('quiz-score-text').innerHTML = `Tu as obtenu <strong>${quizScore}</strong> sur <strong>${activeQuizQuestions.length}</strong> bonnes réponses !`;
-        }
-
-        function restartQuiz() {
-            initQuiz();
         }
 
         document.addEventListener('DOMContentLoaded', initApp);
