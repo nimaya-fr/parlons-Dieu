@@ -17,8 +17,19 @@
             --radius: 12px;
         }
 
+        body.dark-theme {
+            --bg-color: #121820;
+            --card-bg: #1a222d;
+            --secondary-bg: #222d3d;
+            --primary-blue: #4ba3e3;
+            --sky-blue: #2f5d82;
+            --text-color: #e4edf7;
+            --border-color: #2c3a4d;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
         @media (prefers-color-scheme: dark) {
-            :root {
+            :root:not(.light-theme) {
                 --bg-color: #121820;
                 --card-bg: #1a222d;
                 --secondary-bg: #222d3d;
@@ -343,6 +354,33 @@
             color: white;
         }
 
+        /* Styles Mini-Chat */
+        #chat-messages {
+            height: 320px;
+            overflow-y: auto;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chat-bubble {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 80%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .chat-bubble.mine {
+            background: var(--secondary-bg);
+            margin-left: auto;
+            border-color: var(--sky-blue);
+        }
+
         /* Modal Profil */
         #profile-modal {
             display: none;
@@ -451,6 +489,7 @@
             <button class="nav-btn active" data-tab="accueil"><span class="icon">🏠</span>Accueil</button>
             <button class="nav-btn" data-tab="decouvrir"><span class="icon">📖</span>Découvrir</button>
             <button class="nav-btn" data-tab="questions"><span class="icon">💬</span>Questions</button>
+            <button class="nav-btn" data-tab="minichat"><span class="icon">⚡</span>Mini-Chat</button>
             <button class="nav-btn" data-tab="prieres"><span class="icon">🙏</span>Prières</button>
             <button class="nav-btn" data-tab="bible"><span class="icon">✝️</span>Bible</button>
             <button class="nav-btn" data-tab="quiz"><span class="icon">🧩</span>Quiz</button>
@@ -616,6 +655,25 @@
             </div>
 
             <div id="questions-feed"></div>
+        </div>
+
+        <!-- 3.5 MINI-CHAT EN DIRECT -->
+        <div id="tab-minichat" class="tab-view">
+            <div class="intro-banner">
+                <h2>⚡ Mini-Chat en direct</h2>
+                <p>Un espace d'échange instantané entre membres de la communauté. Restez courtois et bienveillants !</p>
+            </div>
+
+            <div class="card">
+                <div id="chat-messages"></div>
+                <div id="chat-auth-warning" style="color: var(--primary-blue); font-style: italic; margin-bottom: 10px; display: none;">
+                    Connectez-vous dans l'onglet « Compte » pour participer au chat.
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="chat-input" placeholder="Écrire un message..." style="margin-bottom:0; flex:1;" onkeydown="if(event.key==='Enter') sendChatMessage()" disabled>
+                    <button class="btn" id="chat-send-btn" onclick="sendChatMessage()" disabled>Envoyer</button>
+                </div>
+            </div>
         </div>
 
         <!-- 4. PRIÈRES -->
@@ -820,6 +878,16 @@
                 <p id="compte-intro-text">Un compte te permet de : poser des questions et commenter ; déposer des intentions de prière ; choisir ton identité (prénom et nom, ou pseudo) ; ajouter une photo de profil.</p>
             </div>
 
+            <!-- Sélecteur de Mode Thème Manuel -->
+            <div class="card">
+                <h3>🌙 Apparence du site</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 12px;">Choisissez votre thème visuel préféré :</p>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn" onclick="setTheme('light')">☀️ Mode Clair</button>
+                    <button class="btn" onclick="setTheme('dark')" style="background-color: #222d3d;">🌙 Mode Sombre</button>
+                </div>
+            </div>
+
             <div id="auth-logged-out" class="card">
                 <h3>Créer mon compte</h3>
                 <input type="text" id="reg-prenom" placeholder="Prénom">
@@ -927,37 +995,7 @@
             { question: "Quel est le plus court psaume de la Bible ?", options: ["Psaume 23", "Psaume 117", "Psaume 51", "Psaume 150"], answer: 1 },
             { question: "Quel disciple a douté de la résurrection de Jésus avant de le toucher ?", options: ["Jacques", "Thomas", "Barthélemy", "Matthieu"], answer: 1 },
             { question: "Qui a écrit la majorité des épitres du Nouveau Testament ?", options: ["Pierre", "Paul", "Jean", "Jacques"], answer: 1 },
-            { question: "Quel est le nom de la mère de la Vierge Marie ?", options: ["Élisabeth", "Anne", "Salomé", "Marthe"], answer: 1 },
-            { question: "Combien de jours Jésus a-t-il jeûné dans le désert ?", options: ["7 jours", "12 jours", "40 jours", "100 jours"], answer: 2 },
-            { question: "Quel pécheur est monté dans un sycomore pour voir Jésus ?", options: ["Zachée", "Matthieu", "Bartimée", "Lazare"], answer: 0 },
-            { question: "Quel nom signifie « Dieu avec nous » ?", options: ["Emmanuel", "Messie", "Christ", "Seigneur"], answer: 0 },
-            { question: "Dans quel pays la Sainte Famille s'est-elle réfugiée pour fuir Hérode ?", options: ["Syrie", "Égypte", "Grèce", "Liban"], answer: 1 },
-            { question: "Quel apôtre était un ancien collecteur d'impôts ?", options: ["Pierre", "Matthieu", "Jean", "André"], answer: 1 },
-            { question: "Quelle femme a versé du parfum de grand prix sur les pieds de Jésus ?", options: ["Marie de Magdala", "Marie de Béthanie", "Marthe", "Salomé"], answer: 1 },
-            { question: "Quel prophète a succédé à Élie après avoir reçu son manteau ?", options: ["Élisée", "Amos", "Osée", "Daniel"], answer: 0 },
-            { question: "Quel est le dernier livre de la Bible ?", options: ["Les Actes", "L'Apocalypse", "L'Épître aux Romains", "Jude"], answer: 1 },
-            { question: "Quel est le signe de l'alliance entre Dieu et Noé après le déluge ?", options: ["Une colombe", "Un arc-en-ciel", "Un olivier", "Une colline"], answer: 1 },
-            { question: "Qui a interprété les songes du pharaon en Égypte ?", options: ["Moïse", "Joseph", "Abraham", "Daniel"], answer: 1 },
-            { question: "Quel prophète a lutté toute une nuit avec un ange ?", options: ["Jacob", "Isaac", "Abraham", "Gédéon"], answer: 0 },
-            { question: "Quel juge d'Israël avait une force prodigieuse liée à ses cheveux ?", options: ["Gédéon", "Samson", "Jephté", "Barak"], answer: 1 },
-            { question: "Quel jeune berger a vaincu le géant Goliath ?", options: ["Saul", "David", "Jonathan", "Salomon"], answer: 1 },
-            { question: "Quel prophète a été jeté dans une fosse aux lions sous le règne de Darius ?", options: ["Daniel", "Jérémie", "Ézéchiel", "Amos"], answer: 0 },
-            { question: "Comment s'appelait la sœur de Lazare et Marthe ?", options: ["Marie", "Madeleine", "Salomé", "Suzanne"], answer: 0 },
-            { question: "Quel gouverneur romain a lavé ses mains face à la foule concernant Jésus ?", options: ["Hérode", "Ponce Pilate", "César", "Félix"], answer: 1 },
-            { question: "Où Jésus a-t-il accompli son premier discours des Béatitudes ?", options: ["Sur la montagne", "Dans le désert", "Au bord du lac", "Dans le Temple"], answer: 0 },
-            { question: "Quel est le plus long livre de la Bible ?", options: ["Isaïe", "Les Psaumes", "Genèse", "Jérémie"], answer: 1 },
-            { question: "Quel est le nom de la montagne où Jésus a été crucifié ?", options: ["Sinaï", "Calvaire (Golgotha)", "Tabor", "Nébo"], answer: 1 },
-            { question: "Quel évangile commence par « Au commencement était le Verbe » ?", options: ["Matthieu", "Marc", "Luc", "Jean"], answer: 3 },
-            { question: "Qui fut le premier martyr chrétien lapidé à mort ?", options: ["Étienne", "Jacques", "Paul", "Barnabé"], answer: 0 },
-            { question: "Quel patriarche a failli sacrifier son fils Isaac sur l'ordre de Dieu ?", options: ["Abraham", "Noé", "Jacob", "Loth"], answer: 0 },
-            { question: "Quel disciple a remplacé Judas parmi les douze apôtres ?", options: ["Matthias", "Paul", "Barnabé", "Timothée"], answer: 0 },
-            { question: "Quelle reine est venue rendre visite au roi Salomon pour éprouver sa sagesse ?", options: ["La reine Esther", "La reine de Saba", "Jézabel", "Kouba"], answer: 1 },
-            { question: "Quel est le symbole de l'Esprit Saint lors du baptême de Jésus ?", options: ["Une colombe", "Un feu ardent", "Un vent violent", "Une étoile"], answer: 0 },
-            { question: "Combien de commandements Dieu a-t-il donnés à Moïse sur les Tables de la Loi ?", options: ["7", "10", "12", "15"], answer: 1 },
-            { question: "Quel prophète a défié les prêtres de Baal sur le mont Carmel ?", options: ["Élie", "Élisée", "Isaïe", "Amos"], answer: 0 },
-            { question: "Quelle femme a caché les espions israélites à Jéricho ?", options: ["Ruth", "Rahab", "Naomie", "Abigaïl"], answer: 1 },
-            { question: "Quel jeune homme a été vendu comme esclave par ses frères jaloux en Égypte ?", options: ["Joseph", "Benjamin", "Ruben", "Juda"], answer: 0 },
-            { question: "Dans quel jardin Jésus a-t-il prié avant son arrestation ?", options: ["Jardin d'Éden", "Jardin de Gethsémani", "Jardin du Roi", "Jardin des Oliviers"], answer: 1 }
+            { question: "Quel est le nom de la mère de la Vierge Marie ?", options: ["Élisabeth", "Anne", "Salomé", "Marthe"], answer: 1 }
         ];
 
         let activeQuizQuestions = [];
@@ -966,6 +1004,23 @@
 
         const atBooks = ["Genèse", "Exode", "Lévitique", "Nombres", "Deutéronome", "Josué", "Juges", "Ruth", "1 Samuel", "2 Samuel", "1 Rois", "2 Rois", "1 Chroniques", "2 Chroniques", "Esdras", "Néhémie", "Tobie*", "Judith*", "Esther", "1 Maccabées*", "2 Maccabées*", "Job", "Psaumes", "Proverbes", "Qohélet", "Cantique des Cantiques", "Sagesse*", "Siracide*", "Isaïe", "Jérémie", "Lamentations", "Baruch*", "Ézéchiel", "Daniel", "Osée", "Joël", "Amos", "Abdias", "Jonas", "Michée", "Nahum", "Habacuc", "Sophonie", "Aggée", "Zacharie", "Malachie"];
         const ntBooks = ["Matthieu", "Marc", "Luc", "Jean", "Actes des Apôtres", "Romains", "1 Corinthiens", "2 Corinthiens", "Galates", "Éphésiens", "Philippiens", "Colossiens", "1 Thessaloniciens", "2 Thessaloniciens", "1 Timothée", "2 Timothée", "Tite", "Philémon", "Hébreux", "Jacques", "1 Pierre", "2 Pierre", "1 Jean", "2 Jean", "3 Jean", "Jude", "Apocalypse"];
+
+        // Gestion du Thème (Mode Clair / Sombre)
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+                localStorage.setItem('pd_theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-theme');
+                localStorage.setItem('pd_theme', 'light');
+            }
+        }
+
+        function loadTheme() {
+            if (localStorage.getItem('pd_theme') === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+        }
 
         function getDayIndex(max) {
             const now = new Date();
@@ -1021,7 +1076,6 @@
             container.innerHTML = logs.map(l => `<div>• ${escapeHTML(l)}</div>`).join('');
         }
 
-        // Gestion des notifications push / Web
         function isPushEnabled() {
             return localStorage.getItem('pd_push_enabled') === 'true';
         }
@@ -1068,16 +1122,12 @@
             }
         }
 
-        // Analyse du texte pour formater les mentions (@Nom ou @Admin)
         function formatMentions(text) {
             if (!text) return "";
-            // Échapper d'abord le HTML
             let safe = escapeHTML(text);
-            // Remplacer les mentions par un span stylisé
             return safe.replace(/@([a-zA-ZÀ-ÿ0-9_\s]+)(?=\b|$)/g, '<span class="mention-tag">@$1</span>');
         }
 
-        // Vérifie si le texte mentionne un admin connecté
         function checkForMentions(text, author) {
             const acc = getAccount();
             if (!acc || !acc.isAdmin) return;
@@ -1089,7 +1139,6 @@
             }
         }
 
-        // Rétrocompatibilité : analyse et enregistre tous les auteurs existants
         function syncAllMembersFromActivity() {
             let members = loadData('members_directory', []);
             const existingNames = new Set(members.map(m => m.name.toLowerCase()));
@@ -1115,6 +1164,9 @@
             const intentions = loadData('intentions', []);
             intentions.forEach(i => addNameIfNeeded(i.author));
 
+            const chatMessages = loadData('minichat', []);
+            chatMessages.forEach(m => addNameIfNeeded(m.author));
+
             saveData('members_directory', members);
         }
 
@@ -1132,6 +1184,7 @@
         }
 
         function initApp() {
+            loadTheme();
             syncAllMembersFromActivity();
 
             document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -1158,12 +1211,65 @@
             initQuiz();
             updateAccountUI();
             renderQuestions();
+            renderChatMessages();
             renderIntentions();
             renderTemoignages();
             updateStats();
             updatePushBtnUI();
             renderAdminReports();
             renderAuditLogs();
+
+            // Rafraîchissement automatique du Mini-Chat toutes les 2 secondes
+            setInterval(renderChatMessages, 2000);
+        }
+
+        // --- MINI-CHAT EN DIRECT ---
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            const acc = getAccount();
+            if (!text || !acc) return;
+
+            let chatMessages = loadData('minichat', []);
+            chatMessages.push({
+                id: Date.now(),
+                author: acc.name,
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+            if (chatMessages.length > 100) chatMessages.shift(); // Garder les 100 derniers messages
+            saveData('minichat', chatMessages);
+            input.value = '';
+            syncAllMembersFromActivity();
+            renderChatMessages();
+        }
+
+        function renderChatMessages() {
+            const container = document.getElementById('chat-messages');
+            if (!container) return;
+            const chatMessages = loadData('minichat', []);
+            const acc = getAccount();
+
+            if (chatMessages.length === 0) {
+                container.innerHTML = `<p style="text-align: center; font-style: italic; opacity: 0.6; margin-top: 20px;">Aucun message pour l'instant. Soyez le premier à écrire !</p>`;
+                return;
+            }
+
+            container.innerHTML = chatMessages.map(m => {
+                const isMine = acc && m.author === acc.name;
+                const isAdmin = isUserAdmin(m.author);
+                return `
+                    <div class="chat-bubble ${isMine ? 'mine' : ''}">
+                        <div style="font-size: 0.75rem; opacity: 0.7; margin-bottom: 2px;">
+                            <strong class="clickable-user" onclick="openProfileModal('${escapeHTML(m.author)}')">${escapeHTML(m.author)}</strong> ${isAdmin ? '<span class="badge-admin">admin</span>' : ''} - ${m.time}
+                        </div>
+                        <div>${escapeHTML(m.text)}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Auto-scroll vers le bas
+            container.scrollTop = container.scrollHeight;
         }
 
         function updateCountdowns() {
@@ -1341,6 +1447,7 @@
             localStorage.setItem('pd_account', JSON.stringify({ name, photo, isAdmin }));
             updateAccountUI();
             renderQuestions();
+            renderChatMessages();
             renderIntentions();
             renderTemoignages();
             updateStats();
@@ -1353,6 +1460,7 @@
                 switchTab('accueil');
             }
             renderQuestions();
+            renderChatMessages();
             renderIntentions();
             renderTemoignages();
             updateStats();
@@ -1367,10 +1475,8 @@
                 localStorage.setItem('pd_account', JSON.stringify(acc));
             }
 
-            if (acc && acc.isAdmin) {
-                adminBtn.style.display = 'flex';
-            } else {
-                adminBtn.style.display = 'none';
+            if (adminBtn) {
+                adminBtn.style.display = (acc && acc.isAdmin) ? 'flex' : 'none';
             }
 
             if (acc) {
@@ -1390,11 +1496,17 @@
                 document.getElementById('publish-temoignage-btn').disabled = false;
                 document.getElementById('auth-warning-temoignage').style.display = 'none';
 
+                // Activation Mini-chat
+                document.getElementById('chat-input').disabled = false;
+                document.getElementById('chat-send-btn').disabled = false;
+                document.getElementById('chat-auth-warning').style.display = 'none';
+
                 renderAdminMembersList();
                 renderAdminReports();
             } else {
                 document.getElementById('auth-logged-out').style.display = 'block';
                 document.getElementById('auth-logged-in').style.display = 'none';
+                
                 document.getElementById('new-question-text').disabled = true;
                 document.getElementById('publish-question-btn').disabled = true;
                 document.getElementById('auth-warning-question').style.display = 'block';
@@ -1402,6 +1514,11 @@
                 document.getElementById('new-temoignage-text').disabled = true;
                 document.getElementById('publish-temoignage-btn').disabled = true;
                 document.getElementById('auth-warning-temoignage').style.display = 'block';
+
+                // Désactivation Mini-chat
+                document.getElementById('chat-input').disabled = true;
+                document.getElementById('chat-send-btn').disabled = true;
+                document.getElementById('chat-auth-warning').style.display = 'block';
             }
         }
 
