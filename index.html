@@ -192,7 +192,7 @@
             opacity: 0.9;
         }
 
-        textarea, input[type="text"], input[type="file"] {
+        textarea, input[type="text"], input[type="file"], input[type="password"] {
             width: 100%;
             padding: 12px;
             border-radius: 8px;
@@ -371,7 +371,7 @@
             
             <div class="card">
                 <h3>👋 Bienvenue</h3>
-                <p>Un espace pour découvrir la foi chrétienne, poser tes questions, prier ensemble et échanger avec des admins et toute la communauté.</p>
+                <p>Un espace pour découvrir la foi chrétienne, poser tes questions, prier ensemble et échanger avec des admins et toute la communauté. Pas besoin d’être un expert : toutes les questions sont les bienvenues.</p>
             </div>
 
             <div class="card">
@@ -380,10 +380,35 @@
             </div>
 
             <div class="card">
+                <h3>🙏 Prière du jour</h3>
+                <p id="home-priere">Chargement de la prière...</p>
+            </div>
+
+            <div class="card">
+                <h3>✨ Le saviez-vous ?</h3>
+                <p id="home-saviez">Chargement...</p>
+            </div>
+
+            <div class="card">
                 <h3>👥 La communauté en chiffres</h3>
                 <p>Questions publiées : <strong id="stat-questions">0</strong></p>
                 <p>Intentions de prière déposées : <strong id="stat-intentions">0</strong></p>
                 <p>Prières prononcées (« Je prie ») : <strong id="stat-priere-clicks">0</strong></p>
+            </div>
+
+            <div class="card">
+                <h3>💬 Dernière question publiée</h3>
+                <div id="home-last-question">Aucune question pour le moment.</div>
+            </div>
+
+            <div class="card">
+                <h3>🕯️ Dernière intention de prière déposée</h3>
+                <div id="home-last-intention">Aucune intention pour le moment.</div>
+            </div>
+
+            <div class="card">
+                <h3>🤝 Esprit du site</h3>
+                <p>Ici on se parle avec respect et bienveillance. On ne se moque pas, on ne juge pas, on écoute. Les messages irrespectueux seront supprimés par les admins.</p>
             </div>
         </div>
 
@@ -391,10 +416,13 @@
         <div id="tab-decouvrir" class="tab-view">
             <div class="intro-banner">
                 <h2>📖 Découvrir la foi catholique</h2>
-                <p>Des explications simples sur ce que croit et vit l’Église catholique.</p>
+                <p>Des explications simples sur ce que croit et vit l’Église catholique. Clique sur un sujet pour le déplier.</p>
             </div>
-            <details><summary>Qui est Jésus ?</summary><p>Jésus de Nazareth est le Fils de Dieu fait homme, vrai Dieu et vrai homme...</p></details>
+
+            <div class="section-title">La foi</div>
+            <details><summary>Qui est Jésus ?</summary><p>Pour les catholiques, Jésus de Nazareth est le Fils de Dieu fait homme : vrai Dieu et vrai homme. Né de la Vierge Marie, il a annoncé le Royaume de Dieu, guéri, pardonné, puis il est mort sur la croix sous Ponce Pilate. Il est ressuscité le troisième jour.</p></details>
             <details><summary>La Sainte Trinité</summary><p>Un seul Dieu en trois Personnes : le Père, le Fils et le Saint-Esprit.</p></details>
+            <details><summary>Le Credo</summary><p>Le Credo résume la foi de l’Église : croire en Dieu le Père créateur, en Jésus-Christ son Fils unique, en l’Esprit Saint.</p></details>
         </div>
 
         <!-- 3. QUESTIONS -->
@@ -420,8 +448,9 @@
         <div id="tab-prieres" class="tab-view">
             <div class="intro-banner">
                 <h2>🙏 Intentions de prière</h2>
-                <p>Dépose ton intention, et prie pour celles des autres.</p>
+                <p>« Là où deux ou trois sont réunis en mon nom, je suis là au milieu d’eux. »</p>
             </div>
+
             <div class="card">
                 <h3>Déposer une intention de prière</h3>
                 <textarea id="new-intention-text" placeholder="Votre intention de prière..." rows="3"></textarea>
@@ -431,6 +460,8 @@
                 </div>
                 <button class="btn" onclick="publishIntention()">Déposer</button>
             </div>
+
+            <div class="section-title">Intentions de la communauté</div>
             <div id="intentions-feed"></div>
         </div>
 
@@ -439,6 +470,11 @@
             <div class="intro-banner">
                 <h2>✝️ Bible — Traduction intégrale</h2>
                 <p>Sélectionne un livre ci-dessous pour le lire directement dans l'application.</p>
+            </div>
+
+            <div class="card">
+                <h3>📖 Conseils de lecture</h3>
+                <p>Commence par les Évangiles (Marc, Luc, Jean) puis les Psaumes pour prier.</p>
             </div>
 
             <div class="card">
@@ -464,12 +500,20 @@
                 <h2>🌐 Équipe & Réseaux</h2>
                 <p>Retrouve l’admin sur ses réseaux.</p>
             </div>
+
+            <div class="section-title">L’équipe</div>
             <div class="card" style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">
                 <img src="image.jpg" alt="Aaron Mendy" style="width: 100px; height: 130px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color);" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'130\'><rect width=\'100\' height=\'130\' fill=\'%23f1e7d3\'/><text x=\'50\' y=\'70\' font-size=\'14\' text-anchor=\'middle\' fill=\'%2325364a\'>Aaron</text></svg>'">
-                <div>
-                    <h3>👤 Admin Principal : Aaron Mendy <span class="badge-admin">admin suprême</span></h3>
-                    <p>Créateur du site et passionné par le partage de la foi.</p>
+                <div style="flex: 1; min-width: 250px;">
+                    <h3 style="margin-bottom: 6px;">👤 Admin Principal : Aaron Mendy <span class="badge-admin">admin suprême</span></h3>
+                    <p>J'ai eu la chance de grandir dans une famille catholique, mais ma foi s'est véritablement renforcée vers la fin de mes années de lycée. Créateur du compte TikTok basé sur le christianisme et animateur de la communauté !</p>
                 </div>
+            </div>
+
+            <div class="section-title">Réseaux sociaux</div>
+            <div class="card">
+                <h3>📷 Instagram</h3>
+                <p><a href="https://www.instagram.com/_imblackman_" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">@_imblackman_</a></p>
             </div>
         </div>
 
@@ -477,7 +521,7 @@
         <div id="tab-compte" class="tab-view">
             <div class="intro-banner">
                 <h2>👤 Mon Compte</h2>
-                <p>Gère ton profil et accède aux fonctionnalités de modération si tu es administrateur.</p>
+                <p>Gère ton profil et accède à la modération si tu es administrateur.</p>
             </div>
 
             <div id="auth-logged-out" class="card">
@@ -485,6 +529,7 @@
                 <input type="text" id="reg-prenom" placeholder="Prénom">
                 <input type="text" id="reg-nom" placeholder="Nom">
                 <input type="text" id="reg-pseudo" placeholder="Pseudo (optionnel)">
+                <input type="password" id="reg-admin-code" placeholder="Code secret administrateur (laisser vide si membre)">
                 <label style="font-size: 0.85rem; display: block; margin-bottom: 4px;">Photo de profil :</label>
                 <input type="file" id="reg-photo" accept="image/*">
                 <button class="btn" onclick="createAccount()">Créer mon compte</button>
@@ -513,12 +558,23 @@
     </main>
 
     <script>
-        // TON NOM ADMIN SUPRÊME UNIQUE DANS TOUT LE CODE
+        // 🔐 TES PARAMÈTRES DE SÉCURITÉ ADMIN EXCLUSIFS
         const SUPREME_ADMIN_NAME = "Aaron Mendy";
+        const SUPREME_ADMIN_SECRET_CODE = "159357";
 
         const versetsList = [
-            "Dieu a tant aimé le monde qu’il a donné son Fils unique... — *Jean 3, 16*",
-            "Le Seigneur est mon berger : je ne manque de rien. — *Psaume 22 (23), 1*"
+            "Dieu a tant aimé le monde qu’il a donné son Fils unique, afin que quiconque croit en lui ne se perde pas, mais obtienne la vie éternelle. — *Jean 3, 16*",
+            "Le Seigneur est mon berger : je ne manque de rien. — *Psaume 22 (23), 1*",
+            "Je suis le chemin, la vérité et la vie. — *Jean 14, 6*"
+        ];
+
+        const prieresJourList = [
+            "Seigneur, je te confie cette journée. Garde-moi dans ta paix, aide-moi à voir ceux qui ont besoin de moi, et donne-moi la force d’aimer. Amen."
+        ];
+
+        const saviezVousList = [
+            "Le mot « Évangile » vient du grec et signifie « bonne nouvelle ».",
+            "La Bible n’est pas un seul livre mais une bibliothèque de 73 livres."
         ];
 
         const atBooks = ["Genèse", "Exode", "Lévitique", "Nombres", "Deutéronome", "Josué", "Juges", "Ruth", "1 Samuel", "2 Samuel", "1 Rois", "2 Rois", "1 Chroniques", "2 Chroniques", "Esdras", "Néhémie", "Tobie*", "Judith*", "Esther", "1 Maccabées*", "2 Maccabées*", "Job", "Psaumes", "Proverbes", "Qohélet", "Cantique des Cantiques", "Sagesse*", "Siracide*", "Isaïe", "Jérémie", "Lamentations", "Baruch*", "Ézéchiel", "Daniel", "Osée", "Joël", "Amos", "Abdias", "Jonas", "Michée", "Nahum", "Habacuc", "Sophonie", "Aggée", "Zacharie", "Malachie"];
@@ -548,9 +604,11 @@
             return acc ? JSON.parse(acc) : null;
         }
 
-        function isUserAdmin(name) {
+        function isUserAdmin(name, secretProvided = "") {
             if (!name) return false;
-            if (name.toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) return true;
+            if (name.toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() && secretProvided === SUPREME_ADMIN_SECRET_CODE) {
+                return true;
+            }
             const customAdmins = loadData('custom_admins', []);
             return customAdmins.map(a => a.toLowerCase()).includes(name.toLowerCase());
         }
@@ -577,6 +635,9 @@
             });
 
             document.getElementById('home-verset').innerText = versetsList[getDayIndex(versetsList.length)];
+            document.getElementById('home-priere').innerText = prieresJourList[getDayIndex(prieresJourList.length)];
+            document.getElementById('home-saviez').innerText = saviezVousList[getDayIndex(saviezVousList.length)];
+
             renderBooks('at-books', atBooks);
             renderBooks('nt-books', ntBooks);
 
@@ -595,12 +656,22 @@
             document.getElementById('stat-questions').innerText = questions.length;
             document.getElementById('stat-intentions').innerText = intentions.length;
             document.getElementById('stat-priere-clicks').innerText = totalJePrie;
+
+            if (questions.length > 0) {
+                const lastQ = questions[questions.length - 1];
+                document.getElementById('home-last-question').innerHTML = `<strong>${escapeHTML(lastQ.author)}</strong> : ${escapeHTML(lastQ.text)}`;
+            }
+            if (intentions.length > 0) {
+                const lastI = intentions[intentions.length - 1];
+                document.getElementById('home-last-intention').innerHTML = `<strong>${escapeHTML(lastI.author)}</strong> : ${escapeHTML(lastI.text)}`;
+            }
         }
 
         function createAccount() {
             const prenom = document.getElementById('reg-prenom').value.trim();
             const nom = document.getElementById('reg-nom').value.trim();
             const pseudo = document.getElementById('reg-pseudo').value.trim();
+            const adminCode = document.getElementById('reg-admin-code').value.trim();
 
             if (!prenom && !nom && !pseudo) {
                 alert("Veuillez renseigner au moins un prénom/nom ou un pseudo.");
@@ -608,19 +679,19 @@
             }
 
             const displayName = pseudo || `${prenom} ${nom}`.trim();
-            const fileInput = document.getElementById('reg-photo');
+            const isAdmin = isUserAdmin(displayName, adminCode);
 
+            const fileInput = document.getElementById('reg-photo');
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = e => saveAccountAndReload(displayName, e.target.result);
+                reader.onload = e => saveAccountAndReload(displayName, e.target.result, isAdmin);
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
-                saveAccountAndReload(displayName, null);
+                saveAccountAndReload(displayName, null, isAdmin);
             }
         }
 
-        function saveAccountAndReload(name, photo) {
-            const isAdmin = isUserAdmin(name);
+        function saveAccountAndReload(name, photo, isAdmin) {
             localStorage.setItem('pd_account', JSON.stringify({ name, photo, isAdmin }));
             updateAccountUI();
             renderQuestions();
@@ -637,10 +708,6 @@
         function updateAccountUI() {
             const acc = getAccount();
             if (acc) {
-                // Actualiser le statut admin au cas où il aurait été promu
-                acc.isAdmin = isUserAdmin(acc.name);
-                localStorage.setItem('pd_account', JSON.stringify(acc));
-
                 document.getElementById('auth-logged-out').style.display = 'none';
                 document.getElementById('auth-logged-in').style.display = 'block';
                 document.getElementById('user-display-name').innerText = acc.name;
@@ -649,8 +716,7 @@
                 const avatarDiv = document.getElementById('user-display-avatar');
                 avatarDiv.innerHTML = acc.photo ? `<img src="${acc.photo}" style="width:100%;height:100%;object-fit:cover;">` : acc.name.charAt(0).toUpperCase();
                 
-                // Afficher le panneau de promotion admin SEULEMENT pour l'admin suprême (toi)
-                if (acc.name.toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) {
+                if (acc.name.toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() && acc.isAdmin) {
                     document.getElementById('admin-panel-section').style.display = 'block';
                 } else {
                     document.getElementById('admin-panel-section').style.display = 'none';
@@ -688,12 +754,12 @@
             const acc = getAccount();
 
             feed.innerHTML = questions.slice().reverse().map(q => {
-                const userIsAdmin = acc && isUserAdmin(acc.name);
-                const authorIsAdmin = isUserAdmin(q.author);
+                const userIsAdmin = acc && acc.isAdmin;
+                const authorIsAdmin = (q.author.toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase() || loadData('custom_admins', []).map(a => a.toLowerCase()).includes(q.author.toLowerCase()));
 
                 let commentsHtml = q.comments ? q.comments.map((c, cIdx) => `
                     <div class="comment-box">
-                        <strong>${escapeHTML(c.author)}</strong> ${isUserAdmin(c.author) ? '<span class="badge-admin">admin</span>' : ''} : ${escapeHTML(c.text)}
+                        <strong>${escapeHTML(c.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''} : ${escapeHTML(c.text)}
                         ${userIsAdmin ? `<button class="btn-delete" onclick="deleteComment(${q.id},${cIdx})">Supprimer</button>` : ''}
                     </div>
                 `).join('') : '';
@@ -733,12 +799,7 @@
             if (!text || !acc) return;
 
             let questions = loadData('questions', []);
-            questions.push({ 
-                id: Date.now(), 
-                author: acc.name, 
-                text, 
-                comments: [] 
-            });
+            questions.push({ id: Date.now(), author: acc.name, text, comments: [] });
             saveData('questions', questions);
             document.getElementById('new-question-text').value = '';
             renderQuestions();
@@ -830,19 +891,16 @@
 
         function openBook(bookName) {
             document.getElementById('bible-reader').style.display = 'block';
-            document.getElementById('reader-book-title').innerText = bookName;
+            document.getElementById('reader-book-title').innerText = bookName + " — Lecture biblique";
             
-            // Génération dynamique d'un contenu de lecture structuré et interactif pour le livre choisi
-            let contentHTML = `<h4 style="color: var(--primary-blue); margin-bottom: 10px;">Chapitre 1</h4>`;
-            for (let i = 1; i <= 10; i++) {
-                contentHTML += `<p style="margin-bottom: 8px;"><strong>${i}</strong> Texte et enseignement du verset ${i} tiré de l'ouvrage traditionnel pour méditation et éditation spirituelle.</p>`;
-            }
-            contentHTML += `<h4 style="color: var(--primary-blue); margin: 15px 0 10px 0;">Chapitre 2</h4>`;
-            for (let i = 1; i <= 8; i++) {
-                contentHTML += `<p style="margin-bottom: 8px;"><strong>${i}</strong> Poursuite du texte du chapitre 2 pour l'édification de la communauté.</p>`;
-            }
+            let htmlContent = `
+                <h4 style="color: var(--primary-blue); margin-bottom: 8px;">Chapitre 1</h4>
+                <p style="margin-bottom: 6px;"><strong>1</strong> Lecture et méditation spirituelle tirée du livre de ${bookName}.</p>
+                <p style="margin-bottom: 6px;"><strong>2</strong> Paroles d'enseignement et de sagesse pour l'édification de la communauté.</p>
+                <p style="margin-bottom: 6px;"><strong>3</strong> Que la paix et la lumière guident votre lecture quotidienne.</p>
+            `;
 
-            document.getElementById('reader-content').innerHTML = contentHTML;
+            document.getElementById('reader-content').innerHTML = htmlContent;
             window.scrollTo({ top: document.getElementById('bible-reader').offsetTop - 20, behavior: 'smooth' });
         }
 
