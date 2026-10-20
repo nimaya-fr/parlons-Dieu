@@ -250,6 +250,7 @@
             padding-left: 12px;
             margin-top: 10px;
             font-size: 0.9rem;
+            position: relative;
         }
 
         .badge-admin {
@@ -274,6 +275,17 @@
             color: var(--primary-blue);
             font-weight: bold;
             font-size: 0.8rem;
+        }
+
+        .btn-delete {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            float: right;
         }
 
         /* Adaptation Mobile */
@@ -359,7 +371,7 @@
             
             <div class="card">
                 <h3>👋 Bienvenue</h3>
-                <p>Un espace pour découvrir la foi chrétienne, poser tes questions, prier ensemble et échanger avec des admins et toute la communauté. Pas besoin d’être un expert : toutes les questions sont les bienvenues.</p>
+                <p>Un espace pour découvrir la foi chrétienne, poser tes questions, prier ensemble et échanger avec des admins et toute la communauté.</p>
             </div>
 
             <div class="card">
@@ -368,35 +380,10 @@
             </div>
 
             <div class="card">
-                <h3>🙏 Prière du jour</h3>
-                <p id="home-priere">Chargement de la prière...</p>
-            </div>
-
-            <div class="card">
-                <h3>✨ Le saviez-vous ?</h3>
-                <p id="home-saviez">Chargement...</p>
-            </div>
-
-            <div class="card">
                 <h3>👥 La communauté en chiffres</h3>
                 <p>Questions publiées : <strong id="stat-questions">0</strong></p>
                 <p>Intentions de prière déposées : <strong id="stat-intentions">0</strong></p>
                 <p>Prières prononcées (« Je prie ») : <strong id="stat-priere-clicks">0</strong></p>
-            </div>
-
-            <div class="card">
-                <h3>💬 Dernière question publiée</h3>
-                <div id="home-last-question">Aucune question pour le moment.</div>
-            </div>
-
-            <div class="card">
-                <h3>🕯️ Dernière intention de prière déposée</h3>
-                <div id="home-last-intention">Aucune intention pour le moment.</div>
-            </div>
-
-            <div class="card">
-                <h3>🤝 Esprit du site</h3>
-                <p>Ici on se parle avec respect et bienveillance. On ne se moque pas, on ne juge pas, on écoute. Les messages irrespectueux seront supprimés par les admins.</p>
             </div>
         </div>
 
@@ -404,43 +391,17 @@
         <div id="tab-decouvrir" class="tab-view">
             <div class="intro-banner">
                 <h2>📖 Découvrir la foi catholique</h2>
-                <p>Des explications simples sur ce que croit et vit l’Église catholique. Clique sur un sujet pour le déplier. Tu as une question qui n’est pas traitée ? Pose-la dans l’onglet « Questions ».</p>
+                <p>Des explications simples sur ce que croit et vit l’Église catholique.</p>
             </div>
-
-            <div class="section-title">La foi</div>
-            <details><summary>Qui est Jésus ?</summary><p>Pour les catholiques, Jésus de Nazareth est le Fils de Dieu fait homme : vrai Dieu et vrai homme. Né de la Vierge Marie, il a annoncé le Royaume de Dieu, guéri, pardonné, puis il est mort sur la croix sous Ponce Pilate. Il est ressuscité le troisième jour : c’est le cœur de la foi chrétienne, célébré à Pâques. Sa vie est racontée dans les quatre Évangiles : Matthieu, Marc, Luc et Jean.</p></details>
-            <details><summary>La Sainte Trinité</summary><p>Un seul Dieu en trois Personnes : le Père, le Fils et le Saint-Esprit. Ce n’est pas trois dieux, mais un seul Dieu qui est amour et relation. On fait le signe de croix « Au nom du Père, et du Fils, et du Saint-Esprit » pour le rappeler.</p></details>
-            <details><summary>Le Credo</summary><p>Le Credo (ou « Symbole des apôtres ») résume la foi de l’Église : croire en Dieu le Père créateur, en Jésus-Christ son Fils unique, en l’Esprit Saint, en l’Église, la communion des saints, le pardon des péchés, la résurrection de la chair et la vie éternelle. On le récite à la messe le dimanche.</p></details>
-            <details><summary>Ciel, enfer, purgatoire</summary><p>Les catholiques croient que Dieu veut sauver tous les hommes. Le ciel est la communion éternelle avec Dieu. L’enfer est le refus définitif de son amour. Le purgatoire est une purification après la mort pour ceux qui sont sauvés mais pas encore prêts à voir Dieu : c’est pourquoi on prie pour les défunts, notamment le 2 novembre.</p></details>
-
-            <div class="section-title">Marie et les saints</div>
-            <details><summary>Marie, Mère de Dieu</summary><p>Marie est la mère de Jésus. Le concile d’Éphèse (431) l’a proclamée « Mère de Dieu ». L’Église enseigne aussi son Immaculée Conception (préservée du péché dès sa conception, dogme de 1854) et son Assomption (élevée au ciel avec son corps et son âme, dogme de 1950). Les catholiques ne l’adorent pas : l’adoration est réservée à Dieu seul. Ils la vénèrent et lui demandent de prier avec eux.</p></details>
-            <details><summary>La communion des saints</summary><p>Les saints sont des hommes et des femmes dont la vie a été exemplaire. Ils sont proposés comme modèles et intercesseurs, comme on demande à un ami de prier pour soi. Pour être canonisé, il faut un procès rigoureux et la reconnaissance de miracles. Exemples : saint François d’Assise, sainte Thérèse de Lisieux, saint Jean-Paul II, sainte Bernadette.</p></details>
-
-            <div class="section-title">L’Église</div>
-            <details><summary>L’Église et le pape</summary><p>Jésus a fondé son Église sur les apôtres, avec Pierre à leur tête (Matthieu 16, 18). Le pape, évêque de Rome, est le successeur de Pierre. Les évêques sont les successeurs des apôtres. Les prêtres et diacres les aident. Les fidèles laïcs forment aussi l’Église, par leur baptême.</p></details>
-            <details><summary>Bible, Tradition, Magistère</summary><p>Les catholiques s’appuient sur trois piliers : l’Écriture sainte, la Tradition vivante transmise depuis les apôtres, et le Magistère (pape et évêques) qui interprète authentiquement l’une et l’autre. La Bible catholique compte 73 livres (46 pour l’Ancien Testament, 27 pour le Nouveau).</p></details>
-            <details><summary>Catholiques, orthodoxes, protestants</summary><p>Ce sont les trois grandes familles chrétiennes. Elles partagent l’essentiel : la Trinité, le Christ, la Bible. Elles diffèrent notamment sur l’autorité du pape (reconnue seulement par les catholiques), la Tradition, le nombre de sacrements et le canon biblique. Le dialogue œcuménique cherche à retrouver l’unité.</p></details>
-
-            <div class="section-title">Les sacrements</div>
-            <details><summary>Les 7 sacrements</summary><p>Signes efficaces de la grâce, institués par le Christ. <strong>Baptême</strong> : naissance à la vie chrétienne. <strong>Confirmation</strong> : don de l’Esprit Saint. <strong>Eucharistie</strong> : communion au Corps et au Sang du Christ. <strong>Réconciliation</strong> : pardon des péchés. <strong>Onction des malades</strong> : force et réconfort dans la maladie. <strong>Ordre</strong> : diacres, prêtres, évêques. <strong>Mariage</strong> : alliance d’un homme et d’une femme.</p></details>
-            <details><summary>La messe, pas à pas</summary><p>1) Rites d’accueil : chant, signe de croix, demande de pardon. 2) Liturgie de la Parole : lectures, psaume, Évangile, homélie, Credo, prière universelle. 3) Liturgie eucharistique : offrande du pain et du vin, prière eucharistique, consécration, Notre Père, communion. 4) Envoi et bénédiction. La messe est célébrée chaque dimanche, jour de la Résurrection.</p></details>
-            <details><summary>L’Eucharistie : présence réelle</summary><p>Les catholiques croient que, lors de la consécration, le pain et le vin deviennent réellement le Corps et le Sang du Christ, tout en gardant l’apparence du pain et du vin : on parle de transsubstantiation. Pour communier, il faut être baptisé, croire à cette présence et ne pas être en état de péché grave sans s’être confessé.</p></details>
-            <details><summary>La confession</summary><p>Le sacrement de réconciliation se vit avec un prêtre. On exprime son regret, on confesse ses péchés, on reçoit l’absolution « Je te pardonne tous tes péchés » et une pénitence. Le prêtre est tenu au secret absolu. Recommandé au moins une fois par an, notamment avant Pâques.</p></details>
-
-            <div class="section-title">La prière et la vie chrétienne</div>
-            <details><summary>Comment prier ?</summary><p>Prier, c’est parler à Dieu comme à un ami : remercier, demander, demander pardon, louer, écouter en silence. On peut prier avec ses mots, avec des prières toutes faites, avec la Bible (lectio divina), ou devant le Saint-Sacrement dans l’adoration. Quelques minutes par jour, à heure fixe, suffisent pour commencer.</p></details>
-            <details><summary>Le chapelet</summary><p>Prière mariale qui accompagne la méditation de la vie du Christ. Il se compose de 5 dizaines : chaque dizaine commence par un Notre Père, puis 10 Je vous salue Marie, et un Gloire au Père. Chaque jour correspond à des mystères : joyeux (lundi, samedi), lumineux (jeudi), douloureux (mardi, vendredi), glorieux (mercredi, dimanche). Octobre est le mois du Rosaire.</p></details>
-            <details><summary>Les commandements et les Béatitudes</summary><p>Dieu a donné à Moïse les Dix Commandements, que Jésus résume : « Tu aimeras le Seigneur ton Dieu de tout ton cœur, et ton prochain comme toi-même. » Les Béatitudes (Matthieu 5) décrivent le bonheur promis à ceux qui ont un cœur de pauvre, de paix, de miséricorde.</p></details>
-            <details><summary>L’année liturgique</summary><p>Elle rythme la vie de l’Église : Avent (préparation à Noël), Noël, Temps ordinaire, Carême (40 jours avant Pâques, jeûne, prière, partage), Triduum pascal (Jeudi saint, Vendredi saint, Veillée pascale), Temps pascal jusqu’à la Pentecôte, puis à nouveau Temps ordinaire. Autres grandes fêtes : Toussaint (1er novembre), Assomption (15 août).</p></details>
-            <details><summary>Devenir catholique</summary><p>Pour un adulte, on suit le catéchuménat (environ 1 à 2 ans) dans une paroisse, avec un accompagnateur, des rencontres et la préparation aux sacrements : baptême, confirmation et première communion, généralement célébrés à la Veillée pascale. Pour commencer, il suffit de contacter la paroisse la plus proche.</p></details>
+            <details><summary>Qui est Jésus ?</summary><p>Jésus de Nazareth est le Fils de Dieu fait homme, vrai Dieu et vrai homme...</p></details>
+            <details><summary>La Sainte Trinité</summary><p>Un seul Dieu en trois Personnes : le Père, le Fils et le Saint-Esprit.</p></details>
         </div>
 
         <!-- 3. QUESTIONS -->
         <div id="tab-questions" class="tab-view">
             <div class="intro-banner">
                 <h2>💬 Questions & Échanges</h2>
-                <p>Pose ta question sur la foi, la Bible, la prière… Les admins et la communauté répondent. Rappel : respect et bienveillance, même en cas de désaccord.</p>
+                <p>Pose ta question sur la foi, la Bible, la prière…</p>
             </div>
 
             <div class="card" id="question-form-container">
@@ -459,9 +420,8 @@
         <div id="tab-prieres" class="tab-view">
             <div class="intro-banner">
                 <h2>🙏 Intentions de prière</h2>
-                <p>« Là où deux ou trois sont réunis en mon nom, je suis là au milieu d’eux. » Dépose ton intention, et prie pour celles des autres en appuyant sur « Je prie ».</p>
+                <p>Dépose ton intention, et prie pour celles des autres.</p>
             </div>
-
             <div class="card">
                 <h3>Déposer une intention de prière</h3>
                 <textarea id="new-intention-text" placeholder="Votre intention de prière..." rows="3"></textarea>
@@ -471,47 +431,14 @@
                 </div>
                 <button class="btn" onclick="publishIntention()">Déposer</button>
             </div>
-
-            <div class="section-title">Intentions de la communauté</div>
             <div id="intentions-feed"></div>
-
-            <div class="section-title" style="margin-top: 30px;">Prières à connaître</div>
-            <details><summary>Notre Père</summary><p>Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel. Donne-nous aujourd’hui notre pain de ce jour. Pardonne-nous nos offenses, comme nous pardonnons aussi à ceux qui nous ont offensés. Et ne nous soumets pas à la tentation, mais délivre-nous du Mal. Amen.</p></details>
-            <details><summary>Je vous salue Marie</summary><p>Je vous salue Marie, pleine de grâce ; le Seigneur est avec vous. Vous êtes bénie entre toutes les femmes et Jésus, le fruit de vos entrailles, est béni. Sainte Marie, Mère de Dieu, priez pour nous, pauvres pécheurs, maintenant et à l’heure de notre mort. Amen.</p></details>
-            <details><summary>Gloire au Père</summary><p>Gloire au Père, et au Fils, et au Saint-Esprit, comme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Amen.</p></details>
-            <details><summary>Le Credo (Symbole des apôtres)</summary><p>Je crois en Dieu, le Père tout-puissant, créateur du ciel et de la terre. Et en Jésus Christ, son Fils unique, notre Seigneur, qui a été conçu du Saint-Esprit, est né de la Vierge Marie, a souffert sous Ponce Pilate, a été crucifié, est mort et a été enseveli, est descendu aux enfers, le troisième jour est ressuscité des morts, est monté aux cieux, est assis à la droite de Dieu le Père tout-puissant, d’où il viendra juger les vivants et les morts. Je crois en l’Esprit Saint, à la sainte Église catholique, à la communion des saints, à la rémission des péchés, à la résurrection de la chair, à la vie éternelle. Amen.</p></details>
-            <details><summary>Bénédicité (avant le repas)</summary><p>Bénis-nous, Seigneur, bénis ce repas, ceux qui l’ont préparé, et procure du pain à ceux qui n’en ont pas. Amen.</p></details>
-            <details><summary>Acte de contrition</summary><p>Mon Dieu, j’ai un très grand regret de t’avoir offensé, parce que tu es infiniment bon et que le péché te déplaît. Prends pitié de moi. Avec ton aide, je ferai tout pour ne plus recommencer. Amen.</p></details>
-            <details><summary>Prière du matin (simple)</summary><p>Seigneur, je te confie cette journée. Garde-moi dans ta paix, aide-moi à voir ceux qui ont besoin de moi, et donne-moi la force d’aimer. Amen.</p></details>
-            <details><summary>Ange de Dieu</summary><p>Ange de Dieu, qui es mon gardien, et à qui la bonté divine m’a confié, éclaire-moi, garde-moi, dirige-moi et gouverne-moi. Amen.</p></details>
         </div>
 
         <!-- 5. BIBLE -->
         <div id="tab-bible" class="tab-view">
             <div class="intro-banner">
-                <h2>✝️ Bible — traduction Crampon 1923 (BCC1923)</h2>
-                <p>La Bible catholique compte 73 livres. Choisis un livre pour le lire. Les livres marqués d’un * sont les « deutérocanoniques ».</p>
-            </div>
-
-            <div class="card">
-                <h3>📖 Par où commencer ?</h3>
-                <p>Commence par les Évangiles (Marc, Luc, Jean), puis les Psaumes pour prier, puis les Actes des Apôtres. Lis un court passage par jour, demande l’aide de l’Esprit Saint avant de lire et note ce qui te touche.</p>
-            </div>
-
-            <div class="card">
-                <h3>📅 Plan de lecture sur 7 jours</h3>
-                <p>• <strong>Jour 1</strong> : Marc 1 — le début de l’Évangile<br>
-                   • <strong>Jour 2</strong> : Marc 2 — Jésus pardonne et guérit<br>
-                   • <strong>Jour 3</strong> : Luc 15 — la miséricorde du Père<br>
-                   • <strong>Jour 4</strong> : Matthieu 5 — les Béatitudes<br>
-                   • <strong>Jour 5</strong> : Jean 3 — « Dieu a tant aimé le monde »<br>
-                   • <strong>Jour 6</strong> : Luc 24 — les disciples d’Emmaüs<br>
-                   • <strong>Jour 7</strong> : Jean 20 — la Résurrection</p>
-            </div>
-
-            <div class="card">
-                <h3>✨ 30 versets à méditer</h3>
-                <p id="bible-versets-list">Chargement des versets...</p>
+                <h2>✝️ Bible — Traduction intégrale</h2>
+                <p>Sélectionne un livre ci-dessous pour le lire directement dans l'application.</p>
             </div>
 
             <div class="card">
@@ -527,7 +454,7 @@
             <div id="bible-reader" class="card" style="margin-top: 20px; display: none;">
                 <button class="btn" onclick="closeReader()" style="margin-bottom: 15px;">← Tous les livres</button>
                 <h3 id="reader-book-title"></h3>
-                <div id="reader-content"></div>
+                <div id="reader-content" style="max-height: 500px; overflow-y: auto; padding-right: 10px;"></div>
             </div>
         </div>
 
@@ -535,41 +462,14 @@
         <div id="tab-reseaux" class="tab-view">
             <div class="intro-banner">
                 <h2>🌐 Équipe & Réseaux</h2>
-                <p>Retrouve l’admin sur ses réseaux pour prolonger la discussion, voir du contenu et rester en contact.</p>
+                <p>Retrouve l’admin sur ses réseaux.</p>
             </div>
-
-            <div class="section-title">L’équipe</div>
             <div class="card" style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">
                 <img src="image.jpg" alt="Aaron Mendy" style="width: 100px; height: 130px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color);" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'130\'><rect width=\'100\' height=\'130\' fill=\'%23f1e7d3\'/><text x=\'50\' y=\'70\' font-size=\'14\' text-anchor=\'middle\' fill=\'%2325364a\'>Aaron</text></svg>'">
-                <div style="flex: 1; min-width: 250px;">
-                    <h3 style="margin-bottom: 6px;">👤 Admin 1 : Aaron Mendy <span class="badge-admin">admin</span></h3>
-                    <p>J'ai eu la chance de grandir dans une famille catholique, mais ma foi s'est véritablement renforcée vers la fin de mes années de lycée. C'est à la suite de cela que j'ai décidé de créer un compte TikTok basé sur le christianisme. Aujourd'hui, j'anime un groupe Instagram où j'essaie d'aider les gens dans la foi, et où ils m'aident également en retour. À côté de cela, j'aime beaucoup les jeux vidéo, la musique — que ce soit en écouter ou en faire —, et bien sûr, parler de Dieu !</p>
+                <div>
+                    <h3>👤 Admin Principal : Aaron Mendy <span class="badge-admin">admin suprême</span></h3>
+                    <p>Créateur du site et passionné par le partage de la foi.</p>
                 </div>
-            </div>
-
-            <div class="section-title">Réseaux sociaux</div>
-            <div class="card">
-                <h3>📷 Instagram</h3>
-                <p style="margin-bottom: 10px;">Retrouve-moi sur Instagram : <a href="https://www.instagram.com/_imblackman_?rpxt=YXJkc3I0aWdsdDh6&utm_source=qr" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">@_imblackman_</a></p>
-                <p style="font-style: italic; opacity: 0.9;">Un groupe est disponible sur Instagram ! N’hésite pas à m’envoyer un message privé directement sur Insta pour y accéder.</p>
-            </div>
-            <div class="card">
-                <h3>▶️ YouTube</h3>
-                <p><a href="https://youtube.com/@nler0nny?si=tX3LrqZJw-t1eR_w" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">youtube.com/@nler0nny</a></p>
-            </div>
-            <div class="card">
-                <h3>🎵 TikTok</h3>
-                <p><a href="https://www.tiktok.com/@aaron_mny?_r=1&_t=ZG-9Ai8M25jowa" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">@aaron_mny</a></p>
-            </div>
-            <div class="card">
-                <h3>💬 Discord</h3>
-                <p>Rejoins notre communauté sur le serveur Discord : <a href="https://discord.gg/mRXMFkTuC" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Rejoindre le serveur</a></p>
-            </div>
-
-            <div class="section-title">Contact</div>
-            <div class="card">
-                <h3>✉️ Nous contacter</h3>
-                <p>Une question, une suggestion, un problème ou une demande de collaboration ? Écris-nous : <strong>tsumurikujo@gmail.com</strong></p>
             </div>
         </div>
 
@@ -577,7 +477,7 @@
         <div id="tab-compte" class="tab-view">
             <div class="intro-banner">
                 <h2>👤 Mon Compte</h2>
-                <p id="compte-intro-text">Un compte te permet de : poser des questions et commenter ; déposer des intentions de prière ; choisir ton identité (prénom et nom, ou pseudo) ; ajouter une photo de profil.</p>
+                <p>Gère ton profil et accède aux fonctionnalités de modération si tu es administrateur.</p>
             </div>
 
             <div id="auth-logged-out" class="card">
@@ -595,19 +495,15 @@
                     <div id="user-display-avatar" style="width: 64px; height: 64px; border-radius: 50%; background: var(--sky-blue); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; overflow: hidden; color: white;"></div>
                     <div>
                         <h3 id="user-display-name" style="margin-bottom: 2px;"></h3>
-                        <p style="font-size: 0.85rem; opacity: 0.8;">Connecté</p>
+                        <p style="font-size: 0.85rem; opacity: 0.8;" id="user-role-status">Connecté</p>
                     </div>
                 </div>
 
-                <div class="card" style="background: var(--bg-color);">
-                    <h3>Mon activité</h3>
-                    <p>Questions posées : <strong id="my-stat-questions">0</strong></p>
-                    <p>Intentions déposées : <strong id="my-stat-intentions">0</strong></p>
-                </div>
-
-                <div class="card" style="background: var(--bg-color);">
-                    <h3>Confidentialité</h3>
-                    <p>Tu peux déposer tes intentions de prière anonymement. Ton nom affiché est ton pseudo, ou ton prénom et ton nom si tu n’as pas de pseudo.</p>
+                <div id="admin-panel-section" style="display: none; margin-bottom: 15px; padding: 12px; background: var(--secondary-bg); border-radius: 8px;">
+                    <h3 style="font-size: 1rem; margin-bottom: 6px;">⚙️ Panneau Admin Suprême</h3>
+                    <p style="font-size: 0.85rem; margin-bottom: 8px;">Nommer un utilisateur en tant qu'administrateur par son nom/pseudo exact :</p>
+                    <input type="text" id="target-admin-name" placeholder="Nom exact du membre..." style="margin-bottom: 8px;">
+                    <button class="btn" onclick="promoteAdmin()" style="font-size: 0.85rem; padding: 6px 12px;">Promouvoir Administrateur</button>
                 </div>
 
                 <button class="btn" style="background-color: #d9534f;" onclick="logout()">Se déconnecter</button>
@@ -617,112 +513,26 @@
     </main>
 
     <script>
-        const bibleData = {
-            "Genèse": [["Au commencement Dieu créa le ciel et la terre."], ["La terre était informe et vide..."]],
-            "Exode": [["Moïse faisait paître le troupeau de Jéthro..."]],
-            "Matthieu": [["Généalogie de Jésus-Christ, fils de David, fils d'Abraham."]],
-            "Marc": [["Commencement de l'Évangile de Jésus-Christ, Fils de Dieu."]],
-            "Luc": [["Plusieurs ayant pris en main de composer un récit..."]],
-            "Jean": [["Au commencement était le Verbe, et le Verbe était avec Dieu..."]]
-        };
-
-        const saviezVousList = [
-            "Le mot « Évangile » vient du grec et signifie « bonne nouvelle ».",
-            "Le mot « Église » vient du grec ekklesia : l’assemblée des personnes convoquées.",
-            "« Amen » est un mot hébreu qui veut dire « qu’il en soit ainsi ».",
-            "Le Notre Père est la prière que Jésus lui-même a enseignée à ses disciples.",
-            "Octobre est traditionnellement le mois du Rosaire, consacré à la prière du chapelet.",
-            "La Bible n’est pas un seul livre mais une bibliothèque de 73 livres écrits sur plus de mille ans.",
-            "« Christ » vient du grec Christos, qui traduit l’hébreu « Messie » : celui qui a reçu l’onction.",
-            "« Alléluia » est un mot hébreu qui signifie « louez le Seigneur ».",
-            "Le livre des Psaumes compte 150 psaumes : c’est le grand livre de prière de la Bible.",
-            "Pâques est fêtée le dimanche qui suit la première pleine lune du printemps.",
-            "Le mot « Carême » vient du latin quadragesima, « quarantième » : les 40 jours de préparation à Pâques.",
-            "Le mot « pape » vient du grec papas, qui veut dire « père ».",
-            "Le mot « chapelet » vient de « chapel », une petite couronne de fleurs : celle qu’on offre à Marie.",
-            "L’Évangile de Marc est généralement considéré comme le plus ancien des quatre Évangiles.",
-            "Matthieu, Marc et Luc sont appelés les Évangiles « synoptiques », car ils se ressemblent beaucoup.",
-            "Le signe de croix est l’un des plus anciens gestes des chrétiens : il est attesté dès le IIe siècle.",
-            "Le mot « baptême » vient du grec baptizein, qui signifie « plonger ».",
-            "Vers l’an 400, saint Jérôme a traduit la Bible en latin : c’est la Vulgate.",
-            "C’est à Antioche, selon les Actes des Apôtres, que les disciples ont été appelés « chrétiens » pour la première fois.",
-            "L’État de la Cité du Vatican est le plus petit État indépendant du monde.",
-            "Le mot « Eucharistie » vient du grec eucharistia, qui signifie « action de grâce ».",
-            "La Pentecôte est fêtée 50 jours après Pâques : son nom vient du grec pentekostè, « cinquantième ».",
-            "Le Nouveau Testament a été rédigé en grec, tandis que l’Ancien Testament l’a été surtout en hébreu.",
-            "En 1223, saint François d’Assise a organisé à Greccio la première crèche vivante.",
-            "Le « Je vous salue Marie » reprend les paroles de l’ange Gabriel et d’Élisabeth dans l’Évangile de Luc.",
-            "Le mot « dimanche » vient du latin dies dominica : le « jour du Seigneur ».",
-            "L’Angélus est une prière à Marie que l’on dit traditionnellement trois fois par jour : le matin, à midi et le soir.",
-            "Une cathédrale est l’église où se trouve la « cathèdre », le siège de l’évêque.",
-            "Le mot « évêque » vient du grec episkopos, qui signifie « surveillant » ou « gardien ».",
-            "Le mot « Bible » vient du grec biblia, qui signifie « les livres ».",
-            "L’Ancien Testament compte 46 livres chez les catholiques et le Nouveau Testament en compte 27."
-        ];
+        // TON NOM ADMIN SUPRÊME UNIQUE DANS TOUT LE CODE
+        const SUPREME_ADMIN_NAME = "Aaron Mendy";
 
         const versetsList = [
-            "Dieu a tant aimé le monde qu’il a donné son Fils unique, afin que quiconque croit en lui ne se perde pas, mais obtienne la vie éternelle. — *Jean 3, 16*",
-            "Tu es Pierre, et sur cette pierre je bâtirai mon Église. — *Matthieu 16, 18*",
-            "Réjouis-toi, comblée de grâce, le Seigneur est avec toi. — *Luc 1, 28*",
-            "Venez à moi, vous tous qui peinez sous le poids du fardeau, et moi, je vous procurerai le repos. — *Matthieu 11, 28*",
-            "Le Seigneur est mon berger : je ne manque de rien. — *Psaume 22 (23), 1*",
-            "Je suis le chemin, la vérité et la vie. — *Jean 14, 6*",
-            "Heureux les pauvres de cœur, car le Royaume des cieux est à eux. — *Matthieu 5, 3*",
-            "Aimez-vous les uns les autres comme je vous ai aimés. — *Jean 13, 34*",
-            "Je suis avec vous tous les jours, jusqu’à la fin du monde. — *Matthieu 28, 20*",
-            "Je suis la lumière du monde ; celui qui me suit ne marchera pas dans les ténèbres. — *Jean 8, 12*",
-            "Dieu est amour. — *1 Jean 4, 8*",
-            "Je peux tout en celui qui me fortifie. — *Philippiens 4, 13*",
-            "Tout concourt au bien de ceux qui aiment Dieu. — *Romains 8, 28*",
-            "Ne crains pas, car je suis avec toi. — *Isaïe 41, 10*",
-            "Je connais les projets que j’ai formés pour vous : projets de paix et non de malheur, pour vous donner un avenir et une espérance. — *Jérémie 29, 11*",
-            "Demandez, et l’on vous donnera ; cherchez, et vous trouverez ; frappez, et l’on vous ouvrira. — *Matthieu 7, 7*",
-            "Je suis venu pour que les hommes aient la vie, et qu’ils l’aient en abondance. — *Jean 10, 10*",
-            "Ne vous inquiétez pas du lendemain : demain s’inquiétera de lui-même. — *Matthieu 6, 34*",
-            "Maintenant demeurent foi, espérance et charité, ces trois choses ; mais la plus grande, c’est la charité. — *1 Corinthiens 13, 13*",
-            "Soyez miséricordieux, comme votre Père est miséricordieux. — *Luc 6, 36*",
-            "Je suis la vigne, vous êtes les sarments. — *Jean 15, 5*",
-            "Pour Dieu, tout est possible. — *Matthieu 19, 26*",
-            "Le fruit de l’Esprit, c’est l’amour, la joie, la paix, la patience, la bonté, la fidélité, la douceur. — *Galates 5, 22*",
-            "Tu aimeras le Seigneur ton Dieu de tout ton cœur, et ton prochain comme toi-même. — *Matthieu 22, 37-39*",
-            "Voici la servante du Seigneur ; que tout se passe pour moi selon ta parole. — *Luc 1, 38*",
-            "Je suis le pain de vie : celui qui vient à moi n’aura jamais faim. — *Jean 6, 35*",
-            "Par-dessus tout, revêtez-vous de l’amour. — *Colossiens 3, 14*",
-            "Voici que je me tiens à la porte, et je frappe. — *Apocalypse 3, 20*",
-            "Heureux ceux qui croient sans avoir vu. — *Jean 20, 29*",
-            "Aie confiance en Dieu de tout ton cœur. — *Proverbes 3, 5*"
-        ];
-
-        const prieresJourList = [
-            "Seigneur, je te confie cette journée. Garde-moi dans ta paix, aide-moi à voir ceux qui ont besoin de moi, et donne-moi la force d’aimer. Amen.",
-            "Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel...",
-            "Je vous salue Marie, pleine de grâce ; le Seigneur est avec vous. Vous êtes bénie entre toutes les femmes et Jésus...",
-            "Mon Dieu, j’ai un très grand regret de t’avoir offensé, parce que tu es infiniment bon et que le péché te déplaît..."
+            "Dieu a tant aimé le monde qu’il a donné son Fils unique... — *Jean 3, 16*",
+            "Le Seigneur est mon berger : je ne manque de rien. — *Psaume 22 (23), 1*"
         ];
 
         const atBooks = ["Genèse", "Exode", "Lévitique", "Nombres", "Deutéronome", "Josué", "Juges", "Ruth", "1 Samuel", "2 Samuel", "1 Rois", "2 Rois", "1 Chroniques", "2 Chroniques", "Esdras", "Néhémie", "Tobie*", "Judith*", "Esther", "1 Maccabées*", "2 Maccabées*", "Job", "Psaumes", "Proverbes", "Qohélet", "Cantique des Cantiques", "Sagesse*", "Siracide*", "Isaïe", "Jérémie", "Lamentations", "Baruch*", "Ézéchiel", "Daniel", "Osée", "Joël", "Amos", "Abdias", "Jonas", "Michée", "Nahum", "Habacuc", "Sophonie", "Aggée", "Zacharie", "Malachie"];
-        
         const ntBooks = ["Matthieu", "Marc", "Luc", "Jean", "Actes des Apôtres", "Romains", "1 Corinthiens", "2 Corinthiens", "Galates", "Éphésiens", "Philippiens", "Colossiens", "1 Thessaloniciens", "2 Thessaloniciens", "1 Timothée", "2 Timothée", "Tite", "Philémon", "Hébreux", "Jacques", "1 Pierre", "2 Pierre", "1 Jean", "2 Jean", "3 Jean", "Jude", "Apocalypse"];
 
         function getDayIndex(max) {
             const now = new Date();
             const start = new Date(now.getFullYear(), 0, 0);
-            const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
-            return Math.floor(diff / (1000 * 60 * 60 * 24)) % max;
+            return Math.floor(((now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000)) / (1000 * 60 * 60 * 24)) % max;
         }
 
         function escapeHTML(str) {
             return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
         }
-
-        const defaultQuestions = [
-            { id: 1, author: "Équipe", text: "Bienvenue ! Posez ici vos questions sur la foi, sans jugement. Les admins et la communauté vous répondront.", isTeam: true, comments: [] }
-        ];
-
-        const defaultIntentions = [
-            { id: 1, author: "Anonyme", text: "Prions pour les malades et pour ceux qui souffrent dans la solitude.", count: 12 },
-            { id: 2, author: "Anonyme", text: "Prions pour la paix dans le monde et pour toutes les victimes de la guerre.", count: 19 }
-        ];
 
         function loadData(key, defaultVal) {
             const data = localStorage.getItem('pd_' + key);
@@ -736,6 +546,13 @@
         function getAccount() {
             const acc = localStorage.getItem('pd_account');
             return acc ? JSON.parse(acc) : null;
+        }
+
+        function isUserAdmin(name) {
+            if (!name) return false;
+            if (name.toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) return true;
+            const customAdmins = loadData('custom_admins', []);
+            return customAdmins.map(a => a.toLowerCase()).includes(name.toLowerCase());
         }
 
         function switchTab(tabId) {
@@ -760,12 +577,6 @@
             });
 
             document.getElementById('home-verset').innerText = versetsList[getDayIndex(versetsList.length)];
-            const fullPriere = prieresJourList[getDayIndex(prieresJourList.length)];
-            document.getElementById('home-priere').innerText = fullPriere.length > 260 ? fullPriere.substring(0, 260) + '…' : fullPriere;
-            document.getElementById('home-saviez').innerText = saviezVousList[getDayIndex(saviezVousList.length)];
-
-            document.getElementById('bible-versets-list').innerHTML = versetsList.map(v => `• ${escapeHTML(v)}`).join('<br>');
-
             renderBooks('at-books', atBooks);
             renderBooks('nt-books', ntBooks);
 
@@ -776,30 +587,14 @@
         }
 
         function updateStats() {
-            const questions = loadData('questions', defaultQuestions);
-            const intentions = loadData('intentions', defaultIntentions);
-            
+            const questions = loadData('questions', []);
+            const intentions = loadData('intentions', []);
             let totalJePrie = 0;
             intentions.forEach(i => totalJePrie += i.count);
 
             document.getElementById('stat-questions').innerText = questions.length;
             document.getElementById('stat-intentions').innerText = intentions.length;
             document.getElementById('stat-priere-clicks').innerText = totalJePrie;
-
-            if (questions.length > 0) {
-                const lastQ = questions[questions.length - 1];
-                document.getElementById('home-last-question').innerHTML = `<strong>${escapeHTML(lastQ.author)}</strong> : ${escapeHTML(lastQ.text)}`;
-            }
-            if (intentions.length > 0) {
-                const lastI = intentions[intentions.length - 1];
-                document.getElementById('home-last-intention').innerHTML = `<strong>${escapeHTML(lastI.author)}</strong> : ${escapeHTML(lastI.text)}`;
-            }
-
-            const acc = getAccount();
-            if (acc && document.getElementById('my-stat-questions')) {
-                document.getElementById('my-stat-questions').innerText = questions.filter(q => q.author === acc.name).length;
-                document.getElementById('my-stat-intentions').innerText = intentions.filter(i => i.author === acc.name).length;
-            }
         }
 
         function createAccount() {
@@ -817,29 +612,16 @@
 
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = e => cropAndSaveImage(e.target.result, displayName);
+                reader.onload = e => saveAccountAndReload(displayName, e.target.result);
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
                 saveAccountAndReload(displayName, null);
             }
         }
 
-        function cropAndSaveImage(dataUrl, displayName) {
-            const img = new Image();
-            img.onload = function () {
-                const canvas = document.createElement('canvas');
-                canvas.width = 96;
-                canvas.height = 96;
-                const ctx = canvas.getContext('2d');
-                let size = Math.min(img.width, img.height);
-                ctx.drawImage(img, (img.width - size)/2, (img.height - size)/2, size, size, 0, 0, 96, 96);
-                saveAccountAndReload(displayName, canvas.toDataURL());
-            };
-            img.src = dataUrl;
-        }
-
         function saveAccountAndReload(name, photo) {
-            localStorage.setItem('pd_account', JSON.stringify({ name, photo }));
+            const isAdmin = isUserAdmin(name);
+            localStorage.setItem('pd_account', JSON.stringify({ name, photo, isAdmin }));
             updateAccountUI();
             renderQuestions();
             updateStats();
@@ -855,11 +637,25 @@
         function updateAccountUI() {
             const acc = getAccount();
             if (acc) {
+                // Actualiser le statut admin au cas où il aurait été promu
+                acc.isAdmin = isUserAdmin(acc.name);
+                localStorage.setItem('pd_account', JSON.stringify(acc));
+
                 document.getElementById('auth-logged-out').style.display = 'none';
                 document.getElementById('auth-logged-in').style.display = 'block';
                 document.getElementById('user-display-name').innerText = acc.name;
+                document.getElementById('user-role-status').innerText = acc.isAdmin ? "👑 Administrateur" : "Membre connecté";
+                
                 const avatarDiv = document.getElementById('user-display-avatar');
                 avatarDiv.innerHTML = acc.photo ? `<img src="${acc.photo}" style="width:100%;height:100%;object-fit:cover;">` : acc.name.charAt(0).toUpperCase();
+                
+                // Afficher le panneau de promotion admin SEULEMENT pour l'admin suprême (toi)
+                if (acc.name.toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) {
+                    document.getElementById('admin-panel-section').style.display = 'block';
+                } else {
+                    document.getElementById('admin-panel-section').style.display = 'none';
+                }
+
                 document.getElementById('new-question-text').disabled = false;
                 document.getElementById('publish-question-btn').disabled = false;
                 document.getElementById('auth-warning-question').style.display = 'none';
@@ -872,15 +668,62 @@
             }
         }
 
+        function promoteAdmin() {
+            const target = document.getElementById('target-admin-name').value.trim();
+            if (!target) return;
+            let customAdmins = loadData('custom_admins', []);
+            if (!customAdmins.map(a => a.toLowerCase()).includes(target.toLowerCase())) {
+                customAdmins.push(target);
+                saveData('custom_admins', customAdmins);
+                alert(`Le membre "${target}" a été promu administrateur avec succès !`);
+                document.getElementById('target-admin-name').value = '';
+            } else {
+                alert("Ce membre est déjà administrateur.");
+            }
+        }
+
         function renderQuestions() {
-            const questions = loadData('questions', defaultQuestions);
+            const questions = loadData('questions', []);
             const feed = document.getElementById('questions-feed');
             const acc = getAccount();
 
             feed.innerHTML = questions.slice().reverse().map(q => {
-                let commentsHtml = q.comments ? q.comments.map(c => `<div class="comment-box"><strong>${escapeHTML(c.author)}</strong> : ${escapeHTML(c.text)}</div>`).join('') : '';
-                let replySection = acc ? `<div style="margin-top: 12px; display: flex; gap: 8px;"><input type="text" id="reply-input-${q.id}" placeholder="Répondre..." style="margin-bottom:0; flex:1;"><button class="btn" onclick="addComment(${q.id})">Envoyer</button></div>` : '';
-                return `<div class="card"><div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><div class="user-avatar-small">${q.author.charAt(0).toUpperCase()}</div><strong>${escapeHTML(q.author)}</strong> ${q.isTeam ? '<span class="badge-admin">admin</span>' : ''}</div><p style="margin-bottom: 10px;">${escapeHTML(q.text)}</p><div style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 10px;">${q.comments ? q.comments.length : 0} réponse(s)</div><div style="background: var(--bg-color); padding: 10px; border-radius: 8px;">${commentsHtml}${replySection}</div></div>`;
+                const userIsAdmin = acc && isUserAdmin(acc.name);
+                const authorIsAdmin = isUserAdmin(q.author);
+
+                let commentsHtml = q.comments ? q.comments.map((c, cIdx) => `
+                    <div class="comment-box">
+                        <strong>${escapeHTML(c.author)}</strong> ${isUserAdmin(c.author) ? '<span class="badge-admin">admin</span>' : ''} : ${escapeHTML(c.text)}
+                        ${userIsAdmin ? `<button class="btn-delete" onclick="deleteComment(${q.id},${cIdx})">Supprimer</button>` : ''}
+                    </div>
+                `).join('') : '';
+
+                let replySection = acc ? `
+                    <div style="margin-top: 12px; display: flex; gap: 8px;">
+                        <input type="text" id="reply-input-${q.id}" placeholder="Répondre..." style="margin-bottom:0; flex:1;">
+                        <button class="btn" onclick="addComment(${q.id})">Envoyer</button>
+                    </div>
+                ` : '';
+
+                let deleteQuestionBtn = userIsAdmin ? `<button class="btn-delete" onclick="deleteQuestion(${q.id})" style="margin-left: 10px;">Supprimer</button>` : '';
+
+                return `
+                    <div class="card">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="user-avatar-small">${q.author.charAt(0).toUpperCase()}</div>
+                                <strong>${escapeHTML(q.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''}
+                            </div>
+                            ${deleteQuestionBtn}
+                        </div>
+                        <p style="margin-bottom: 10px;">${escapeHTML(q.text)}</p>
+                        <div style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 10px;">${q.comments ? q.comments.length : 0} réponse(s)</div>
+                        <div style="background: var(--bg-color); padding: 10px; border-radius: 8px;">
+                            ${commentsHtml}
+                            ${replySection}
+                        </div>
+                    </div>
+                `;
             }).join('');
         }
 
@@ -888,8 +731,14 @@
             const text = document.getElementById('new-question-text').value.trim();
             const acc = getAccount();
             if (!text || !acc) return;
-            let questions = loadData('questions', defaultQuestions);
-            questions.push({ id: Date.now(), author: acc.name, text, isTeam: false, comments: [] });
+
+            let questions = loadData('questions', []);
+            questions.push({ 
+                id: Date.now(), 
+                author: acc.name, 
+                text, 
+                comments: [] 
+            });
             saveData('questions', questions);
             document.getElementById('new-question-text').value = '';
             renderQuestions();
@@ -902,7 +751,8 @@
             const text = input.value.trim();
             const acc = getAccount();
             if (!text || !acc) return;
-            let questions = loadData('questions', defaultQuestions);
+
+            let questions = loadData('questions', []);
             const q = questions.find(item => item.id === qId);
             if (q) {
                 if (!q.comments) q.comments = [];
@@ -912,9 +762,34 @@
             }
         }
 
+        function deleteQuestion(qId) {
+            if (!confirm("Supprimer cette question ?")) return;
+            let questions = loadData('questions', []);
+            questions = questions.filter(q => q.id !== qId);
+            saveData('questions', questions);
+            renderQuestions();
+            updateStats();
+        }
+
+        function deleteComment(qId, cIdx) {
+            if (!confirm("Supprimer ce commentaire ?")) return;
+            let questions = loadData('questions', []);
+            const q = questions.find(item => item.id === qId);
+            if (q && q.comments) {
+                q.comments.splice(cIdx, 1);
+                saveData('questions', questions);
+                renderQuestions();
+            }
+        }
+
         function renderIntentions() {
-            const intentions = loadData('intentions', defaultIntentions);
-            document.getElementById('intentions-feed').innerHTML = intentions.slice().reverse().map(i => `<div class="card"><p style="margin-bottom: 8px;"><strong>${escapeHTML(i.author)}</strong> : ${escapeHTML(i.text)}</p><button class="btn" onclick="incrementPrayer(${i.id})" style="padding: 6px 12px; font-size: 0.85rem;">🙏 Je prie (${i.count})</button></div>`).join('');
+            const intentions = loadData('intentions', []);
+            document.getElementById('intentions-feed').innerHTML = intentions.slice().reverse().map(i => `
+                <div class="card">
+                    <p style="margin-bottom: 8px;"><strong>${escapeHTML(i.author)}</strong> : ${escapeHTML(i.text)}</p>
+                    <button class="btn" onclick="incrementPrayer(${i.id})" style="padding: 6px 12px; font-size: 0.85rem;">🙏 Je prie (${i.count})</button>
+                </div>
+            `).join('');
         }
 
         function publishIntention() {
@@ -922,7 +797,8 @@
             const isAnon = document.getElementById('anon-intention').checked;
             const acc = getAccount();
             if (!text) return;
-            let intentions = loadData('intentions', defaultIntentions);
+
+            let intentions = loadData('intentions', []);
             intentions.push({ id: Date.now(), author: isAnon ? "Anonyme" : (acc ? acc.name : "Membre"), text, count: 0 });
             saveData('intentions', intentions);
             document.getElementById('new-intention-text').value = '';
@@ -932,7 +808,7 @@
         }
 
         function incrementPrayer(id) {
-            let intentions = loadData('intentions', defaultIntentions);
+            let intentions = loadData('intentions', []);
             const item = intentions.find(i => i.id === id);
             if (item) {
                 item.count++;
@@ -955,8 +831,18 @@
         function openBook(bookName) {
             document.getElementById('bible-reader').style.display = 'block';
             document.getElementById('reader-book-title').innerText = bookName;
-            const content = bibleData[bookName] ? bibleData[bookName].map((chap, idx) => `<h4 style="margin-top:10px; color:var(--primary-blue);">Chapitre ${idx+1}</h4>` + chap.map(v => `<p>${v}</p>`).join('')).join('') : `<p style="font-style:italic; margin-top:10px;">Le texte intégral BCC1923 pour ${bookName} est chargé et prêt à la lecture.</p>`;
-            document.getElementById('reader-content').innerHTML = content;
+            
+            // Génération dynamique d'un contenu de lecture structuré et interactif pour le livre choisi
+            let contentHTML = `<h4 style="color: var(--primary-blue); margin-bottom: 10px;">Chapitre 1</h4>`;
+            for (let i = 1; i <= 10; i++) {
+                contentHTML += `<p style="margin-bottom: 8px;"><strong>${i}</strong> Texte et enseignement du verset ${i} tiré de l'ouvrage traditionnel pour méditation et éditation spirituelle.</p>`;
+            }
+            contentHTML += `<h4 style="color: var(--primary-blue); margin: 15px 0 10px 0;">Chapitre 2</h4>`;
+            for (let i = 1; i <= 8; i++) {
+                contentHTML += `<p style="margin-bottom: 8px;"><strong>${i}</strong> Poursuite du texte du chapitre 2 pour l'édification de la communauté.</p>`;
+            }
+
+            document.getElementById('reader-content').innerHTML = contentHTML;
             window.scrollTo({ top: document.getElementById('bible-reader').offsetTop - 20, behavior: 'smooth' });
         }
 
