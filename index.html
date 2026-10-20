@@ -17,8 +17,20 @@
             --radius: 12px;
         }
 
+        /* Mode Sombre forcé par l'utilisateur */
+        body.dark-theme {
+            --bg-color: #121820;
+            --card-bg: #1a222d;
+            --secondary-bg: #222d3d;
+            --primary-blue: #4ba3e3;
+            --sky-blue: #2f5d82;
+            --text-color: #e4edf7;
+            --border-color: #2c3a4d;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
         @media (prefers-color-scheme: dark) {
-            :root {
+            :root:not(.light-theme) {
                 --bg-color: #121820;
                 --card-bg: #1a222d;
                 --secondary-bg: #222d3d;
@@ -95,20 +107,20 @@
         .nav-links {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .nav-btn {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 14px;
+            padding: 10px 14px;
             border-radius: 8px;
             border: none;
             background: transparent;
             color: var(--text-color);
             font-family: Georgia, serif;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             text-align: left;
             transition: all 0.2s ease;
@@ -125,7 +137,7 @@
         }
 
         .nav-btn span.icon {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         /* Contenu Principal Plein Écran */
@@ -263,6 +275,16 @@
             font-family: sans-serif;
         }
 
+        .badge-pinned {
+            background: #f0ad4e;
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            font-family: sans-serif;
+        }
+
         .user-avatar-small {
             width: 28px;
             height: 28px;
@@ -327,6 +349,18 @@
             cursor: pointer;
         }
 
+        .btn-pin {
+            background-color: #f0ad4e;
+            color: white;
+            border: none;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            float: right;
+            margin-left: 4px;
+        }
+
         .btn-report {
             background-color: transparent;
             color: #d9534f;
@@ -370,6 +404,33 @@
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 16px;
             margin-bottom: 16px;
+        }
+
+        /* Mini-chat styles */
+        #chat-messages {
+            height: 320px;
+            overflow-y: auto;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chat-bubble {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 80%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .chat-bubble.mine {
+            background: var(--secondary-bg);
+            margin-left: auto;
+            border-color: var(--sky-blue);
         }
 
         /* Styles spécifiques Quiz */
@@ -423,11 +484,11 @@
                 flex-direction: column;
                 gap: 2px;
                 padding: 4px;
-                font-size: 0.65rem;
+                font-size: 0.6rem;
                 text-align: center;
             }
             .nav-btn span.icon {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
             main.content {
                 margin-left: 0;
@@ -451,11 +512,12 @@
             <button class="nav-btn active" data-tab="accueil"><span class="icon">🏠</span>Accueil</button>
             <button class="nav-btn" data-tab="decouvrir"><span class="icon">📖</span>Découvrir</button>
             <button class="nav-btn" data-tab="questions"><span class="icon">💬</span>Questions</button>
+            <button class="nav-btn" data-tab="minichat"><span class="icon">⚡</span>Mini-Chat</button>
             <button class="nav-btn" data-tab="prieres"><span class="icon">🙏</span>Prières</button>
             <button class="nav-btn" data-tab="bible"><span class="icon">✝️</span>Bible</button>
             <button class="nav-btn" data-tab="quiz"><span class="icon">🧩</span>Quiz</button>
             <button class="nav-btn" data-tab="temoignages"><span class="icon">📝</span>Témoignages</button>
-            <button class="nav-btn" data-tab="reseaux"><span class="icon">🌐</span>Équipe & Réseaux</button>
+            <button class="nav-btn" data-tab="reseaux"><span class="icon">🌐</span>Réseaux</button>
             <button class="nav-btn" data-tab="admin-panel" id="nav-btn-admin" style="display: none;"><span class="icon">⚙️</span>Admin</button>
             <button class="nav-btn" data-tab="compte"><span class="icon">👤</span>Compte</button>
         </div>
@@ -491,6 +553,8 @@
                 <h3>👋 Bienvenue</h3>
                 <p>Un espace pour découvrir la foi chrétienne, poser tes questions, prier ensemble et échanger avec des admins et toute la communauté. Pas besoin d’être un expert : toutes les questions sont les bienvenues.</p>
             </div>
+
+            <div id="pinned-section"></div>
 
             <div class="card">
                 <h3>⭐ Saint du jour</h3>
@@ -550,60 +614,18 @@
         <div id="tab-decouvrir" class="tab-view">
             <div class="intro-banner">
                 <h2>📖 Découvrir la foi catholique</h2>
-                <p>Des explications simples sur ce que croit et vit l’Église catholique. Clique sur un sujet pour le déplier. Tu as une question qui n’est pas traitée ? Pose-la dans l’onglet « Questions ».</p>
+                <p>Des explications simples sur ce que croit et vit l’Église catholique. Clique sur un sujet pour le déplier.</p>
             </div>
-
             <div class="section-title">La foi</div>
-            <details><summary>Qui est Jésus ?</summary><p>Pour les catholiques, Jésus de Nazareth est le Fils de Dieu fait homme : vrai Dieu et vrai homme. Né de la Vierge Marie, il a annoncé le Royaume de Dieu, guéri, pardonné, puis il est mort sur la croix sous Ponce Pilate. Il est ressuscité le troisième jour : c’est le cœur de la foi chrétienne, célébré à Pâques. Sa vie est racontée dans les quatre Évangiles : Matthieu, Marc, Luc et Jean.</p></details>
-            <details><summary>La Sainte Trinité</summary><p>Un seul Dieu en trois Personnes : le Père, le Fils et le Saint-Esprit. Ce n’est pas trois dieux, mais un seul Dieu qui est amour et relation. On fait le signe de croix « Au nom du Père, et du Fils, et du Saint-Esprit » pour le rappeler.</p></details>
-            <details><summary>Le Credo</summary><p>Le Credo (ou « Symbole des apôtres ») résume la foi de l’Église : croire en Dieu le Père créateur, en Jésus-Christ son Fils unique, en l’Esprit Saint, en l’Église, la communion des saints, le pardon des péchés, la résurrection de la chair et la vie éternelle. On le récite à la messe le dimanche.</p></details>
-            <details><summary>Ciel, enfer, purgatoire</summary><p>Les catholiques croient que Dieu veut sauver tous les hommes. Le ciel est la communion éternelle avec Dieu. L’enfer est le refus définitif de son amour. Le purgatoire est une purification après la mort pour ceux qui sont sauvés mais pas encore prêts à voir Dieu : c’est pourquoi on prie pour les défunts, notamment le 2 novembre.</p></details>
-
-            <div class="section-title">Marie et les saints</div>
-            <details><summary>Marie, Mère de Dieu</summary><p>Marie est la mère de Jésus. Le concile d’Éphèse (431) l’a proclamée « Mère de Dieu ». L’Église enseigne aussi son Immaculée Conception (préservée du péché dès sa conception, dogme de 1854) et son Assomption (élevée au ciel avec son corps et son âme, dogme de 1950). Les catholiques ne l’adorent pas : l’adoration est réservée à Dieu seul. Ils la vénèrent et lui demandent de prier avec eux.</p></details>
-            <details><summary>La communion des saints</summary><p>Les saints sont des hommes et des femmes dont la vie a été exemplaire. Ils sont proposés comme modèles et intercesseurs, comme on demande à un ami de prier pour soi. Pour être canonisé, il faut un procès rigoureux et la reconnaissance de miracles. Exemples : saint François d’Assise, sainte Thérèse de Lisieux, saint Jean-Paul II, sainte Bernadette.</p></details>
-
-            <div class="section-title">L’Église</div>
-            <details><summary>L’Église et le pape</summary><p>Jésus a fondé son Église sur les apôtres, avec Pierre à leur tête (Matthieu 16, 18). Le pape, évêque de Rome, est le successeur de Pierre. Les évêques sont les successeurs des apôtres. Les prêtres et diacres les aident. Les fidèles laïcs forment aussi l’Église, par leur baptême.</p></details>
-            <details><summary>Bible, Tradition, Magistère</summary><p>Les catholiques s’appuient sur trois piliers : l’Écriture sainte, la Tradition vivante transmise depuis les apôtres, et le Magistère (pape et évêques) qui interprète authentiquement l’une et l’autre. La Bible catholique compte 73 livres (46 pour l’Ancien Testament, 27 pour le Nouveau).</p></details>
-            <details><summary>Catholiques et Orthodoxes : quelles différences ?</summary><p>Bien que les catholiques et les orthodoxes partagent la même foi apostolique, les sept sacrements et la succession apostolique, plusieurs différences importantes existent :
-                <br><br>• <strong>L'autorité du Pape</strong> : Pour les catholiques, le pape (évêque de Rome) possède une juridiction universelle et l'infaillibilité pontificale sous certaines conditions strictes. Les orthodoxes considèrent le pape comme le « premier entre ses pairs » (primauté d'honneur), mais rejettent sa juridiction absolue et son infaillibilité, privilégiant une gouvernance collégiale des patriarches.
-                <br><br>• <strong>Le Filioque dans le Credo</strong> : L'Église catholique professe que le Saint-Esprit procède du Père <em>et du Fils</em>. L'Église orthodoxe soutient qu'il procède du Père <em>seul</em>, pour rester fidèle au texte initial du concile de Nicée.
-                <br><br>• <strong>Le Purgatoire</strong> : Le catholicisme enseigne l'existence du purgatoire (état de purification après la mort). L'orthodoxie rejette ce terme dogmatique, préférant confier les défunts à la miséricorde divine par la prière, sans définir précisément l'au-delà.
-                <br><br>• <strong>Les sacrements et le mariage des prêtres</strong> : L'orthodoxie permet l'ordination d'hommes mariés comme prêtres (mais pas comme évêques, qui doivent être moines ou célibataires). Chez les catholiques de rite latin, le célibat sacerdotal est obligatoire. Les orthodoxes pratiquent également la confirmation (chrismation) et la communion des nourrissons dès le baptême.
-                <br><br>• <strong>Le calendrier</strong> : De nombreuses Églises orthodoxes (comme en Russie ou en Serbie) utilisent encore le calendrier julien pour fixer les fêtes liturgiques, ce qui décale la date de Noël (célébrée le 7 janvier) par rapport au calendrier grégorien des catholiques.
-            </p></details>
-            <details><summary>Catholiques, orthodoxes, protestants</summary><p>Ce sont les trois grandes familles chrétiennes. Elles partagent l’essentiel : la Trinité, le Christ, la Bible. Le dialogue œcuménique cherche à retrouver l’unité.</p></details>
-
-            <div class="section-title">Les sacrements</div>
-            <details><summary>Les 7 sacrements</summary><p>Signes efficaces de la grâce, institués par le Christ. <strong>Baptême</strong> : naissance à la vie chrétienne. <strong>Confirmation</strong> : don de l’Esprit Saint. <strong>Eucharistie</strong> : communion au Corps et au Sang du Christ. <strong>Réconciliation</strong> : pardon des péchés. <strong>Onction des malades</strong> : force et réconfort dans la maladie. <strong>Ordre</strong> : diacres, prêtres, évêques. <strong>Mariage</strong> : alliance d’un homme et d’une femme.</p></details>
-            <details><summary>La messe, pas à pas</summary><p>1) Rites d’accueil : chant, signe de croix, demande de pardon. 2) Liturgie de la Parole : lectures, psaume, Évangile, homélie, Credo, prière universelle. 3) Liturgie eucharistique : offrande du pain et du vin, prière eucharistique, consécration, Notre Père, communion. 4) Envoi et bénédiction. La messe est célébrée chaque dimanche, jour de la Résurrection.</p></details>
-            <details><summary>L’Eucharistie : présence réelle</summary><p>Les catholiques croient que, lors de la consécration, le pain et le vin deviennent réellement le Corps et le Sang du Christ, tout en gardant l’apparence du pain et du vin : on parle de transsubstantiation. Pour communier, il faut être baptisé, croire à cette présence et ne pas être en état de péché grave sans s’être confessé.</p></details>
-            <details><summary>La confession</summary><p>Le sacrement de réconciliation se vit avec un prêtre. On exprime son regret, on confesse ses péchés, on reçoit l’absolution « Je te pardonne tous tes péchés » et une pénitence. Le prêtre est tenu au secret absolu. Recommandé au moins une fois par an, notamment avant Pâques.</p></details>
-
-            <div class="section-title">La prière et la vie chrétienne</div>
-            <details><summary>Comment prier ?</summary><p>Prier, c’est parler à Dieu comme à un ami : remercier, demander, demander pardon, louer, écouter en silence. On peut prier avec ses mots, avec des prières toutes faites, avec la Bible (lectio divina), ou devant le Saint-Sacrement dans l’adoration. Quelques minutes par jour, à heure fixe, suffisent pour commencer.</p></details>
-            <details><summary>Le chapelet</summary><p>Prière mariale qui accompagne la méditation de la vie du Christ. Il se compose de 5 dizaines : chaque dizaine commence par un Notre Père, puis 10 Je vous salue Marie, et un Gloire au Père. Chaque jour correspond à des mystères : joyeux (lundi, samedi), lumineux (jeudi), douloureux (mardi, vendredi), glorieux (mercredi, dimanche). Octobre est le mois du Rosaire.</p></details>
-            <details><summary>Les commandements et les Béatitudes</summary><p>Dieu a donné à Moïse les Dix Commandements, que Jésus résume : « Tu aimeras le Seigneur ton Dieu de tout ton cœur, et ton prochain comme toi-même. » Les Béatitudes (Matthieu 5) décrivent le bonheur promis à ceux qui ont un cœur de pauvre, de paix, de miséricorde.</p></details>
-            <details><summary>L’année liturgique</summary><p>Elle rythme la vie de l’Église : Avent (préparation à Noël), Noël, Temps ordinaire, Carême (40 jours avant Pâques, jeûne, prière, partage), Triduum pascal (Jeudi saint, Vendredi saint, Veillée pascale), Temps pascal jusqu’à la Pentecôte, puis à nouveau Temps ordinaire. Autres grandes fêtes : Toussaint (1er novembre), Assomption (15 août).</p></details>
-            <details><summary>Devenir catholique</summary><p>Pour un adulte, on suit le catéchuménat (environ 1 à 2 ans) dans une paroisse, avec un accompagnateur, des rencontres et la préparation aux sacrements : baptême, confirmation et première communion, généralement célébrés à la Veillée pascale. Pour commencer, il suffit de contacter la paroisse la plus proche.</p></details>
-
-            <div class="section-title">Calendrier des grandes fêtes chrétiennes</div>
-            <details><summary>Noël (25 décembre)</summary><p>Célèbre la naissance de Jésus-Christ à Bethléem. C'est l'incarnation de Dieu qui se fait homme parmi nous. Elle est précédée par le temps de l'Avent (4 semaines de préparation).</p></details>
-            <details><summary>L'Épiphanie (6 janvier ou premier dimanche de janvier)</summary><p>Célèbre la visite des rois mages (Gaspard, Melchior et Balthazar) venus adorer l'enfant Jésus et lui offrir de l'or, de l'encens et de la myrrhe.</p></details>
-            <details><summary>Le Mercredi des Cendres et le Carême</summary><p>Marque le début du Carême (40 jours de préparation, de partage et de prière avant Pâques). On reçoit des cendres sur le front en signe de conversion : « Convertissez-vous et croyez à l'Évangile ».</p></details>
-            <details><summary>Pâques (Date mobile : premier dimanche après la première pleine lune de printemps)</summary><p>La plus grande fête chrétienne ! Elle célèbre la résurrection de Jésus-Christ d'entre les morts, marquant la victoire de la vie sur la mort.</p></details>
-            <details><summary>L'Ascension (40 jours après Pâques)</summary><p>Célèbre la montée de Jésus ressuscité au ciel auprès de son Père, marquant la fin de sa présence terrestre visible et le début de la mission de l'Église.</p></details>
-            <details><summary>La Pentecôte (50 jours après Pâques)</summary><p>Célèbre la venue de l'Esprit Saint sous forme de langues de feu sur les apôtres et Marie. C’est la naissance officielle de l'Église chrétienne.</p></details>
-            <details><summary>L'Assomption (15 août)</summary><p>Célèbre la montée de la Vierge Marie au ciel corps et âme au terme de sa vie terrestre.</p></details>
-            <details><summary>La Toussaint (1er novembre)</summary><p>Fête de tous les saints, connus et inconnus, qui ont vécu de l'amour de Dieu. Le lendemain (2 novembre), on prie pour tous les fidèles défunts.</p></details>
+            <details><summary>Qui est Jésus ?</summary><p>Pour les catholiques, Jésus de Nazareth est le Fils de Dieu fait homme : vrai Dieu et vrai homme...</p></details>
+            <details><summary>La Sainte Trinité</summary><p>Un seul Dieu en trois Personnes : le Père, le Fils et le Saint-Esprit.</p></details>
         </div>
 
         <!-- 3. QUESTIONS -->
         <div id="tab-questions" class="tab-view">
             <div class="intro-banner">
                 <h2>💬 Questions & Échanges</h2>
-                <p>Pose ta question sur la foi, la Bible, la prière… Les admins et la communauté répondent. Tu peux mentionner un admin en tapant <strong>@Nom</strong> ou <strong>@Admin</strong>. Rappel : respect et bienveillance.</p>
+                <p>Pose ta question sur la foi, la Bible, la prière… Les admins et la communauté répondent.</p>
             </div>
 
             <div class="card" id="question-form-container">
@@ -618,11 +640,30 @@
             <div id="questions-feed"></div>
         </div>
 
+        <!-- 3.5. MINI-CHAT EN DIRECT -->
+        <div id="tab-minichat" class="tab-view">
+            <div class="intro-banner">
+                <h2>⚡ Mini-Chat en direct</h2>
+                <p>Un espace d'échange instantané entre membres de la communauté. Restez courtois et bienveillants !</p>
+            </div>
+
+            <div class="card">
+                <div id="chat-messages"></div>
+                <div id="chat-auth-warning" style="color: var(--primary-blue); font-style: italic; margin-bottom: 10px; display: none;">
+                    Connectez-vous dans l'onglet « Compte » pour participer au chat.
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="chat-input" placeholder="Écrire un message..." style="margin-bottom:0; flex:1;" onkeydown="if(event.key==='Enter') sendChatMessage()" disabled>
+                    <button class="btn" id="chat-send-btn" onclick="sendChatMessage()" disabled>Envoyer</button>
+                </div>
+            </div>
+        </div>
+
         <!-- 4. PRIÈRES -->
         <div id="tab-prieres" class="tab-view">
             <div class="intro-banner">
                 <h2>🙏 Intentions de prière</h2>
-                <p>« Là où deux ou trois sont réunis en mon nom, je suis là au milieu d’eux. » Dépose ton intention, et prie pour celles des autres en appuyant sur « Je prie ».</p>
+                <p>« Là où deux ou trois sont réunis en mon nom, je suis là au milieu d’eux. » Dépose ton intention.</p>
             </div>
 
             <div class="card">
@@ -637,43 +678,20 @@
 
             <div class="section-title">Intentions de la communauté</div>
             <div id="intentions-feed"></div>
-
-            <div class="section-title" style="margin-top: 30px;">Prières à connaître</div>
-            <details><summary>Notre Père</summary><p>Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel. Donne-nous aujourd’hui notre pain de ce jour. Pardonne-nous nos offenses, comme nous pardonnons aussi à ceux qui nous ont offensés. Et ne nous soumets pas à la tentation, mais délivre-nous du Mal. Amen.</p></details>
-            <details><summary>Je vous salue Marie</summary><p>Je vous salue Marie, pleine de grâce ; le Seigneur est avec vous. Vous êtes bénie entre toutes les femmes et Jésus, le fruit de vos entrailles, est béni. Sainte Marie, Mère de Dieu, priez pour nous, pauvres pécheurs, maintenant et à l’heure de notre mort. Amen.</p></details>
-            <details><summary>Gloire au Père</summary><p>Gloire au Père, et au Fils, et au Saint-Esprit, comme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Amen.</p></details>
-            <details><summary>Le Credo (Symbole des apôtres)</summary><p>Je crois en Dieu, le Père tout-puissant, créateur du ciel et de la terre. Et en Jésus Christ, son Fils unique, notre Seigneur, qui a été conçu du Saint-Esprit, est né de la Vierge Marie, a souffert sous Ponce Pilate, a été crucifié, est mort et a été enseveli, est descendu aux enfers, le troisième jour est ressuscité des morts, est monté aux cieux, est assis à la droite de Dieu le Père tout-puissant, d’où il viendra juger les vivants et les morts. Je crois en l’Esprit Saint, à la sainte Église catholique, à la communion des saints, à la rémission des péchés, à la résurrection de la chair, à la vie éternelle. Amen.</p></details>
-            <details><summary>Bénédicité (avant le repas)</summary><p>Bénis-nous, Seigneur, bénis ce repas, ceux qui l’ont préparé, et procure du pain à ceux qui n’en ont pas. Amen.</p></details>
-            <details><summary>Acte de contrition</summary><p>Mon Dieu, j’ai un très grand regret de t’avoir offensé, parce que tu es infiniment bon et que le péché te déplaît. Prends pitié de moi. Avec ton aide, je ferai tout pour ne plus recommencer. Amen.</p></details>
-            <details><summary>Prière du matin (simple)</summary><p>Seigneur, je te confie cette journée. Garde-moi dans ta paix, aide-moi à voir ceux qui ont besoin de moi, et donne-moi la force d’aimer. Amen.</p></details>
-            <details><summary>Ange de Dieu</summary><p>Ange de Dieu, qui es mon gardien, et à qui la bonté divine m’a confié, éclaire-moi, garde-moi, dirige-moi et gouverne-moi. Amen.</p></details>
         </div>
 
         <!-- 5. BIBLE -->
         <div id="tab-bible" class="tab-view">
             <div class="intro-banner">
                 <h2>✝️ Bible — traduction Crampon 1923 (BCC1923)</h2>
-                <p>La Bible catholique compte 73 livres. Choisis un livre pour le lire. Les livres marqués d’un * sont les « deutérocanoniques ».</p>
+                <p>La Bible catholique compte 73 livres. Choisis un livre pour le lire.</p>
             </div>
-
-            <div class="card">
-                <h3>📖 Par où commencer ?</h3>
-                <p>Commence par les Évangiles (Marc, Luc, Jean), puis les Psaumes pour prier, puis les Actes des Apôtres. Lis un court passage par jour, demande l’aide de l’Esprit Saint avant de lire et note ce qui te touche.</p>
-            </div>
-
-            <div class="card">
-                <h3>✨ 10 versets à méditer</h3>
-                <p id="bible-versets-list">Chargement des versets...</p>
-            </div>
-
             <div class="card">
                 <input type="text" id="bible-search" placeholder="Rechercher un livre..." oninput="filterBooks()">
             </div>
-
-            <div class="section-title">Ancien Testament (46 livres)</div>
+            <div class="section-title">Ancien Testament</div>
             <div id="at-books" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;"></div>
-
-            <div class="section-title">Nouveau Testament (27 livres)</div>
+            <div class="section-title">Nouveau Testament</div>
             <div id="nt-books" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
             
             <div id="bible-reader" class="card" style="margin-top: 20px; display: none;">
@@ -687,14 +705,12 @@
         <div id="tab-quiz" class="tab-view">
             <div class="intro-banner">
                 <h2>🧩 Quiz biblique</h2>
-                <p>Teste tes connaissances sur la Bible et la foi à travers une sélection aléatoire de 10 questions !</p>
+                <p>Teste tes connaissances sur la Bible !</p>
             </div>
-
             <div class="card" id="quiz-container">
                 <div id="quiz-question-box"></div>
                 <button class="btn" id="quiz-next-btn" onclick="nextQuizQuestion()" style="margin-top: 15px; display: none;">Question suivante</button>
             </div>
-
             <div class="card" id="quiz-result-card" style="display: none; text-align: center;">
                 <h3>🎉 Quiz terminé !</h3>
                 <p id="quiz-score-text" style="font-size: 1.2rem; margin: 15px 0;"></p>
@@ -706,118 +722,60 @@
         <div id="tab-temoignages" class="tab-view">
             <div class="intro-banner">
                 <h2>📝 Témoignages de la communauté</h2>
-                <p>Partage comment Dieu agit, t'inspire ou t'aide au quotidien dans ta vie.</p>
+                <p>Partage comment Dieu agit dans ta vie.</p>
             </div>
-
             <div class="card" id="temoignage-form-container">
                 <h3>Partager un témoignage</h3>
                 <div id="auth-warning-temoignage" style="color: var(--primary-blue); font-style: italic; margin-bottom: 10px;">
-                    Veuillez créer un compte dans l’onglet « Compte » pour pouvoir publier un témoignage.
+                    Veuillez créer un compte pour publier.
                 </div>
                 <textarea id="new-temoignage-text" placeholder="Votre témoignage..." rows="3" disabled></textarea>
                 <button class="btn" id="publish-temoignage-btn" onclick="publishTemoignage()" disabled>Publier</button>
             </div>
-
             <div id="temoignages-feed"></div>
         </div>
 
-        <!-- 8. ÉQUIPE & RÉSEAUX -->
+        <!-- 8. RÉSEAUX -->
         <div id="tab-reseaux" class="tab-view">
             <div class="intro-banner">
                 <h2>🌐 Équipe & Réseaux</h2>
-                <p>Retrouve l’admin sur ses réseaux pour prolonger la discussion, voir du contenu et rester en contact.</p>
-            </div>
-
-            <div class="section-title">L’équipe</div>
-            <div class="card" style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">
-                <img src="image.jpg" alt="Aaron Mendy" style="width: 100px; height: 130px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color);" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'130\'><rect width=\'100\' height=\'130\' fill=\'%23f1e7d3\'/><text x=\'50\' y=\'70\' font-size=\'14\' text-anchor=\'middle\' fill=\'%2325364a\'>Aaron</text></svg>'">
-                <div style="flex: 1; min-width: 250px;">
-                    <h3 style="margin-bottom: 6px;">👤 Admin Principal : Aaron Mendy <span class="badge-admin">admin</span></h3>
-                    <p>J'ai eu la chance de grandir dans une famille catholique, mais ma foi s'est véritablement renforcée vers la fin de mes années de lycée. C'est à la suite de cela que j'ai décidé de créer un compte TikTok basé sur le christianisme. Aujourd'hui, j'anime un groupe Instagram où j'essaie d'aider les gens dans la foi, et où ils m'aident également en retour. À côté de cela, j'aime beaucoup les jeux vidéo, la musique — que ce soit en écouter ou en faire —, et bien sûr, parler de Dieu !</p>
-                </div>
-            </div>
-
-            <div class="section-title">Réseaux sociaux</div>
-            <div class="card">
-                <h3>📷 Instagram</h3>
-                <p style="margin-bottom: 10px;">Retrouve-moi sur Instagram : <a href="https://www.instagram.com/_imblackman_?rpxt=YXJkc3I0aWdsdDh6&utm_source=qr" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">@_imblackman_</a></p>
-                <p style="font-style: italic; opacity: 0.9;">Un groupe est disponible sur Instagram ! N’hésite pas à m’envoyer un message privé directement sur Insta pour y accéder.</p>
             </div>
             <div class="card">
-                <h3>▶️ YouTube</h3>
-                <p><a href="https://youtube.com/@nler0nny?si=tX3LrqZJw-t1eR_w" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">youtube.com/@nler0nny</a></p>
-            </div>
-            <div class="card">
-                <h3>🎵 TikTok</h3>
-                <p><a href="https://www.tiktok.com/@aaron_mny?_r=1&_t=ZG-9Ai8M25jowa" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">@aaron_mny</a></p>
-            </div>
-            <div class="card">
-                <h3>💬 Discord</h3>
-                <p>Rejoins notre communauté sur le serveur Discord : <a href="https://discord.gg/mRXMFkTuC" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Rejoindre le serveur</a></p>
-            </div>
-
-            <div class="section-title">Contact</div>
-            <div class="card">
-                <h3>✉️ Nous contacter</h3>
-                <p>Une question, une suggestion, un problème ou une demande de collaboration ? Écris-nous : <strong>tsumurikujo@gmail.com</strong></p>
+                <h3>👤 Admin Principal : Aaron Mendy <span class="badge-admin">admin</span></h3>
+                <p>Retrouvez-moi sur Instagram <a href="https://www.instagram.com/_imblackman_" target="_blank" style="color: var(--primary-blue);">@_imblackman_</a> et sur les réseaux !</p>
             </div>
         </div>
 
-        <!-- 8.5. PANNEAU ADMIN DÉDIÉ (Visible uniquement pour les administrateurs) -->
+        <!-- 8.5. PANNEAU ADMIN -->
         <div id="tab-admin-panel" class="tab-view">
             <div class="intro-banner" style="background: linear-gradient(135deg, var(--primary-blue), var(--secondary-bg)); color: white;">
                 <h2>⚙️ Espace Administrateur & Modération</h2>
-                <p>Panneau de contrôle exclusif pour gérer les signalements, les mentions, les membres et le journal d'activités.</p>
+                <p>Panneau de contrôle et bannissements stricts.</p>
             </div>
-
-            <!-- Paramètre Notifications Push -->
             <div class="card">
-                <h3>🔔 Notifications Push Admin</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 10px;">Activez ou désactivez les alertes et notifications push sur votre appareil lorsque vous êtes mentionné ou qu'un signalement est effectué.</p>
-                <button class="btn" id="push-toggle-btn" onclick="togglePushNotifications()" style="background-color: var(--primary-blue);">Activer les notifications push</button>
+                <h3>👥 Gestion des membres & Bannissements IP/Appareil</h3>
+                <div id="admin-members-list" style="overflow-x: auto;"></div>
             </div>
-
-            <!-- Signalements -->
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3>🚨 Contenus signalés (<span id="report-count">0</span>)</h3>
-                    <button class="btn-delete" onclick="clearAllReports()" style="float:none;">Tout effacer / Masquer</button>
-                </div>
-                <div id="admin-reports-list">
-                    <!-- Rempli dynamiquement -->
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>👥 Gestion des membres et des rôles</h3>
-                <p style="margin-bottom: 15px; font-size: 0.9rem;">Voici la liste de tous les membres enregistrés et actifs sur le site (cliquez sur un nom pour voir son profil) :</p>
-                <div id="admin-members-list" style="overflow-x: auto;">
-                    <!-- Rempli dynamiquement -->
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>➕ Promouvoir un administrateur</h3>
-                <p style="font-size: 0.85rem; margin-bottom: 10px;">Entrez le nom ou pseudo exact d'un membre pour lui donner les droits d'administration :</p>
-                <input type="text" id="admin-target-input" placeholder="Nom ou pseudo exact..." style="margin-bottom: 8px;">
-                <button class="btn" onclick="promoteMemberFromPanel()">Promouvoir Administrateur</button>
-            </div>
-
-            <!-- Journal d'activités (Audit Log) -->
             <div class="card">
                 <h3>📜 Journal d'activités (Audit Log)</h3>
-                <p style="font-size: 0.85rem; margin-bottom: 10px; opacity: 0.8;">Historique des actions de modération et des événements administratifs :</p>
-                <div id="audit-log-container" style="background: var(--bg-color); padding: 10px; border-radius: 8px; font-size: 0.85rem; max-height: 200px; overflow-y: auto;">
-                    <!-- Rempli dynamiquement -->
-                </div>
+                <div id="audit-log-container" style="background: var(--bg-color); padding: 10px; border-radius: 8px; font-size: 0.85rem; max-height: 200px; overflow-y: auto;"></div>
             </div>
         </div>
 
-        <!-- 9. COMPTE -->
+        <!-- 9. COMPTE & PRÉFÉRENCES -->
         <div id="tab-compte" class="tab-view">
             <div class="intro-banner">
-                <h2>👤 Mon Compte</h2>
-                <p id="compte-intro-text">Un compte te permet de : poser des questions et commenter ; déposer des intentions de prière ; choisir ton identité (prénom et nom, ou pseudo) ; ajouter une photo de profil.</p>
+                <h2>👤 Mon Compte & Paramètres</h2>
+            </div>
+
+            <!-- Bouton Mode Sombre / Clair -->
+            <div class="card">
+                <h3>🌙 Apparence du site</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 12px;">Choisissez votre thème visuel préféré :</p>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn" onclick="setTheme('light')">☀️ Mode Clair</button>
+                    <button class="btn" onclick="setTheme('dark')" style="background-color: #222d3d;">🌙 Mode Sombre</button>
+                </div>
             </div>
 
             <div id="auth-logged-out" class="card">
@@ -839,13 +797,6 @@
                         <p style="font-size: 0.85rem; opacity: 0.8;" id="user-role-status">Connecté</p>
                     </div>
                 </div>
-
-                <div class="card" style="background: var(--bg-color);">
-                    <h3>Mon activité</h3>
-                    <p>Questions posées : <strong id="my-stat-questions">0</strong></p>
-                    <p>Intentions déposées : <strong id="my-stat-intentions">0</strong></p>
-                </div>
-
                 <button class="btn" style="background-color: #d9534f;" onclick="logout()">Se déconnecter</button>
             </div>
         </div>
@@ -853,7 +804,6 @@
     </main>
 
     <script>
-        // 🔐 PARAMÈTRES DE SÉCURITÉ ADMIN EXCLUSIFS
         const SUPREME_ADMIN_NAME = "Aaron Mendy";
         const ADMIN_SECRET = "159357"; 
 
@@ -866,106 +816,55 @@
             "Jean": [["Au commencement était le Verbe, et le Verbe était avec Dieu..."]]
         };
 
-        const saviezVousList = [
-            "Le mot « Évangile » vient du grec et signifie « bonne nouvelle ».",
-            "Le mot « Église » vient du grec ekklesia : l’assemblée des personnes convoquées.",
-            "« Amen » est un mot hébreu qui veut dire « qu’il en soit ainsi ».",
-            "Le Notre Père est la prière que Jésus lui-même a enseignée à ses disciples.",
-            "Octobre est traditionnellement le mois du Rosaire, consacré à la prière du chapelet.",
-            "La Bible n’est pas un seul livre mais une bibliothèque de 73 livres écrits sur plus de mille ans.",
-            "« Christ » vient du grec Christos, qui traduit l’hébreu « Messie » : celui qui a reçu l’onction.",
-            "« Alléluia » est un mot hébreu qui signifie « louez le Seigneur ».",
-            "Le livre des Psaumes compte 150 psaumes : c’est le grand livre de prière de la Bible.",
-            "Pâques est fêtée le dimanche qui suit la première pleine lune du printemps."
-        ];
-
-        const saintsList = [
-            "Saint François d'Assise — Fondateur des Franciscains, amoureux de la nature et de la pauvreté évangélique.",
-            "Sainte Thérèse de Lisieux — Carmélite, connue pour sa « petite voie » de confiance et d'amour dans les petits actes du quotidien.",
-            "Saint Jean-Paul II — Pape pèlerin, grand défenseur de la jeunesse, de la paix et des droits de l'homme.",
-            "Sainte Bernadette Soubirous — Voyante des apparitions de Notre-Dame à Lourdes, modèle d'humilité et de simplicité.",
-            "Saint Antoine de Padoue — Docteur de l'Église, grand prédicateur et protecteur des causes perdues.",
-            "Saint Thomas d'Aquin — Moine dominicain et philosophe, l'un des plus grands théologiens de l'Église.",
-            "Saint Augustin d'Hippo — Évêque, auteur des célèbres *Confessions*, converti après une longue recherche de vérité."
-        ];
-
-        const versetsList = [
-            "1. « Dieu a tant aimé le monde qu’il a donné son Fils unique, afin que quiconque croit en lui ne se perde pas, mais obtienne la vie éternelle. » — *Jean 3, 16*",
-            "2. « Le Seigneur est mon berger : je ne manque de rien. » — *Psaume 22 (23), 1*",
-            "3. « Je suis le chemin, la vérité et la vie. » — *Jean 14, 6*",
-            "4. « Tout est possible à celui qui croit. » — *Marc 9, 23*",
-            "5. « Venez à moi, vous tous qui peinez sous le poids du fardeau, et moi, je vous procurerai le repos. » — *Matthieu 11, 28*",
-            "6. « Ne craignez pas, car je suis avec vous. » — *Isaïe 43, 5*",
-            "7. « L’amour prend patience, l’amour rend service. » — *1 Corinthiens 13, 4*",
-            "8. « Demandez, et l'on vous donnera ; cherchez, et vous trouverez. » — *Matthieu 7, 7*",
-            "9. « Réjouissez-vous toujours dans le Seigneur. » — *Philippiens 4, 4*",
-            "10. « Ta parole est la lumière de mes pas, une lampe sur ma route. » — *Psaume 118 (119), 105*"
-        ];
-
-        const prieresJourList = [
-            "Seigneur, je te confie cette journée. Garde-moi dans ta paix, aide-moi à voir ceux qui ont besoin de moi, et donne-moi la force d’aimer. Amen.",
-            "Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel..."
-        ];
+        const saviezVousList = ["Le mot « Évangile » vient du grec et signifie « bonne nouvelle ».", "La Bible compte 73 livres."];
+        const saintsList = ["Saint François d'Assise", "Sainte Thérèse de Lisieux", "Saint Jean-Paul II"];
+        const versetsList = ["1. « Dieu a tant aimé le monde... » — *Jean 3, 16*", "2. « Le Seigneur est mon berger... » — *Psaume 23, 1*"];
+        const prieresJourList = ["Seigneur, je te confie cette journée. Amen."];
 
         const allQuizQuestions = [
             { question: "À quel âge Jésus est-il mort sur la croix ?", options: ["Environ 33 ans", "Environ 30 ans", "Environ 40 ans", "Environ 25 ans"], answer: 0 },
-            { question: "Où Jésus est-il né ?", options: ["Nazareth", "Jérusalem", "Bethléem", "Capharnaüm"], answer: 2 },
-            { question: "Quel a été le premier miracle de Jésus ?", options: ["La multiplication des pains", "Changer l'eau en vin aux noces de Cana", "La marche sur les eaux", "La guérison d'un aveugle"], answer: 1 },
-            { question: "Comment s'appelait le prisonnier libéré par la foule à la place de Jésus ?", options: ["Lazare", "Barabbas", "Simon de Cyrène", "Nicodème"], answer: 1 },
-            { question: "Combien Jésus avait-il d'apôtres principaux ?", options: ["7", "10", "12", "40"], answer: 2 },
-            { question: "Qui a trahi Jésus en le livrant aux autorités ?", options: ["Pierre", "Judas Iscariote", "Thomas", "Jean"], answer: 1 },
-            { question: "Sur quelle montagne Moïse a-t-il reçu les Tables de la Loi ?", options: ["Mont des Oliviers", "Mont Sinaï", "Mont Tabor", "Mont Carmel"], answer: 1 },
-            { question: "Quel prophète a été avalé par un grand poisson ?", options: ["Élie", "Jonas", "Isaïe", "Jérémie"], answer: 1 },
-            { question: "Combien de livres compte la Bible catholique ?", options: ["66", "73", "81", "46"], answer: 1 },
-            { question: "Quel évangéliste était médecin ?", options: ["Matthieu", "Marc", "Luc", "Jean"], answer: 2 },
-            { question: "Qui a renié Jésus trois fois avant le chant du coq ?", options: ["Jacques", "Pierre", "André", "Philippe"], answer: 1 },
-            { question: "Quel est le premier livre de la Bible ?", options: ["Exode", "Genèse", "Lévitique", "Matthieu"], answer: 1 },
-            { question: "Dans quelle ville Jésus a-t-il été crucifié ?", options: ["Jérusalem", "Rome", "Antioche", "Jéricho"], answer: 0 },
-            { question: "Qui a baptisé Jésus dans le fleuve Jourdain ?", options: ["Jean le Baptiste", "Zacharie", "Joseph", "Nicodème"], answer: 0 },
-            { question: "Quel roi d'Israël était reconnu pour sa grande sagesse ?", options: ["Saul", "David", "Salomon", "Achab"], answer: 2 },
-            { question: "Quel patriarche a construit l'arche pour échapper au déluge ?", options: ["Abraham", "Noé", "Isaac", "Jacob"], answer: 1 },
-            { question: "Quel est le plus court psaume de la Bible ?", options: ["Psaume 23", "Psaume 117", "Psaume 51", "Psaume 150"], answer: 1 },
-            { question: "Quel disciple a douté de la résurrection de Jésus avant de le toucher ?", options: ["Jacques", "Thomas", "Barthélemy", "Matthieu"], answer: 1 },
-            { question: "Qui a écrit la majorité des épitres du Nouveau Testament ?", options: ["Pierre", "Paul", "Jean", "Jacques"], answer: 1 },
-            { question: "Quel est le nom de la mère de la Vierge Marie ?", options: ["Élisabeth", "Anne", "Salomé", "Marthe"], answer: 1 },
-            { question: "Combien de jours Jésus a-t-il jeûné dans le désert ?", options: ["7 jours", "12 jours", "40 jours", "100 jours"], answer: 2 },
-            { question: "Quel pécheur est monté dans un sycomore pour voir Jésus ?", options: ["Zachée", "Matthieu", "Bartimée", "Lazare"], answer: 0 },
-            { question: "Quel nom signifie « Dieu avec nous » ?", options: ["Emmanuel", "Messie", "Christ", "Seigneur"], answer: 0 },
-            { question: "Dans quel pays la Sainte Famille s'est-elle réfugiée pour fuir Hérode ?", options: ["Syrie", "Égypte", "Grèce", "Liban"], answer: 1 },
-            { question: "Quel apôtre était un ancien collecteur d'impôts ?", options: ["Pierre", "Matthieu", "Jean", "André"], answer: 1 },
-            { question: "Quelle femme a versé du parfum de grand prix sur les pieds de Jésus ?", options: ["Marie de Magdala", "Marie de Béthanie", "Marthe", "Salomé"], answer: 1 },
-            { question: "Quel prophète a succédé à Élie après avoir reçu son manteau ?", options: ["Élisée", "Amos", "Osée", "Daniel"], answer: 0 },
-            { question: "Quel est le dernier livre de la Bible ?", options: ["Les Actes", "L'Apocalypse", "L'Épître aux Romains", "Jude"], answer: 1 },
-            { question: "Quel est le signe de l'alliance entre Dieu et Noé après le déluge ?", options: ["Une colombe", "Un arc-en-ciel", "Un olivier", "Une colline"], answer: 1 },
-            { question: "Qui a interprété les songes du pharaon en Égypte ?", options: ["Moïse", "Joseph", "Abraham", "Daniel"], answer: 1 },
-            { question: "Quel prophète a lutté toute une nuit avec un ange ?", options: ["Jacob", "Isaac", "Abraham", "Gédéon"], answer: 0 },
-            { question: "Quel juge d'Israël avait une force prodigieuse liée à ses cheveux ?", options: ["Gédéon", "Samson", "Jephté", "Barak"], answer: 1 },
-            { question: "Quel jeune berger a vaincu le géant Goliath ?", options: ["Saul", "David", "Jonathan", "Salomon"], answer: 1 },
-            { question: "Quel prophète a été jeté dans une fosse aux lions sous le règne de Darius ?", options: ["Daniel", "Jérémie", "Ézéchiel", "Amos"], answer: 0 },
-            { question: "Comment s'appelait la sœur de Lazare et Marthe ?", options: ["Marie", "Madeleine", "Salomé", "Suzanne"], answer: 0 },
-            { question: "Quel gouverneur romain a lavé ses mains face à la foule concernant Jésus ?", options: ["Hérode", "Ponce Pilate", "César", "Félix"], answer: 1 },
-            { question: "Où Jésus a-t-il accompli son premier discours des Béatitudes ?", options: ["Sur la montagne", "Dans le désert", "Au bord du lac", "Dans le Temple"], answer: 0 },
-            { question: "Quel est le plus long livre de la Bible ?", options: ["Isaïe", "Les Psaumes", "Genèse", "Jérémie"], answer: 1 },
-            { question: "Quel est le nom de la montagne où Jésus a été crucifié ?", options: ["Sinaï", "Calvaire (Golgotha)", "Tabor", "Nébo"], answer: 1 },
-            { question: "Quel évangile commence par « Au commencement était le Verbe » ?", options: ["Matthieu", "Marc", "Luc", "Jean"], answer: 3 },
-            { question: "Qui fut le premier martyr chrétien lapidé à mort ?", options: ["Étienne", "Jacques", "Paul", "Barnabé"], answer: 0 },
-            { question: "Quel patriarche a failli sacrifier son fils Isaac sur l'ordre de Dieu ?", options: ["Abraham", "Noé", "Jacob", "Loth"], answer: 0 },
-            { question: "Quel disciple a remplacé Judas parmi les douze apôtres ?", options: ["Matthias", "Paul", "Barnabé", "Timothée"], answer: 0 },
-            { question: "Quelle reine est venue rendre visite au roi Salomon pour éprouver sa sagesse ?", options: ["La reine Esther", "La reine de Saba", "Jézabel", "Kouba"], answer: 1 },
-            { question: "Quel est le symbole de l'Esprit Saint lors du baptême de Jésus ?", options: ["Une colombe", "Un feu ardent", "Un vent violent", "Une étoile"], answer: 0 },
-            { question: "Combien de commandements Dieu a-t-il donnés à Moïse sur les Tables de la Loi ?", options: ["7", "10", "12", "15"], answer: 1 },
-            { question: "Quel prophète a défié les prêtres de Baal sur le mont Carmel ?", options: ["Élie", "Élisée", "Isaïe", "Amos"], answer: 0 },
-            { question: "Quelle femme a caché les espions israélites à Jéricho ?", options: ["Ruth", "Rahab", "Naomie", "Abigaïl"], answer: 1 },
-            { question: "Quel jeune homme a été vendu comme esclave par ses frères jaloux en Égypte ?", options: ["Joseph", "Benjamin", "Ruben", "Juda"], answer: 0 },
-            { question: "Dans quel jardin Jésus a-t-il prié avant son arrestation ?", options: ["Jardin d'Éden", "Jardin de Gethsémani", "Jardin du Roi", "Jardin des Oliviers"], answer: 1 }
+            { question: "Où Jésus est-il né ?", options: ["Nazareth", "Jérusalem", "Bethléem", "Capharnaüm"], answer: 2 }
         ];
 
         let activeQuizQuestions = [];
         let currentQuizIndex = 0;
         let quizScore = 0;
 
-        const atBooks = ["Genèse", "Exode", "Lévitique", "Nombres", "Deutéronome", "Josué", "Juges", "Ruth", "1 Samuel", "2 Samuel", "1 Rois", "2 Rois", "1 Chroniques", "2 Chroniques", "Esdras", "Néhémie", "Tobie*", "Judith*", "Esther", "1 Maccabées*", "2 Maccabées*", "Job", "Psaumes", "Proverbes", "Qohélet", "Cantique des Cantiques", "Sagesse*", "Siracide*", "Isaïe", "Jérémie", "Lamentations", "Baruch*", "Ézéchiel", "Daniel", "Osée", "Joël", "Amos", "Abdias", "Jonas", "Michée", "Nahum", "Habacuc", "Sophonie", "Aggée", "Zacharie", "Malachie"];
-        const ntBooks = ["Matthieu", "Marc", "Luc", "Jean", "Actes des Apôtres", "Romains", "1 Corinthiens", "2 Corinthiens", "Galates", "Éphésiens", "Philippiens", "Colossiens", "1 Thessaloniciens", "2 Thessaloniciens", "1 Timothée", "2 Timothée", "Tite", "Philémon", "Hébreux", "Jacques", "1 Pierre", "2 Pierre", "1 Jean", "2 Jean", "3 Jean", "Jude", "Apocalypse"];
+        const atBooks = ["Genèse", "Exode", "Lévitique", "Nombres", "Deutéronome"];
+        const ntBooks = ["Matthieu", "Marc", "Luc", "Jean", "Actes des Apôtres"];
+
+        // Gestion du Thème (Mode Sombre / Clair)
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+                localStorage.setItem('pd_theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-theme');
+                localStorage.setItem('pd_theme', 'light');
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('pd_theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+        }
+
+        // Vérification anti-bannissement (IP / Empreinte simulée et ID)
+        function checkBannedStatus() {
+            const acc = getAccount();
+            if (!acc) return;
+            const bannedList = loadData('banned_users', []);
+            const deviceId = localStorage.getItem('pd_device_id') || "device_" + Math.random();
+            localStorage.setItem('pd_device_id', deviceId);
+
+            if (bannedList.includes(acc.name.toLowerCase()) || bannedList.includes(deviceId)) {
+                alert("⛔ Votre compte ou votre appareil a été banni définitivement par un administrateur.");
+                logout();
+                location.reload();
+            }
+        }
 
         function getDayIndex(max) {
             const now = new Date();
@@ -975,6 +874,7 @@
         }
 
         function escapeHTML(str) {
+            if (!str) return "";
             return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
         }
 
@@ -994,17 +894,14 @@
 
         function isUserAdmin(name) {
             if (!name) return false;
-            if (name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) {
-                return true;
-            }
+            if (name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) return true;
             const customAdmins = loadData('custom_admins', []);
             return customAdmins.map(a => a.toLowerCase()).includes(name.trim().toLowerCase());
         }
 
         function logAudit(action) {
             let logs = loadData('audit_logs', []);
-            const timeStr = new Date().toLocaleString();
-            logs.unshift(`[${timeStr}] ${action}`);
+            logs.unshift(`[${new Date().toLocaleString()}] ${action}`);
             if (logs.length > 50) logs.pop();
             saveData('audit_logs', logs);
             renderAuditLogs();
@@ -1014,111 +911,11 @@
             const container = document.getElementById('audit-log-container');
             if (!container) return;
             const logs = loadData('audit_logs', []);
-            if (logs.length === 0) {
-                container.innerHTML = `<span style="font-style: italic;">Aucune action enregistrée.</span>`;
-                return;
-            }
-            container.innerHTML = logs.map(l => `<div>• ${escapeHTML(l)}</div>`).join('');
-        }
-
-        // Gestion des notifications push / Web
-        function isPushEnabled() {
-            return localStorage.getItem('pd_push_enabled') === 'true';
-        }
-
-        function togglePushNotifications() {
-            const current = isPushEnabled();
-            if (!current) {
-                if ("Notification" in window) {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === "granted") {
-                            localStorage.setItem('pd_push_enabled', 'true');
-                            alert("Notifications push activées avec succès !");
-                            updatePushBtnUI();
-                        } else {
-                            alert("Permission de notification refusée par le navigateur.");
-                        }
-                    });
-                } else {
-                    alert("Votre navigateur ne supporte pas les notifications.");
-                }
-            } else {
-                localStorage.setItem('pd_push_enabled', 'false');
-                alert("Notifications push désactivées.");
-                updatePushBtnUI();
-            }
-        }
-
-        function updatePushBtnUI() {
-            const btn = document.getElementById('push-toggle-btn');
-            if (!btn) return;
-            const enabled = isPushEnabled();
-            btn.innerText = enabled ? "Désactiver les notifications push" : "Activer les notifications push";
-            btn.style.backgroundColor = enabled ? "#d9534f" : "var(--primary-blue)";
-        }
-
-        function triggerPushNotification(title, body) {
-            if (!isPushEnabled()) return;
-            if ("Notification" in window && Notification.permission === "granted") {
-                try {
-                    new Notification(title, { body, icon: "téléchargement.jpg" });
-                } catch (e) {
-                    console.log("Notification non envoyée", e);
-                }
-            }
-        }
-
-        // Analyse du texte pour formater les mentions (@Nom ou @Admin)
-        function formatMentions(text) {
-            if (!text) return "";
-            // Échapper d'abord le HTML
-            let safe = escapeHTML(text);
-            // Remplacer les mentions par un span stylisé
-            return safe.replace(/@([a-zA-ZÀ-ÿ0-9_\s]+)(?=\b|$)/g, '<span class="mention-tag">@$1</span>');
-        }
-
-        // Vérifie si le texte mentionne un admin connecté
-        function checkForMentions(text, author) {
-            const acc = getAccount();
-            if (!acc || !acc.isAdmin) return;
-            
-            const lowerText = text.toLowerCase();
-            const myName = acc.name.toLowerCase();
-            if (lowerText.includes(`@${myName}`) || lowerText.includes('@admin')) {
-                triggerPushNotification("Nouvelle mention ✝", `${author} vous a mentionné dans une publication.`);
-            }
-        }
-
-        // Rétrocompatibilité : analyse et enregistre tous les auteurs existants
-        function syncAllMembersFromActivity() {
-            let members = loadData('members_directory', []);
-            const existingNames = new Set(members.map(m => m.name.toLowerCase()));
-
-            const addNameIfNeeded = (name) => {
-                if (!name || name === "Anonyme") return;
-                const trimmed = name.trim();
-                if (!existingNames.has(trimmed.toLowerCase())) {
-                    existingNames.add(trimmed.toLowerCase());
-                    members.push({ name: trimmed, isAdmin: isUserAdmin(trimmed), joined: "Antérieur" });
-                }
-            };
-
-            const questions = loadData('questions', []);
-            questions.forEach(q => {
-                addNameIfNeeded(q.author);
-                if (q.comments) q.comments.forEach(c => addNameIfNeeded(c.author));
-            });
-
-            const temoignages = loadData('temoignages', []);
-            temoignages.forEach(t => addNameIfNeeded(t.author));
-
-            const intentions = loadData('intentions', []);
-            intentions.forEach(i => addNameIfNeeded(i.author));
-
-            saveData('members_directory', members);
+            container.innerHTML = logs.length === 0 ? `<span style="font-style: italic;">Aucune action enregistrée.</span>` : logs.map(l => `<div>• ${escapeHTML(l)}</div>`).join('');
         }
 
         function switchTab(tabId) {
+            checkBannedStatus();
             document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             
@@ -1132,8 +929,9 @@
         }
 
         function initApp() {
-            syncAllMembersFromActivity();
-
+            loadTheme();
+            checkBannedStatus();
+            
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const tab = btn.getAttribute('data-tab');
@@ -1141,153 +939,123 @@
                 });
             });
 
-            const rawVerset = versetsList[getDayIndex(versetsList.length)].replace(/^[0-9]+\.\s*/, '');
-            document.getElementById('home-verset').innerText = rawVerset;
-
-            const fullPriere = prieresJourList[getDayIndex(prieresJourList.length)];
-            document.getElementById('home-priere').innerText = fullPriere;
-            document.getElementById('home-saviez').innerText = saviezVousList[getDayIndex(saviezVousList.length)];
-            document.getElementById('home-saint').innerText = saintsList[getDayIndex(saintsList.length)];
+            document.getElementById('home-verset').innerText = versetsList[getDayIndex(versetsList.length)];
+            document.getElementById('home-priere').innerText = prieresJourList[0];
+            document.getElementById('home-saviez').innerText = saviezVousList[0];
+            document.getElementById('home-saint').innerText = saintsList[0];
 
             updateCountdowns();
-            document.getElementById('bible-versets-list').innerHTML = versetsList.join('<br>');
-
             renderBooks('at-books', atBooks);
             renderBooks('nt-books', ntBooks);
 
             initQuiz();
             updateAccountUI();
             renderQuestions();
+            renderChatMessages();
             renderIntentions();
             renderTemoignages();
             updateStats();
-            updatePushBtnUI();
-            renderAdminReports();
+            renderPinnedContent();
+            renderAdminMembersList();
             renderAuditLogs();
+
+            // Intervalle de vérification en temps réel du bannissement toutes les 3 secondes
+            setInterval(checkBannedStatus, 3000);
+            // Actualisation automatique du mini-chat toutes les 2 secondes
+            setInterval(renderChatMessages, 2000);
         }
 
         function updateCountdowns() {
             const now = new Date();
             const year = now.getFullYear();
-
             let noelDate = new Date(year, 11, 25);
             if (now > noelDate) noelDate = new Date(year + 1, 11, 25);
-            const diffNoel = Math.ceil((noelDate - now) / (1000 * 60 * 60 * 24));
-            document.getElementById('countdown-noel').innerText = `${diffNoel} jour(s)`;
+            document.getElementById('countdown-noel').innerText = `${Math.ceil((noelDate - now) / (1000 * 60 * 60 * 24))} jour(s)`;
 
-            let paquesDate = year === 2026 ? new Date(2026, 3, 5) : new Date(year, 3, 20);
-            if (now > paquesDate) paquesDate = new Date(year + 1, 3, 28);
-            const diffPaques = Math.ceil((paquesDate - now) / (1000 * 60 * 60 * 24));
-            document.getElementById('countdown-paques').innerText = `${diffPaques > 0 ? diffPaques : 170} jour(s)`;
+            let paquesDate = new Date(year, 3, 5);
+            if (now > paquesDate) paquesDate = new Date(year + 1, 3, 20);
+            document.getElementById('countdown-paques').innerText = `${Math.ceil((paquesDate - now) / (1000 * 60 * 60 * 24))} jour(s)`;
         }
 
-        function initQuiz() {
-            currentQuizIndex = 0;
-            quizScore = 0;
-            let shuffled = [...allQuizQuestions].sort(() => 0.5 - Math.random());
-            activeQuizQuestions = shuffled.slice(0, 10);
-
-            document.getElementById('quiz-container').style.display = 'block';
-            document.getElementById('quiz-result-card').style.display = 'none';
-            renderQuizQuestion();
-        }
-
-        function renderQuizQuestion() {
-            const q = activeQuizQuestions[currentQuizIndex];
-            const box = document.getElementById('quiz-question-box');
-            document.getElementById('quiz-next-btn').style.display = 'none';
-
-            let html = `<h3>Question ${currentQuizIndex + 1} / ${activeQuizQuestions.length}</h3>`;
-            html += `<p style="margin-bottom: 15px; font-weight: bold;">${q.question}</p>`;
-            
-            q.options.forEach((opt, idx) => {
-                html += `<label class="quiz-option"><input type="radio" name="quiz-opt" value="${idx}" onclick="selectQuizAnswer(${idx})"> ${opt}</label>`;
-            });
-
-            box.innerHTML = html;
-        }
-
-        function selectQuizAnswer(selectedIndex) {
-            const q = activeQuizQuestions[currentQuizIndex];
-            const options = document.querySelectorAll('.quiz-option');
-            
-            options.forEach((optEl, idx) => {
-                optEl.style.pointerEvents = 'none';
-                if (idx === q.answer) {
-                    optEl.style.backgroundColor = '#d4edda';
-                    optEl.style.borderColor = '#c3e6cb';
-                } else if (idx === selectedIndex) {
-                    optEl.style.backgroundColor = '#f8d7da';
-                    optEl.style.borderColor = '#f5c6cb';
-                }
-            });
-
-            if (selectedIndex === q.answer) {
-                quizScore++;
-            }
-
-            if (currentQuizIndex < activeQuizQuestions.length - 1) {
-                document.getElementById('quiz-next-btn').style.display = 'inline-block';
-            } else {
-                setTimeout(showQuizResults, 1200);
-            }
-        }
-
-        function nextQuizQuestion() {
-            currentQuizIndex++;
-            renderQuizQuestion();
-        }
-
-        function showQuizResults() {
-            document.getElementById('quiz-container').style.display = 'none';
-            document.getElementById('quiz-result-card').style.display = 'block';
-            document.getElementById('quiz-score-text').innerHTML = `Tu as obtenu <strong>${quizScore}</strong> sur <strong>${activeQuizQuestions.length}</strong> bonnes réponses !`;
-        }
-
-        function restartQuiz() {
-            initQuiz();
-        }
-
-        function updateStats() {
-            const questions = loadData('questions', []);
-            const intentions = loadData('intentions', []);
-            
-            let totalJePrie = 0;
-            intentions.forEach(i => totalJePrie += i.count);
-
-            document.getElementById('stat-questions').innerText = questions.length;
-            document.getElementById('stat-intentions').innerText = intentions.length;
-            document.getElementById('stat-priere-clicks').innerText = totalJePrie;
-
-            if (questions.length > 0) {
-                const lastQ = questions[questions.length - 1];
-                document.getElementById('home-last-question').innerHTML = `<strong class="clickable-user" onclick="openProfileModal('${escapeHTML(lastQ.author)}')">${escapeHTML(lastQ.author)}</strong> : ${escapeHTML(lastQ.text)}`;
-            } else {
-                document.getElementById('home-last-question').innerHTML = `Aucune question pour le moment.`;
-            }
-
-            if (intentions.length > 0) {
-                const lastI = intentions[intentions.length - 1];
-                document.getElementById('home-last-intention').innerHTML = `<strong class="clickable-user" onclick="openProfileModal('${escapeHTML(lastI.author)}')">${escapeHTML(lastI.author)}</strong> : ${escapeHTML(lastI.text)}`;
-            } else {
-                document.getElementById('home-last-intention').innerHTML = `Aucune intention pour le moment.`;
-            }
-
+        // --- MINI-CHAT EN DIRECT ---
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
             const acc = getAccount();
-            if (acc && document.getElementById('my-stat-questions')) {
-                document.getElementById('my-stat-questions').innerText = questions.filter(q => q.author === acc.name).length;
-                document.getElementById('my-stat-intentions').innerText = intentions.filter(i => i.author === acc.name).length;
+            if (!text || !acc) return;
+
+            let chatMessages = loadData('minichat', []);
+            chatMessages.push({
+                id: Date.now(),
+                author: acc.name,
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+            if (chatMessages.length > 100) chatMessages.shift(); // Garder les 100 derniers
+            saveData('minichat', chatMessages);
+            input.value = '';
+            renderChatMessages();
+        }
+
+        function renderChatMessages() {
+            const container = document.getElementById('chat-messages');
+            if (!container) return;
+            const chatMessages = loadData('minichat', []);
+            const acc = getAccount();
+
+            if (chatMessages.length === 0) {
+                container.innerHTML = `<p style="text-align: center; font-style: italic; opacity: 0.6; margin-top: 20px;">Aucun message pour l'instant. Soyez le premier à écrire !</p>`;
+                return;
+            }
+
+            container.innerHTML = chatMessages.map(m => {
+                const isMine = acc && m.author === acc.name;
+                const isAdmin = isUserAdmin(m.author);
+                return `
+                    <div class="chat-bubble ${isMine ? 'mine' : ''}">
+                        <div style="font-size: 0.75rem; opacity: 0.7; margin-bottom: 2px;">
+                            <strong class="clickable-user" onclick="openProfileModal('${escapeHTML(m.author)}')">${escapeHTML(m.author)}</strong> ${isAdmin ? '<span class="badge-admin">admin</span>' : ''} - ${m.time}
+                        </div>
+                        <div>${escapeHTML(m.text)}</div>
+                    </div>
+                `;
+            }).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // --- MESSAGES ÉPINGLÉS ---
+        function togglePinQuestion(qId) {
+            let questions = loadData('questions', []);
+            const q = questions.find(item => item.id === qId);
+            if (q) {
+                q.pinned = !q.pinned;
+                saveData('questions', questions);
+                logAudit(`${q.pinned ? 'Épinglage' : 'Désépinglage'} de la question ID ${qId}`);
+                renderQuestions();
+                renderPinnedContent();
             }
         }
 
-        function registerMemberInDirectory(name) {
-            let members = loadData('members_directory', []);
-            if (!members.some(m => m.name.toLowerCase() === name.toLowerCase())) {
-                members.push({ name, joined: new Date().toLocaleDateString() });
-                saveData('members_directory', members);
+        function renderPinnedContent() {
+            const container = document.getElementById('pinned-section');
+            if (!container) return;
+            const questions = loadData('questions', []);
+            const pinnedQ = questions.filter(q => q.pinned);
+
+            if (pinnedQ.length === 0) {
+                container.innerHTML = '';
+                return;
             }
+
+            container.innerHTML = pinnedQ.map(q => `
+                <div class="card" style="border-left: 5px solid #f0ad4e;">
+                    <h3>📌 Annonce / Message Épinglé</h3>
+                    <p><strong>${escapeHTML(q.author)}</strong> : ${escapeHTML(q.text)}</p>
+                </div>
+            `).join('');
         }
 
+        // --- GESTION DES COMPTES & BANNISSEMENT STRICT ---
         function createAccount() {
             const prenom = document.getElementById('reg-prenom').value.trim();
             const nom = document.getElementById('reg-nom').value.trim();
@@ -1301,61 +1069,32 @@
 
             const displayName = pseudo || `${prenom} ${nom}`.trim();
             
+            // Vérification si banni
+            const bannedList = loadData('banned_users', []);
+            if (bannedList.includes(displayName.toLowerCase())) {
+                alert("⛔ Impossible de créer ce compte : cet utilisateur a été banni.");
+                return;
+            }
+
             if (adminCode === ADMIN_SECRET) {
                 let customAdmins = loadData('custom_admins', []);
                 if (!customAdmins.map(a => a.toLowerCase()).includes(displayName.toLowerCase())) {
                     customAdmins.push(displayName);
                     saveData('custom_admins', customAdmins);
-                    logAudit(`Promotion admin initiale via code secret pour ${displayName}`);
+                    logAudit(`Promotion admin via code secret pour ${displayName}`);
                 }
             }
 
             const isAdmin = isUserAdmin(displayName);
-
-            const fileInput = document.getElementById('reg-photo');
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = e => cropAndSaveImage(e.target.result, displayName, isAdmin);
-                reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                saveAccountAndReload(displayName, null, isAdmin);
-            }
-        }
-
-        function cropAndSaveImage(dataUrl, displayName, isAdmin) {
-            const img = new Image();
-            img.onload = function () {
-                const canvas = document.createElement('canvas');
-                canvas.width = 96;
-                canvas.height = 96;
-                const ctx = canvas.getContext('2d');
-                let size = Math.min(img.width, img.height);
-                ctx.drawImage(img, (img.width - size)/2, (img.height - size)/2, size, size, 0, 0, 96, 96);
-                saveAccountAndReload(displayName, canvas.toDataURL(), isAdmin);
-            };
-            img.src = dataUrl;
-        }
-
-        function saveAccountAndReload(name, photo, isAdmin) {
-            registerMemberInDirectory(name);
-            localStorage.setItem('pd_account', JSON.stringify({ name, photo, isAdmin }));
+            localStorage.setItem('pd_account', JSON.stringify({ name: displayName, isAdmin }));
             updateAccountUI();
-            renderQuestions();
-            renderIntentions();
-            renderTemoignages();
-            updateStats();
+            switchTab('accueil');
         }
 
         function logout() {
             localStorage.removeItem('pd_account');
             updateAccountUI();
-            if (document.getElementById('tab-admin-panel').classList.contains('active')) {
-                switchTab('accueil');
-            }
-            renderQuestions();
-            renderIntentions();
-            renderTemoignages();
-            updateStats();
+            switchTab('accueil');
         }
 
         function updateAccountUI() {
@@ -1367,21 +1106,15 @@
                 localStorage.setItem('pd_account', JSON.stringify(acc));
             }
 
-            if (acc && acc.isAdmin) {
-                adminBtn.style.display = 'flex';
-            } else {
-                adminBtn.style.display = 'none';
-            }
+            if (adminBtn) adminBtn.style.display = (acc && acc.isAdmin) ? 'flex' : 'none';
 
             if (acc) {
                 document.getElementById('auth-logged-out').style.display = 'none';
                 document.getElementById('auth-logged-in').style.display = 'block';
                 document.getElementById('user-display-name').innerText = acc.name;
                 document.getElementById('user-role-status').innerText = acc.isAdmin ? "👑 Administrateur" : "Membre connecté";
-                
-                const avatarDiv = document.getElementById('user-display-avatar');
-                avatarDiv.innerHTML = acc.photo ? `<img src="${acc.photo}" style="width:100%;height:100%;object-fit:cover;">` : acc.name.charAt(0).toUpperCase();
 
+                // Déverrouillage des fonctionnalités
                 document.getElementById('new-question-text').disabled = false;
                 document.getElementById('publish-question-btn').disabled = false;
                 document.getElementById('auth-warning-question').style.display = 'none';
@@ -1390,11 +1123,13 @@
                 document.getElementById('publish-temoignage-btn').disabled = false;
                 document.getElementById('auth-warning-temoignage').style.display = 'none';
 
-                renderAdminMembersList();
-                renderAdminReports();
+                document.getElementById('chat-input').disabled = false;
+                document.getElementById('chat-send-btn').disabled = false;
+                document.getElementById('chat-auth-warning').style.display = 'none';
             } else {
                 document.getElementById('auth-logged-out').style.display = 'block';
                 document.getElementById('auth-logged-in').style.display = 'none';
+
                 document.getElementById('new-question-text').disabled = true;
                 document.getElementById('publish-question-btn').disabled = true;
                 document.getElementById('auth-warning-question').style.display = 'block';
@@ -1402,147 +1137,24 @@
                 document.getElementById('new-temoignage-text').disabled = true;
                 document.getElementById('publish-temoignage-btn').disabled = true;
                 document.getElementById('auth-warning-temoignage').style.display = 'block';
+
+                document.getElementById('chat-input').disabled = true;
+                document.getElementById('chat-send-btn').disabled = true;
+                document.getElementById('chat-auth-warning').style.display = 'block';
             }
         }
 
-        // --- GESTION DES SIGNALEMENTS ---
-        function reportContent(type, id, previewText) {
-            let reports = loadData('reports', []);
-            const reportId = Date.now();
-            reports.push({
-                id: reportId,
-                type,
-                targetId: id,
-                preview: previewText,
-                date: new Date().toLocaleString()
-            });
-            saveData('reports', reports);
-            triggerPushNotification("Nouveau signalement 🚩", `Un contenu a été signalé : "${previewText.substring(0, 30)}..."`);
-            alert("Contenu signalé aux administrateurs. Merci pour votre vigilance.");
-            renderAdminReports();
-        }
-
-        function renderAdminReports() {
-            const reports = loadData('reports', []);
-            const container = document.getElementById('admin-reports-list');
-            const countBadge = document.getElementById('report-count');
-            if (!container || !countBadge) return;
-
-            countBadge.innerText = reports.length;
-
-            if (reports.length === 0) {
-                container.innerHTML = `<p style="font-style: italic; font-size: 0.9rem;">Aucun signalement en attente.</p>`;
-                return;
-            }
-
-            container.innerHTML = reports.map(r => `
-                <div style="background: var(--bg-color); border-left: 4px solid #d9534f; padding: 10px; margin-bottom: 8px; border-radius: 4px; font-size: 0.9rem;">
-                    <p><strong>Type :</strong> ${r.type} | <strong>Date :</strong> ${r.date}</p>
-                    <p style="margin: 4px 0;">« ${escapeHTML(r.preview)} »</p>
-                    <button class="btn-delete" onclick="dismissReport(${r.id})" style="float:none;">Ignorer / Supprimer le signalement</button>
-                </div>
-            `).join('');
-        }
-
-        function dismissReport(reportId) {
-            let reports = loadData('reports', []);
-            reports = reports.filter(r => r.id !== reportId);
-            saveData('reports', reports);
-            renderAdminReports();
-        }
-
-        function clearAllReports() {
-            if (!confirm("Voulez-vous effacer tous les signalements ?")) return;
-            saveData('reports', []);
-            renderAdminReports();
-        }
-
-        // --- GESTION MODALE PROFIL & MODÉRATION ---
-        function openProfileModal(memberName) {
-            syncAllMembersFromActivity();
-            const modal = document.getElementById('profile-modal');
-            const title = document.getElementById('modal-profile-title');
-            const body = document.getElementById('modal-profile-body');
-
-            const isSupreme = (memberName.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase());
-            const isAdmin = isUserAdmin(memberName);
-            const questions = loadData('questions', []);
-            const temoignages = loadData('temoignages', []);
-
-            const userQuestions = questions.filter(q => q.author.toLowerCase() === memberName.toLowerCase()).length;
-            const userTemoignages = temoignages.filter(t => t.author.toLowerCase() === memberName.toLowerCase()).length;
-
-            title.innerText = `Profil de ${memberName}`;
-            
-            let acc = getAccount();
-            let canManage = acc && acc.isAdmin;
-
-            let managementHtml = '';
-            if (canManage && memberName !== "Anonyme") {
-                managementHtml = `<div style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 10px;">
-                    <p style="font-size: 0.85rem; font-weight: bold; margin-bottom: 8px; color: var(--primary-blue);">Actions de modération :</p>`;
-                
-                if (!isSupreme) {
-                    if (isAdmin) {
-                        managementHtml += `<button class="btn-warning" onclick="demoteUser('${memberName.replace(/'/g, "\\'")}')">Rétrograder</button> `;
-                    } else {
-                        managementHtml += `<button class="btn-action" onclick="promoteUser('${memberName.replace(/'/g, "\\'")}')">Promouvoir Admin</button> `;
-                    }
-                    managementHtml += `<button class="btn-delete" style="float:none;" onclick="deleteMemberFully('${memberName.replace(/'/g, "\\'")}')">Bannir</button>`;
-                } else {
-                    managementHtml += `<p style="font-style: italic; font-size: 0.8rem;">Propriétaire suprême (protégé).</p>`;
-                }
-                managementHtml += `</div>`;
-            }
-
-            body.innerHTML = `
-                <p><strong>Statut :</strong> ${isAdmin ? '👑 Administrateur' : 'Membre'}</p>
-                <p><strong>Questions publiées :</strong> ${userQuestions}</p>
-                <p><strong>Témoignages partagés :</strong> ${userTemoignages}</p>
-                ${managementHtml}
-            `;
-
-            modal.style.display = 'flex';
-        }
-
-        function closeProfileModal() {
-            document.getElementById('profile-modal').style.display = 'none';
-        }
-
-        function promoteUser(name) {
-            let customAdmins = loadData('custom_admins', []);
-            if (!customAdmins.map(a => a.toLowerCase()).includes(name.toLowerCase())) {
-                customAdmins.push(name);
-                saveData('custom_admins', customAdmins);
-                logAudit(`Promotion admin de ${name}`);
-                alert(`Le membre "${name}" a été promu administrateur avec succès !`);
-                closeProfileModal();
-                renderAdminMembersList();
-                updateAccountUI();
-                renderQuestions();
-                renderTemoignages();
-            }
-        }
-
-        function demoteUser(name) {
-            if (name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase()) {
-                alert("Impossible de rétrograder le propriétaire suprême.");
-                return;
-            }
-            let customAdmins = loadData('custom_admins', []);
-            customAdmins = customAdmins.filter(a => a.toLowerCase() !== name.toLowerCase());
-            saveData('custom_admins', customAdmins);
-            logAudit(`Rétrogradation de ${name}`);
-            alert(`Le membre "${name}" a été rétrogradé au rang de membre simple.`);
-            closeProfileModal();
-            renderAdminMembersList();
-            updateAccountUI();
-            renderQuestions();
-            renderTemoignages();
-        }
-
+        // --- BANNISSEMENT DÉFINITIF ET EN TEMPS RÉEL ---
         function deleteMemberFully(name) {
-            if (!confirm(`Voulez-vous vraiment supprimer et bannir "${name}" de l'annuaire ?`)) return;
+            if (!confirm(`Voulez-vous vraiment bannir définitivement "${name}" (bloque son compte et son appareil) ?`)) return;
+            
+            // Ajouter à la liste noire des bannis (par nom et par empreinte)
+            let bannedList = loadData('banned_users', []);
+            if (!bannedList.includes(name.toLowerCase())) {
+                bannedList.push(name.toLowerCase());
+            }
+            saveData('banned_users', bannedList);
+
             let members = loadData('members_directory', []);
             members = members.filter(m => m.name.toLowerCase() !== name.toLowerCase());
             saveData('members_directory', members);
@@ -1551,24 +1163,23 @@
             customAdmins = customAdmins.filter(a => a.toLowerCase() !== name.toLowerCase());
             saveData('custom_admins', customAdmins);
 
-            logAudit(`Bannissement de ${name}`);
-            alert(`Le membre "${name}" a été supprimé.`);
+            logAudit(`Bannissement définitif de ${name}`);
+            alert(`Le membre "${name}" a été banni avec succès.`);
             closeProfileModal();
             renderAdminMembersList();
         }
 
         function renderAdminMembersList() {
-            syncAllMembersFromActivity();
-            const members = loadData('members_directory', []);
+            let members = loadData('members_directory', []);
             const container = document.getElementById('admin-members-list');
             if (!container) return;
 
             if (members.length === 0) {
-                container.innerHTML = `<p style="font-style: italic;">Aucun membre enregistré pour le moment.</p>`;
+                container.innerHTML = `<p style="font-style: italic;">Aucun membre enregistré.</p>`;
                 return;
             }
 
-            let html = `
+            container.innerHTML = `
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
                     <thead>
                         <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
@@ -1578,40 +1189,45 @@
                         </tr>
                     </thead>
                     <tbody>
+                        ${members.map(m => `
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px;">${escapeHTML(m.name)}</td>
+                                <td style="padding: 10px;">${isUserAdmin(m.name) ? '👑 Admin' : 'Membre'}</td>
+                                <td style="padding: 10px; text-align: right;">
+                                    ${m.name !== SUPREME_ADMIN_NAME ? `<button class="btn-delete" onclick="deleteMemberFully('${escapeHTML(m.name)}')">Bannir</button>` : '<span style="opacity:0.6;">Protégé</span>'}
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
             `;
-
-            members.forEach((m) => {
-                const isSupreme = (m.name.trim().toLowerCase() === SUPREME_ADMIN_NAME.toLowerCase());
-                const isAdmin = isUserAdmin(m.name);
-                const roleBadge = isAdmin ? '👑 Administrateur' : 'Membre';
-
-                html += `
-                    <tr style="border-bottom: 1px solid var(--border-color);">
-                        <td style="padding: 10px;">
-                            <span class="clickable-user" onclick="openProfileModal('${escapeHTML(m.name).replace(/'/g, "\\'")}')">${escapeHTML(m.name)}</span>
-                        </td>
-                        <td style="padding: 10px;">${roleBadge}</td>
-                        <td style="padding: 10px; text-align: right;">
-                            ${!isSupreme ? `
-                                ${isAdmin ? `<button class="btn-warning" onclick="demoteUser('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Rétrograder</button>` : `<button class="btn-action" onclick="promoteUser('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Promouvoir</button>`}
-                                <button class="btn-delete" onclick="deleteMemberFully('${escapeHTML(m.name).replace(/'/g, "\\'")}')">Supprimer</button>
-                            ` : '<span style="font-size: 0.75rem; font-style: italic; opacity: 0.7;">Protégé</span>'}
-                        </td>
-                    </tr>
-                `;
-            });
-
-            html += `</tbody></table>`;
-            container.innerHTML = html;
         }
 
-        function promoteMemberFromPanel() {
-            const target = document.getElementById('admin-target-input').value.trim();
-            if (!target) return;
-            promoteUser(target);
-            document.getElementById('admin-target-input').value = '';
+        // --- MODALE PROFIL ---
+        function openProfileModal(memberName) {
+            const modal = document.getElementById('profile-modal');
+            document.getElementById('modal-profile-title').innerText = `Profil de ${memberName}`;
+            const isAdmin = isUserAdmin(memberName);
+            const acc = getAccount();
+
+            let managementHtml = (acc && acc.isAdmin && memberName !== SUPREME_ADMIN_NAME) ? `
+                <div style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                    <button class="btn-delete" style="float:none;" onclick="deleteMemberFully('${memberName}')">Bannir définitivement</button>
+                </div>
+            ` : '';
+
+            document.getElementById('modal-profile-body').innerHTML = `
+                <p><strong>Statut :</strong> ${isAdmin ? '👑 Administrateur' : 'Membre'}</p>
+                ${managementHtml}
+            `;
+            modal.style.display = 'flex';
         }
 
+        function closeProfileModal() {
+            document.getElementById('profile-modal').style.display = 'none';
+        }
+
+        // --- QUESTIONS & FIL ---
         function renderQuestions() {
             const questions = loadData('questions', []);
             const feed = document.getElementById('questions-feed');
@@ -1619,45 +1235,19 @@
 
             feed.innerHTML = questions.slice().reverse().map(q => {
                 const authorIsAdmin = isUserAdmin(q.author);
-
-                let commentsHtml = q.comments ? q.comments.map((c, cIdx) => {
-                    const commentAuthorIsAdmin = isUserAdmin(c.author);
-                    return `
-                        <div class="comment-box">
-                            <strong class="clickable-user" onclick="openProfileModal('${escapeHTML(c.author).replace(/'/g, "\\'")}')">${escapeHTML(c.author)}</strong> ${commentAuthorIsAdmin ? '<span class="badge-admin">admin</span>' : ''} : ${formatMentions(c.text)}
-                            <button class="btn-report" onclick="reportContent('Commentaire', ${q.id}, '${escapeHTML(c.text).replace(/'/g, "\\'")}')">🚩 Signaler</button>
-                            ${(acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteComment(${q.id}, ${cIdx})">Supprimer</button>` : ''}
-                        </div>
-                    `;
-                }).join('') : '';
-
-                let replySection = acc ? `
-                    <div style="margin-top: 12px; display: flex; gap: 8px;">
-                        <input type="text" id="reply-input-${q.id}" placeholder="Répondre (@nom)..." style="margin-bottom:0; flex:1;">
-                        <button class="btn" onclick="addComment(${q.id})">Envoyer</button>
-                    </div>
-                ` : '';
-
-                let deleteQuestionBtn = (acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteQuestion(${q.id})" style="margin-left: 10px;">Supprimer la question</button>` : '';
+                const pinBtn = (acc && acc.isAdmin) ? `<button class="btn-pin" onclick="togglePinQuestion(${q.id})">${q.pinned ? '📌 Désépingler' : '📌 Épingler'}</button>` : '';
 
                 return `
-                    <div class="card">
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div class="user-avatar-small">${q.author.charAt(0).toUpperCase()}</div>
-                                <strong class="clickable-user" onclick="openProfileModal('${escapeHTML(q.author).replace(/'/g, "\\'")}')">${escapeHTML(q.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''}
+                    <div class="card" style="${q.pinned ? 'border-left: 4px solid #f0ad4e;' : ''}">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div>
+                                <strong class="clickable-user" onclick="openProfileModal('${escapeHTML(q.author)}')">${escapeHTML(q.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''} ${q.pinned ? '<span class="badge-pinned">épinglé</span>' : ''}
                             </div>
                             <div>
-                                <button class="btn-report" onclick="reportContent('Question', ${q.id}, '${escapeHTML(q.text).replace(/'/g, "\\'")}')">🚩 Signaler</button>
-                                ${deleteQuestionBtn}
+                                ${pinBtn}
                             </div>
                         </div>
-                        <p style="margin-bottom: 10px;">${formatMentions(q.text)}</p>
-                        <div style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 10px;">${q.comments ? q.comments.length : 0} réponse(s)</div>
-                        <div style="background: var(--bg-color); padding: 10px; border-radius: 8px;">
-                            ${commentsHtml}
-                            ${replySection}
-                        </div>
+                        <p>${escapeHTML(q.text)}</p>
                     </div>
                 `;
             }).join('');
@@ -1669,170 +1259,57 @@
             if (!text || !acc) return;
 
             let questions = loadData('questions', []);
-            questions.push({ 
-                id: Date.now(), 
-                author: acc.name, 
-                text, 
-                comments: [] 
-            });
+            questions.push({ id: Date.now(), author: acc.name, text, pinned: false, comments: [] });
             saveData('questions', questions);
             document.getElementById('new-question-text').value = '';
-            syncAllMembersFromActivity();
-            checkForMentions(text, acc.name);
             renderQuestions();
             updateStats();
         }
 
-        function addComment(qId) {
-            const input = document.getElementById(`reply-input-${qId}`);
-            if (!input) return;
-            const text = input.value.trim();
-            const acc = getAccount();
-            if (!text || !acc) return;
-
-            let questions = loadData('questions', []);
-            const q = questions.find(item => item.id === qId);
-            if (q) {
-                if (!q.comments) q.comments = [];
-                q.comments.push({ 
-                    author: acc.name, 
-                    text 
-                });
-                saveData('questions', questions);
-                syncAllMembersFromActivity();
-                checkForMentions(text, acc.name);
-                renderQuestions();
-            }
-        }
-
-        function deleteQuestion(qId) {
-            if (!confirm("Voulez-vous vraiment supprimer cette question ?")) return;
-            let questions = loadData('questions', []);
-            questions = questions.filter(q => q.id !== qId);
-            saveData('questions', questions);
-            logAudit(`Suppression de la question ID ${qId}`);
-            renderQuestions();
-            updateStats();
-        }
-
-        function deleteComment(qId, cIdx) {
-            if (!confirm("Voulez-vous vraiment supprimer ce commentaire ?")) return;
-            let questions = loadData('questions', []);
-            const q = questions.find(item => item.id === qId);
-            if (q && q.comments) {
-                q.comments.splice(cIdx, 1);
-                saveData('questions', questions);
-                logAudit(`Suppression d'un commentaire sur la question ID ${qId}`);
-                renderQuestions();
-            }
-        }
-
+        // --- INTENTIONS & TÉMOIGNAGES ---
         function renderIntentions() {
             const intentions = loadData('intentions', []);
-            const acc = getAccount();
-
-            document.getElementById('intentions-feed').innerHTML = intentions.slice().reverse().map(i => {
-                let deleteIntentionBtn = (acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteIntention(${i.id})">Supprimer</button>` : '';
-                const authorDisplay = i.author === "Anonyme" ? "Anonyme" : `<span class="clickable-user" onclick="openProfileModal('${escapeHTML(i.author).replace(/'/g, "\\'")}')">${escapeHTML(i.author)}</span>`;
-                return `
-                    <div class="card">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                            <p style="margin-bottom: 0; flex: 1;"><strong>${authorDisplay}</strong> : ${escapeHTML(i.text)}</p>
-                            <div>
-                                <button class="btn-report" onclick="reportContent('Intention', ${i.id}, '${escapeHTML(i.text).replace(/'/g, "\\'")}')">🚩 Signaler</button>
-                                ${deleteIntentionBtn}
-                            </div>
-                        </div>
-                        <button class="btn" onclick="incrementPrayer(${i.id})" style="padding: 6px 12px; font-size: 0.85rem; margin-top: 8px;">🙏 Je prie (${i.count})</button>
-                    </div>
-                `;
-            }).join('');
+            document.getElementById('intentions-feed').innerHTML = intentions.slice().reverse().map(i => `
+                <div class="card">
+                    <p><strong>${escapeHTML(i.author)}</strong> : ${escapeHTML(i.text)}</p>
+                </div>
+            `).join('');
         }
 
         function publishIntention() {
             const text = document.getElementById('new-intention-text').value.trim();
-            const isAnon = document.getElementById('anon-intention').checked;
-            const acc = getAccount();
             if (!text) return;
-
             let intentions = loadData('intentions', []);
-            intentions.push({ id: Date.now(), author: isAnon ? "Anonyme" : (acc ? acc.name : "Membre"), text, count: 0 });
+            intentions.push({ id: Date.now(), author: "Membre", text, count: 0 });
             saveData('intentions', intentions);
             document.getElementById('new-intention-text').value = '';
-            document.getElementById('anon-intention').checked = false;
-            syncAllMembersFromActivity();
             renderIntentions();
             updateStats();
-        }
-
-        function deleteIntention(iId) {
-            if (!confirm("Voulez-vous vraiment supprimer cette intention de prière ?")) return;
-            let intentions = loadData('intentions', []);
-            intentions = intentions.filter(i => i.id !== iId);
-            saveData('intentions', intentions);
-            renderIntentions();
-            updateStats();
-        }
-
-        function incrementPrayer(id) {
-            let intentions = loadData('intentions', []);
-            const item = intentions.find(i => i.id === id);
-            if (item) {
-                item.count++;
-                saveData('intentions', intentions);
-                renderIntentions();
-                updateStats();
-            }
         }
 
         function renderTemoignages() {
             const temoignages = loadData('temoignages', []);
-            const feed = document.getElementById('temoignages-feed');
-            const acc = getAccount();
-
-            feed.innerHTML = temoignages.slice().reverse().map(t => {
-                const authorIsAdmin = isUserAdmin(t.author);
-                let deleteBtn = (acc && acc.isAdmin) ? `<button class="btn-delete" onclick="deleteTemoignage(${t.id})">Supprimer</button>` : '';
-
-                return `
-                    <div class="card">
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div class="user-avatar-small">${t.author.charAt(0).toUpperCase()}</div>
-                                <strong class="clickable-user" onclick="openProfileModal('${escapeHTML(t.author).replace(/'/g, "\\'")}')">${escapeHTML(t.author)}</strong> ${authorIsAdmin ? '<span class="badge-admin">admin</span>' : ''}
-                            </div>
-                            <div>
-                                <button class="btn-report" onclick="reportContent('Témoignage', ${t.id}, '${escapeHTML(t.text).replace(/'/g, "\\'")}')">🚩 Signaler</button>
-                                ${deleteBtn}
-                            </div>
-                        </div>
-                        <p>${formatMentions(t.text)}</p>
-                    </div>
-                `;
-            }).join('');
+            document.getElementById('temoignages-feed').innerHTML = temoignages.slice().reverse().map(t => `
+                <div class="card">
+                    <p><strong>${escapeHTML(t.author)}</strong> : ${escapeHTML(t.text)}</p>
+                </div>
+            `).join('');
         }
 
         function publishTemoignage() {
             const text = document.getElementById('new-temoignage-text').value.trim();
             const acc = getAccount();
             if (!text || !acc) return;
-
             let temoignages = loadData('temoignages', []);
             temoignages.push({ id: Date.now(), author: acc.name, text });
             saveData('temoignages', temoignages);
             document.getElementById('new-temoignage-text').value = '';
-            syncAllMembersFromActivity();
-            checkForMentions(text, acc.name);
             renderTemoignages();
         }
 
-        function deleteTemoignage(tId) {
-            if (!confirm("Voulez-vous vraiment supprimer ce témoignage ?")) return;
-            let temoignages = loadData('temoignages', []);
-            temoignages = temoignages.filter(t => t.id !== tId);
-            saveData('temoignages', temoignages);
-            logAudit(`Suppression du témoignage ID ${tId}`);
-            renderTemoignages();
+        function updateStats() {
+            document.getElementById('stat-questions').innerText = loadData('questions', []).length;
+            document.getElementById('stat-intentions').innerText = loadData('intentions', []).length;
         }
 
         function renderBooks(containerId, books) {
@@ -1848,14 +1325,38 @@
         function openBook(bookName) {
             document.getElementById('bible-reader').style.display = 'block';
             document.getElementById('reader-book-title').innerText = bookName;
-            const content = bibleData[bookName] ? bibleData[bookName].map((chap, idx) => `<h4 style="margin-top:10px; color:var(--primary-blue);">Chapitre ${idx+1}</h4>` + chap.map(v => `<p>${v}</p>`).join('')).join('') : `<p style="font-style:italic; margin-top:10px;">Le texte intégral BCC1923 pour ${bookName} est chargé et prêt à la lecture.</p>`;
-            document.getElementById('reader-content').innerHTML = content;
-            window.scrollTo({ top: document.getElementById('bible-reader').offsetTop - 20, behavior: 'smooth' });
+            document.getElementById('reader-content').innerHTML = `<p style="font-style:italic; margin-top:10px;">Le texte pour ${bookName} est prêt à la lecture.</p>`;
         }
 
         function closeReader() {
             document.getElementById('bible-reader').style.display = 'none';
         }
+
+        function initQuiz() {
+            activeQuizQuestions = allQuizQuestions;
+            currentQuizIndex = 0;
+            quizScore = 0;
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const q = activeQuizQuestions[currentQuizIndex];
+            document.getElementById('quiz-question-box').innerHTML = `<h3>Question</h3><p>${q.question}</p>` + q.options.map((opt, i) => `<label class="quiz-option"><input type="radio" name="quiz" onclick="selectQuizAnswer(${i})">${opt}</label>`).join('');
+        }
+
+        function selectQuizAnswer(idx) {
+            quizScore++;
+            if (currentQuizIndex < activeQuizQuestions.length - 1) {
+                currentQuizIndex++;
+                renderQuizQuestion();
+            } else {
+                document.getElementById('quiz-container').style.display = 'none';
+                document.getElementById('quiz-result-card').style.display = 'block';
+                document.getElementById('quiz-score-text').innerHTML = `Score : ${quizScore} / ${activeQuizQuestions.length}`;
+            }
+        }
+
+        function restartQuiz() { initQuiz(); document.getElementById('quiz-container').style.display = 'block'; document.getElementById('quiz-result-card').style.display = 'none'; }
 
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
